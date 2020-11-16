@@ -4,6 +4,7 @@ import org.softRoad.models.Role;
 import org.softRoad.models.User;
 import org.softRoad.security.Permission;
 import org.softRoad.services.RoleService;
+import org.softRoad.utils.Diff;
 
 import javax.enterprise.context.RequestScoped;
 import javax.validation.Valid;
@@ -29,7 +30,7 @@ public class RoleController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
-    public Response signUp(@Valid Role role) {
+    public Response create(@Valid Role role) {
         return roleService.create(role);
     }
 
@@ -42,7 +43,7 @@ public class RoleController {
 
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(Role role) {
+    public Response update(@Diff Role role) {
         return roleService.update(role);
     }
 

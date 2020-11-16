@@ -20,6 +20,7 @@ import org.softRoad.models.User;
 import org.softRoad.models.dao.LoginUser;
 import org.softRoad.security.AuthenticationResponse;
 import org.softRoad.services.UserService;
+import org.softRoad.utils.Diff;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class UserController {
 
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(User user) {
+    public Response update(@Diff User user) {
         return userService.update(user);
     }
 
