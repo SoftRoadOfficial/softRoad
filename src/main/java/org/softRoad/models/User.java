@@ -20,6 +20,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.softRoad.security.SecurityUtils;
 
 @Entity
 @Table(name = "users")
@@ -56,8 +57,7 @@ public class User extends SoftRoadModel {
 
     public void setPassword(String password) {
         if (password != null && !password.isEmpty())
-            this.password = BcryptUtil.bcryptHash(password, 10,
-                    ConfigProvider.getConfig().getValue("bcryptHash.salt", String.class).getBytes());
+            this.password = SecurityUtils.hashPassword(password);
         else
             this.password = password;
         this.presentFields.add("password");

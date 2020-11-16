@@ -2,6 +2,9 @@ package org.softRoad.services;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import liquibase.precondition.Precondition;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.SoftRoadModel;
 import org.softRoad.utils.ModelUtils;
@@ -11,6 +14,7 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class CrudService<T extends SoftRoadModel> {
@@ -49,7 +53,7 @@ public class CrudService<T extends SoftRoadModel> {
                 field.setAccessible(true);
                 Column column = field.getAnnotation(Column.class);
                 JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-                String columnName = joinColumn != null ? joinColumn.name() : Strings.isNullOrEmpty(column.name()) ? fieldName : column.name();
+                String columnName = joinColumn != null ? joinColumn.name() : column == null || Strings.isNullOrEmpty(column.name()) ? fieldName : column.name();
 
                 Object value = field.get(obj);
                 if (joinColumn != null)

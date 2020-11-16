@@ -12,7 +12,7 @@ import org.softRoad.models.Role;
 import org.softRoad.models.User;
 import org.softRoad.models.dao.LoginUser;
 import org.softRoad.security.AuthenticationResponse;
-import org.softRoad.security.JwtUtils;
+import org.softRoad.security.SecurityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class UserService extends CrudService<User> {
         if (user == null) {
             throw new InvalidDataException("Invalid Username or password");
         }
-        return new AuthenticationResponse(JwtUtils.createToken(user), user.username);
+        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.username);
     }
 
     @Transactional
@@ -53,7 +53,7 @@ public class UserService extends CrudService<User> {
         }
         user.enabled = false; //FIXME users should be enabled after email or phone verification
         User.persist(user);
-        return new AuthenticationResponse(JwtUtils.createToken(user), user.username);
+        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.username);
     }
 
     @Transactional
