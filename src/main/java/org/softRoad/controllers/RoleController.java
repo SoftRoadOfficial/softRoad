@@ -2,6 +2,7 @@ package org.softRoad.controllers;
 
 import org.softRoad.models.Role;
 import org.softRoad.models.User;
+import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.Permission;
 import org.softRoad.services.RoleService;
 import org.softRoad.utils.Diff;
@@ -39,6 +40,13 @@ public class RoleController {
     @Path("{id}")
     public Role get(@PathParam("id") Integer id) {
         return roleService.get(id);
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getAll")
+    public List<Role> getAll(@NotNull SearchCriteria searchCriteria) {
+        return roleService.getAll(searchCriteria);
     }
 
     @PATCH

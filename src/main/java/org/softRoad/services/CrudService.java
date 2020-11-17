@@ -2,25 +2,35 @@ package org.softRoad.services;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import liquibase.precondition.Precondition;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.SoftRoadModel;
+import org.softRoad.models.query.QueryUtils;
+import org.softRoad.models.query.SearchConditionSqlResult;
+import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.utils.ModelUtils;
 
 import javax.inject.Inject;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EntityManager;
+import javax.persistence.JoinColumn;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class CrudService<T extends SoftRoadModel> {
 
+    private final Class<?> objClass;
+
     @Inject
     EntityManager entityManager;
+
+
+    public CrudService(Class<?> objClass) {
+        this.objClass = objClass;
+    }
 
     @Transactional
     public Response create(T obj) {
@@ -38,9 +48,8 @@ public class CrudService<T extends SoftRoadModel> {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder queryBuilder = new StringBuilder();
 
-        Table table = obj.getClass().getAnnotation(Table.class);
-        Preconditions.checkState(table != null && !Strings.isNullOrEmpty(table.name()));
-        queryBuilder.append("update ").append(table.name()).append(" set ");
+        String table = ModelUtils.getTableName(obj.getClass());
+        queryBuilder.append("update ").append(table).append(" set ");
 
         Field primaryKeyField = ModelUtils.getPrimaryKeyField(obj, obj.getClass());
         Preconditions.checkState(primaryKeyField != null, "Invalid update input, did you use DiffValidator?");
@@ -86,5 +95,30 @@ public class CrudService<T extends SoftRoadModel> {
             throw new InvalidDataException("Invalid id");
         databaseObj.delete();
         return Response.ok().build();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<T> getAll(SearchCriteria searchCriteria) {
+        StringBuilder queryBuilder = new StringBuilder();
+
+        String table = ModelUtils.getTableName(objClass);
+        queryBuilder.append("select * from ").append(table);
+
+        SearchConditionSqlResult sqlResult = QueryUtils.getSqlResult(searchCriteria.getCondition(), objClass);
+        if (sqlResult != null)
+            queryBuilder.append(sqlResult.getSql());
+
+        String sort = QueryUtils.getOrderBySql(searchCriteria, objClass);
+        if (sort != null)
+            queryBuilder.append(sort);
+        Query nativeQuery = entityManager.createNativeQuery(queryBuilder.toString(), objClass);
+
+        if (sqlResult != null)
+            for (String key : sqlResult.getParams().keySet())
+                nativeQuery.setParameter(key, sqlResult.getParams().get(key));
+
+        nativeQuery.setFirstResult(searchCriteria.getOffset());
+        nativeQuery.setMaxResults(searchCriteria.getPageSize());
+        return nativeQuery.getResultList();
     }
 }

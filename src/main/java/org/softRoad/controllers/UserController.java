@@ -18,6 +18,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.softRoad.models.Role;
 import org.softRoad.models.User;
 import org.softRoad.models.dao.LoginUser;
+import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.AuthenticationResponse;
 import org.softRoad.services.UserService;
 import org.softRoad.utils.Diff;
@@ -47,6 +48,13 @@ public class UserController {
     @Path("signup")
     public AuthenticationResponse signUp(@Valid User user) {
         return userService.signUp(user);
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getAll")
+    public List<User> getAll(@NotNull SearchCriteria searchCriteria) {
+        return userService.getAll(searchCriteria);
     }
 
     @GET

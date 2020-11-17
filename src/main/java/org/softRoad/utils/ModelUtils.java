@@ -1,6 +1,11 @@
 package org.softRoad.utils;
 
+import com.google.common.base.Strings;
+import org.softRoad.exception.InvalidDataException;
+
+import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.lang.reflect.Field;
 
 public class ModelUtils {
@@ -24,5 +29,26 @@ public class ModelUtils {
             }
         }
         return null;
+    }
+
+    public static String getTableName(Class<?> aClass) {
+        Table table = aClass.getAnnotation(Table.class);
+        if (table != null && !Strings.isNullOrEmpty(table.name())) {
+            return table.name();
+        }
+        return aClass.getName().toLowerCase();
+    }
+
+    public static String getColumnName(String field, Class<?> aClass) {
+        Field declaredField = null;
+        try {
+            declaredField = aClass.getDeclaredField(field);
+        } catch (NoSuchFieldException e) {
+            throw new InvalidDataException("Invalid field ");
+        }
+        Column column = declaredField.getAnnotation(Column.class);
+        if (column == null || Strings.isNullOrEmpty(column.name()))
+            return field;
+        return column.name();
     }
 }

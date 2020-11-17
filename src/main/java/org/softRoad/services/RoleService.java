@@ -2,6 +2,7 @@ package org.softRoad.services;
 
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Role;
+import org.softRoad.models.SoftRoadModel;
 import org.softRoad.models.User;
 import org.softRoad.security.Permission;
 
@@ -19,6 +20,10 @@ public class RoleService extends CrudService<Role> {
 
     @Inject
     EntityManager entityManager;
+
+    public RoleService() {
+        super(Role.class);
+    }
 
     @Transactional
     public Response addPermissionsToRole(Integer id, List<Permission> permissions) {

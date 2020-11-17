@@ -1,11 +1,5 @@
 package org.softRoad.services;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
-
 import org.softRoad.exception.DuplicateDataException;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Role;
@@ -14,6 +8,11 @@ import org.softRoad.models.dao.LoginUser;
 import org.softRoad.security.AuthenticationResponse;
 import org.softRoad.security.SecurityUtils;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,10 @@ public class UserService extends CrudService<User> {
 
     @Inject
     EntityManager entityManager;
+
+    public UserService() {
+        super(User.class);
+    }
 
     @Override
     public User get(Integer id) {
@@ -107,7 +110,7 @@ public class UserService extends CrudService<User> {
 //            u.roles.remove(r);
 //            role.users.remove(user);
 //            Role.persist(r);
-            entityManager.createNativeQuery("delete from user_role where role_id=:roleId and  user_id=:userId")
+            entityManager.createNativeQuery("delete from user_role where role_id=:roleId and user_id=:userId")
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }
