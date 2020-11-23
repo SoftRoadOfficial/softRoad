@@ -49,7 +49,7 @@ public class QueryUtils {
         return query;
     }
 
-    public static SearchConditionHqlQuery getConditionHqlWhereQuery (SearchCondition searchCondition, Class<?> objClass){
+    public static SearchConditionHqlQuery getConditionHqlWhereQuery(SearchCondition searchCondition, Class<?> objClass) {
         SearchConditionHqlQuery conditionHqlQuery = getConditionHqlQuery(searchCondition, objClass);
         conditionHqlQuery.setSql(" WHERE " + conditionHqlQuery.getSql());
         return conditionHqlQuery;
@@ -64,9 +64,10 @@ public class QueryUtils {
         if (searchCondition instanceof SimpleCondition) {
             SimpleCondition simpleCondition = (SimpleCondition) searchCondition;
             String columnName = ModelUtils.getColumnName(simpleCondition.getField(), objClass);
-            String fieldName = simpleCondition.getField() + "_" + index.toString();
-            searchConditionHqlQuery.setSql(columnName + simpleCondition.getOperator().getSymbol() + ":" + fieldName);
-            searchConditionHqlQuery.getParams().put(fieldName, simpleCondition.getValue());
+            String fieldName = simpleCondition.getField() + "_" + index;
+            searchConditionHqlQuery.setSql(" " + columnName + " " + simpleCondition.getOperator().getSymbol() + " :" + fieldName);
+            searchConditionHqlQuery.getParams().put(fieldName, simpleCondition.getOperator() != SimpleCondition.Operator.LIKE
+                    ? simpleCondition.getValue() : "%" + simpleCondition.getValue() + "%");
         } else if (searchCondition instanceof ComplexCondition) {
             ComplexCondition complexCondition = (ComplexCondition) searchCondition;
             List<SearchCondition> conditions = complexCondition.getConditions();

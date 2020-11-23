@@ -104,18 +104,18 @@ public class CrudService<T extends SoftRoadModel> {
         String table = ModelUtils.getTableName(objClass);
         queryBuilder.append("select * from ").append(table);
 
-        SearchConditionHqlQuery sqlResult = QueryUtils.getConditionHqlQuery(searchCriteria.getCondition(), objClass);
-        if (sqlResult != null)
-            queryBuilder.append(sqlResult.getSql());
+        SearchConditionHqlQuery hqlQuery = QueryUtils.getConditionHqlWhereQuery(searchCriteria.getCondition(), objClass);
+        if (!hqlQuery.isEmpty())
+            queryBuilder.append(hqlQuery.getSql());
 
         String sort = QueryUtils.getOrderBySql(searchCriteria, objClass);
         if (sort != null)
             queryBuilder.append(sort);
         Query nativeQuery = entityManager.createNativeQuery(queryBuilder.toString(), objClass);
 
-        if (sqlResult != null)
-            for (String key : sqlResult.getParams().keySet())
-                nativeQuery.setParameter(key, sqlResult.getParams().get(key));
+        if (!hqlQuery.isEmpty())
+            for (String key : hqlQuery.getParams().keySet())
+                nativeQuery.setParameter(key, hqlQuery.getParams().get(key));
 
         nativeQuery.setFirstResult(searchCriteria.getOffset());
         nativeQuery.setMaxResults(searchCriteria.getPageSize());

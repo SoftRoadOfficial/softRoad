@@ -19,9 +19,13 @@ public class SearchConditionHqlQuery {
         this.sql = sql;
     }
 
+    public boolean isEmpty() {
+        return params.isEmpty();
+    }
+
     @Override
     public String toString() {
-        return "SearchConditionSqlResult{" +
+        return "SearchConditionHqlQuery{" +
                 "sql='" + sql + '\'' +
                 ", params=" + params +
                 '}';
