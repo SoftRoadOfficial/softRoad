@@ -36,14 +36,14 @@ public class SimpleCondition implements SearchCondition {
     public enum Operator {
         EQUAL("="), LT("<"), LTE("<="), GT(">"), GTE(">="), LIKE("like");
 
-        private final String operator;
+        private final String symbol;
 
-        Operator(String operator) {
-            this.operator = operator;
+        Operator(String symbol) {
+            this.symbol = symbol;
         }
 
-        public String getOperator() {
-            return operator;
+        public String getSymbol() {
+            return symbol;
         }
     }
 }

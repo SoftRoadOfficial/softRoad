@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.SoftRoadModel;
 import org.softRoad.models.query.QueryUtils;
-import org.softRoad.models.query.SearchConditionSqlResult;
+import org.softRoad.models.query.SearchConditionHqlQuery;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.utils.ModelUtils;
 
@@ -104,7 +104,7 @@ public class CrudService<T extends SoftRoadModel> {
         String table = ModelUtils.getTableName(objClass);
         queryBuilder.append("select * from ").append(table);
 
-        SearchConditionSqlResult sqlResult = QueryUtils.getSqlResult(searchCriteria.getCondition(), objClass);
+        SearchConditionHqlQuery sqlResult = QueryUtils.getConditionHqlQuery(searchCriteria.getCondition(), objClass);
         if (sqlResult != null)
             queryBuilder.append(sqlResult.getSql());
 

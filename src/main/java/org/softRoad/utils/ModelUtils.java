@@ -40,6 +40,8 @@ public class ModelUtils {
     }
 
     public static String getColumnName(String field, Class<?> aClass) {
+        if (aClass == null)
+            return field;
         Field declaredField = null;
         try {
             declaredField = aClass.getDeclaredField(field);

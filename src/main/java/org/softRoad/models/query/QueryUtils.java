@@ -49,7 +49,41 @@ public class QueryUtils {
         return query;
     }
 
-    public static SearchConditionSqlResult getSqlResult(SearchCondition searchCondition, Class<?> objClass) {
-        return new SearchConditionSqlResult();
+    public static SearchConditionHqlQuery getConditionHqlWhereQuery (SearchCondition searchCondition, Class<?> objClass){
+        SearchConditionHqlQuery conditionHqlQuery = getConditionHqlQuery(searchCondition, objClass);
+        conditionHqlQuery.setSql(" WHERE " + conditionHqlQuery.getSql());
+        return conditionHqlQuery;
+    }
+
+    public static SearchConditionHqlQuery getConditionHqlQuery(SearchCondition searchCondition, Class<?> objClass) {
+        return doGetConditionHqlQuery(searchCondition, objClass, 0);
+    }
+
+    private static SearchConditionHqlQuery doGetConditionHqlQuery(SearchCondition searchCondition, Class<?> objClass, Integer index) {
+        SearchConditionHqlQuery searchConditionHqlQuery = new SearchConditionHqlQuery();
+        if (searchCondition instanceof SimpleCondition) {
+            SimpleCondition simpleCondition = (SimpleCondition) searchCondition;
+            String columnName = ModelUtils.getColumnName(simpleCondition.getField(), objClass);
+            String fieldName = simpleCondition.getField() + "_" + index.toString();
+            searchConditionHqlQuery.setSql(columnName + simpleCondition.getOperator().getSymbol() + ":" + fieldName);
+            searchConditionHqlQuery.getParams().put(fieldName, simpleCondition.getValue());
+        } else if (searchCondition instanceof ComplexCondition) {
+            ComplexCondition complexCondition = (ComplexCondition) searchCondition;
+            List<SearchCondition> conditions = complexCondition.getConditions();
+            StringBuilder sqlResult = new StringBuilder();
+            sqlResult.append("(");
+            for (int i = 0; i < conditions.size(); i++) {
+                SearchConditionHqlQuery result = doGetConditionHqlQuery(conditions.get(i), objClass, index);
+                searchConditionHqlQuery.getParams().putAll(result.getParams());
+                index += result.getParams().size();
+                if (i == 0)
+                    sqlResult.append(result.getSql());
+                else
+                    sqlResult.append(" ").append(complexCondition.getOperator()).append(" ").append(result.getSql());
+            }
+            sqlResult.append(")");
+            searchConditionHqlQuery.setSql(sqlResult.toString());
+        }
+        return searchConditionHqlQuery;
     }
 }
