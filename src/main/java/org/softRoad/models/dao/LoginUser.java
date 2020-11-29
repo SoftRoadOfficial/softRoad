@@ -1,34 +1,31 @@
 package org.softRoad.models.dao;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import io.quarkus.elytron.security.common.BcryptUtil;
 
 import javax.validation.constraints.NotNull;
 
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.softRoad.security.SecurityUtils;
 
 public class LoginUser {
     @NotNull
-    private String username;
+    private String email;
     @NotNull
     private String password;
 
-    public LoginUser(String username, String password) {
-        this.username = username;
+    public LoginUser(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
     public LoginUser() {
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -42,7 +39,7 @@ public class LoginUser {
 
     @Override
     public String toString() {
-        return "LoginUser{" + "username=" + username + ", password=" + password + '}';
+        return "LoginUser{" + "username=" + email + ", password=" + password + '}';
     }
 
 }

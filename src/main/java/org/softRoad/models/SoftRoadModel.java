@@ -12,4 +12,5 @@ public abstract class SoftRoadModel extends PanacheEntityBase {
     @Transient
     @JsonIgnore
     public List<String> presentFields = new ArrayList<>();
+
 }

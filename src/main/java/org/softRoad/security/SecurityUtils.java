@@ -9,8 +9,7 @@ import org.softRoad.models.User;
 public class SecurityUtils {
     public static String createJwtToken(User user) {
         return Jwt
-                .upn(user.username)
-                .claim(Claims.phone_number.name(), user.phoneNumber)
+                .upn(user.phoneNumber)
                 .claim(Claims.full_name.name(), user.displayName)
                 .sign();
     }

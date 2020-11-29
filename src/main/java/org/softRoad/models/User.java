@@ -5,22 +5,19 @@
  */
 package org.softRoad.models;
 
-import io.quarkus.elytron.security.common.BcryptUtil;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import org.eclipse.microprofile.config.ConfigProvider;
+import org.softRoad.config.Constants;
 import org.softRoad.security.SecurityUtils;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -31,16 +28,17 @@ public class User extends SoftRoadModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    @NotNull
-    @Username
-    public String username;
+    @Email
+    @Pattern(regexp = Constants.PHONE_NUMBER_REGEX)
+    public String email;
 
     @NotNull
     @Password
     public String password;
 
     @NotNull
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
+    @Username
     public String phoneNumber;
 
     @NotNull
@@ -68,9 +66,9 @@ public class User extends SoftRoadModel {
         this.presentFields.add("id");
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-        this.presentFields.add("username");
+    public void setEmail(String email) {
+        this.email = email;
+        this.presentFields.add("email");
     }
 
     public void setPhoneNumber(String phoneNumber) {
@@ -92,7 +90,7 @@ public class User extends SoftRoadModel {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", displayName='" + displayName + '\'' +

@@ -1,0 +1,351 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+
+    <changeSet id="create-category-table" author="softroad">
+        <createTable tableName="categories">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-user_verifications-table" author="softroad">
+        <createTable tableName="user_verifications">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="verified" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <dropDefaultValue tableName="user_verifications" columnName="time" columnDataType="datetime"/>
+    </changeSet>
+
+
+    <changeSet id="create-fees-table" author="softroad">
+        <createTable tableName="fees">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amount" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="minute" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="consultant_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="category_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-consultant_profiles-table" author="softroad">
+        <createTable tableName="consultant_profiles">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="bio" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-fees-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="consultant_id"
+                                 baseTableName="fees"
+                                 constraintName="fk_fee_consultant_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="consultant_profiles"/>
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="fees"
+                                 constraintName="fk_fee_category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="categories"/>
+    </changeSet>
+
+    <changeSet id="create-consultant_profile_categories-table" author="softroad">
+        <createTable tableName="consultant_profile_categories">
+            <column name="categories_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="consultant_profile_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="consultant_profile_id, categories_id" tableName="consultant_profile_categories"/>
+    </changeSet>
+
+    <changeSet id="create-consultant_profiles-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="consultant_profile_id"
+                                 baseTableName="consultant_profile_categories"
+                                 constraintName="fk_consultant_profile_categories_consultant_profile_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="consultant_profiles"/>
+
+        <addForeignKeyConstraint baseColumnNames="categories_id"
+                                 baseTableName="consultant_profile_categories"
+                                 constraintName="fk_consultant_profile_categories_categories_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="categories"/>
+    </changeSet>
+
+    <changeSet id="create-consultations-table" author="softroad">
+        <createTable tableName="consultations">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fee_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_consultation_fee_id"/>
+            </column>
+            <column name="consultant_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-consultations-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="fee_id"
+                                 baseTableName="consultations"
+                                 constraintName="fk_consultation_fee_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="fees"/>
+
+        <addForeignKeyConstraint baseColumnNames="consultant_id"
+                                 baseTableName="consultations"
+                                 constraintName="fk_consultation_consultant_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="consultant_profiles"/>
+    </changeSet>
+
+    <changeSet id="create-cities-table" author="softroad">
+        <createTable tableName="cities">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-procedures-table" author="softroad">
+        <createTable tableName="procedures">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confirmed" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <dropDefaultValue tableName="procedures" columnName="created_date" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="create-procedures-relations-table" author="softroad">
+        <createTable tableName="procedure_cities">
+            <column name="cities_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="procedure_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="procedure_id, cities_id" tableName="procedure_cities"/>
+
+        <createTable tableName="procedure_categories">
+            <column name="categories_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="procedure_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="procedure_id, categories_id" tableName="procedure_categories"/>
+    </changeSet>
+
+    <changeSet id="create-procedures-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="procedure_id"
+                                 baseTableName="procedure_cities"
+                                 constraintName="fk_procedure_cities_procedure_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="procedures"/>
+
+        <addForeignKeyConstraint baseColumnNames="cities_id"
+                                 baseTableName="procedure_cities"
+                                 constraintName="fk_procedure_cities_cities_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="cities"/>
+
+        <addForeignKeyConstraint baseColumnNames="procedure_id"
+                                 baseTableName="procedure_categories"
+                                 constraintName="fk_procedure_categories_procedure_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="procedures"/>
+
+        <addForeignKeyConstraint baseColumnNames="categories_id"
+                                 baseTableName="procedure_categories"
+                                 constraintName="fk_procedure_categories_categories_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="categories"/>
+    </changeSet>
+
+    <changeSet id="create-update-requests-table" author="softroad">
+        <createTable tableName="update_requests">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="accepted" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="create_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="procedure_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <dropDefaultValue tableName="update_requests" columnName="create_date" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="create-update-requests-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="procedure_id"
+                                 baseTableName="update_requests"
+                                 constraintName="fk_update_request_procedure_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="procedures"/>
+    </changeSet>
+
+    <changeSet id="create-comments-table" author="softroad">
+        <createTable tableName="comments">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rate" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reply_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="consultation_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="procedure_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <dropDefaultValue tableName="comments" columnName="created_date" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="create-comments-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="reply_id"
+                                 baseTableName="comments"
+                                 constraintName="fk_comment_reply_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="comments"/>
+
+        <addForeignKeyConstraint baseColumnNames="consultation_id"
+                                 baseTableName="comments"
+                                 constraintName="fk_comment_consultation_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="consultations"/>
+
+        <addForeignKeyConstraint baseColumnNames="procedure_id"
+                                 baseTableName="comments"
+                                 constraintName="fk_comment_procedure_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="procedures"/>
+    </changeSet>
+
+    <changeSet id="create-steps-table" author="softroad">
+        <createTable tableName="steps">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="picture" type="longblob">
+                <constraints nullable="true"/>
+            </column>
+            <column name="picture_content_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="procedure_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-steps-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="procedure_id"
+                                 baseTableName="steps"
+                                 constraintName="fk_step_procedure_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="procedures"/>
+    </changeSet>
+
+    <changeSet id="create-audit-logs-table" author="softroad">
+        <createTable tableName="audit_logs">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <dropDefaultValue tableName="audit_logs" columnName="time" columnDataType="datetime"/>
+    </changeSet>
+</databaseChangeLog>
+
+

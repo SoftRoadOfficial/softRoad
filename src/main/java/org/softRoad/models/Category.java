@@ -1,8 +1,6 @@
 package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.quarkus.security.jpa.RolesValue;
-import org.softRoad.security.Permission;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,27 +8,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "roles")
-public class Role extends SoftRoadModel {
+@Table(name = "categories")
+public class Category extends SoftRoadModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
     @NotNull
-    @RolesValue
-    @Column(name = "name", nullable = false, unique = true)
     public String name;
 
-    @ElementCollection
-    @CollectionTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id"))
-    @Column(name = "permission")
-    @Enumerated(EnumType.STRING)
-    @JsonIgnore
-    public Set<Permission> permissions = new HashSet<>();
+    @NotNull
+    public String type;
 
+    @OneToMany(mappedBy = "category")
+    public Set<Fee> fees = new HashSet<>();
+
+    @ManyToMany(mappedBy = "categories")
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
-    public Set<User> users = new HashSet<>();
+    public Set<Procedure> procedures = new HashSet<>();
+
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    public Set<ConsultantProfile> consultants = new HashSet<>();
 
     public void setId(Integer id) {
         this.id = id;
@@ -40,5 +39,10 @@ public class Role extends SoftRoadModel {
     public void setName(String name) {
         this.name = name;
         presentFields.add("name");
+    }
+
+    public void setType(String type) {
+        this.type = type;
+        presentFields.add("type");
     }
 }

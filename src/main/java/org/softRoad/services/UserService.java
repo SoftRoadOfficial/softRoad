@@ -41,22 +41,22 @@ public class UserService extends CrudService<User> {
 
     @Transactional
     public AuthenticationResponse login(LoginUser loginUser) {
-        User user = User.find("username=?1 and password=?2", loginUser.getUsername(),
+        User user = User.find("phone_number=?1 and password=?2", loginUser.getEmail(),
                 loginUser.getPassword()).firstResult();
         if (user == null) {
             throw new InvalidDataException("Invalid Username or password");
         }
-        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.username);
+        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.phoneNumber);
     }
 
     @Transactional
     public AuthenticationResponse signUp(User user) {
-        if (User.find("username=?1 or phone_number=?2", user.username, user.phoneNumber).count() > 0) {
+        if (User.find("phone_number=?1", user.phoneNumber).count() > 0) {
             throw new DuplicateDataException("Duplicated username or phoneNumber");
         }
         user.enabled = false; //FIXME users should be enabled after email or phone verification
         User.persist(user);
-        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.username);
+        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.email);
     }
 
     @Transactional

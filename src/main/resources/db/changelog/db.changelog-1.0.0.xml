@@ -1,10 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
-    http://www.liquibase.org/xml/ns/dbchangelog
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     
     
@@ -13,8 +10,8 @@
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="username" type="varchar(32)">
-                <constraints unique="true" nullable="false"/>
+            <column name="email" type="varchar(256)">
+                <constraints unique="true" nullable="true"/>
             </column>
             <column name="password" type="varchar(256)">
                 <constraints unique="false" nullable="false"/>
@@ -31,7 +28,7 @@
         </createTable>
         <insert tableName="users">
             <column name="id" value="0"/>
-            <column name="username" value="root"/>
+            <column name="email" value="root"/>
             <column name="password" value="$2a$10$uRBFvOuRbrYbwQXiZ2Hio.2UViw9.0.vLvSKXsw6QeSW8yUrA0w.m"/>
             <column name="display_name" value="Root"/>
             <column name="phone_number" value="09999999999"/>
