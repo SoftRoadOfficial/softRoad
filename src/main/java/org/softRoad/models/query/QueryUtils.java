@@ -6,11 +6,14 @@ import org.softRoad.utils.ModelUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 
-public class QueryUtils {
+public class QueryUtils
+{
 
     @SuppressWarnings("AccessStaticViaInstance")
-    public static Sort getSort(SearchCriteria searchCriteria) {
+    public static Sort getSort(SearchCriteria searchCriteria)
+    {
         List<SearchOrder> orders = searchCriteria.getSearchOrders();
         Sort sort = null;
         if (!orders.isEmpty()) {
@@ -27,64 +30,92 @@ public class QueryUtils {
 
     /**
      * Works for pageBased offset only
+     *
+     * @param searchCriteria
+     * @return page
      */
-    public static Page getPage(SearchCriteria searchCriteria) {
+    public static Page getPage(SearchCriteria searchCriteria)
+    {
         return Page.of(searchCriteria.getOffset() / searchCriteria.getPageSize(), searchCriteria.getPageSize());
     }
 
-    public static String getOrderBySql(SearchCriteria searchCriteria, Class<?> aClass) {
-        List<SearchOrder> orders = searchCriteria.getSearchOrders();
+    public static String getOrderBySql(List<SearchOrder> orders, Class<?> aClass)
+    {
         if (orders.isEmpty())
-            return null;
+            return "";
         return " order by " + orders.stream()
                 .map(searchOrder -> ModelUtils.getColumnName(searchOrder.getField(), aClass)
-                        + (searchOrder.isDescending() ? " DESC" : " ASC"))
+                + (searchOrder.isDescending() ? " DESC" : " ASC"))
                 .collect(Collectors.joining(", "));
     }
 
-    public static String addOrderBy(String query, SearchCriteria searchCriteria, Class<?> aClass) {
-        String orderBySql = getOrderBySql(searchCriteria, aClass);
-        if (orderBySql != null)
-            query = query + orderBySql;
-        return query;
+    public static HqlQuery getConditionHqlWhereQuery(SearchCondition searchCondition, Class<?> objClass)
+    {
+        HqlQuery hqlQuery = getConditionHqlQuery(searchCondition, objClass);
+        if (!hqlQuery.isEmpty())
+            hqlQuery.setHql(" WHERE " + hqlQuery.getHql());
+        return hqlQuery;
     }
 
-    public static SearchConditionHqlQuery getConditionHqlWhereQuery(SearchCondition searchCondition, Class<?> objClass) {
-        SearchConditionHqlQuery conditionHqlQuery = getConditionHqlQuery(searchCondition, objClass);
-        conditionHqlQuery.setSql(" WHERE " + conditionHqlQuery.getSql());
-        return conditionHqlQuery;
+    public static HqlQuery getConditionHqlWhereQuery(SearchCondition searchCondition, Class<?> objClass,
+            HqlQuery additionalFilter)
+    {
+        HqlQuery hqlQuery = getConditionHqlQuery(searchCondition, objClass, additionalFilter);
+        if (!hqlQuery.isEmpty())
+            hqlQuery.setHql(" WHERE " + hqlQuery.getHql());
+        return hqlQuery;
     }
 
-    public static SearchConditionHqlQuery getConditionHqlQuery(SearchCondition searchCondition, Class<?> objClass) {
+    public static HqlQuery getConditionHqlQuery(SearchCondition searchCondition, Class<?> objClass,
+            HqlQuery additionalFilter)
+    {
+        HqlQuery hqlQuery = getConditionHqlQuery(searchCondition, objClass);
+        if (hqlQuery.isEmpty())
+            return additionalFilter;
+        if (!additionalFilter.isEmpty()) {
+            hqlQuery.setHql(additionalFilter.getHql() + " and " + hqlQuery.getHql());
+            hqlQuery.getParams().putAll(additionalFilter.getParams());
+        }
+        return hqlQuery;
+    }
+
+    public static HqlQuery getConditionHqlQuery(SearchCondition searchCondition, Class<?> objClass)
+    {
         return doGetConditionHqlQuery(searchCondition, objClass, 0);
     }
 
-    private static SearchConditionHqlQuery doGetConditionHqlQuery(SearchCondition searchCondition, Class<?> objClass, Integer index) {
-        SearchConditionHqlQuery searchConditionHqlQuery = new SearchConditionHqlQuery();
+    private static HqlQuery doGetConditionHqlQuery(SearchCondition searchCondition, Class<?> objClass, Integer index)
+    {
+        HqlQuery hqlQuery = new HqlQuery();
         if (searchCondition instanceof SimpleCondition) {
             SimpleCondition simpleCondition = (SimpleCondition) searchCondition;
             String columnName = ModelUtils.getColumnName(simpleCondition.getField(), objClass);
             String fieldName = simpleCondition.getField() + "_" + index;
-            searchConditionHqlQuery.setSql(" " + columnName + " " + simpleCondition.getOperator().getSymbol() + " :" + fieldName);
-            searchConditionHqlQuery.getParams().put(fieldName, simpleCondition.getOperator() != SimpleCondition.Operator.LIKE
+            hqlQuery.setHql(" " + columnName + " " + simpleCondition.getOperator().getSymbol() + " :" + fieldName);
+            hqlQuery.getParams().put(fieldName, simpleCondition.getOperator() != SimpleCondition.Operator.LIKE
                     ? simpleCondition.getValue() : "%" + simpleCondition.getValue() + "%");
         } else if (searchCondition instanceof ComplexCondition) {
             ComplexCondition complexCondition = (ComplexCondition) searchCondition;
             List<SearchCondition> conditions = complexCondition.getConditions();
-            StringBuilder sqlResult = new StringBuilder();
-            sqlResult.append("(");
+            StringBuilder hqlResult = new StringBuilder();
+            hqlResult.append("(");
             for (int i = 0; i < conditions.size(); i++) {
-                SearchConditionHqlQuery result = doGetConditionHqlQuery(conditions.get(i), objClass, index);
-                searchConditionHqlQuery.getParams().putAll(result.getParams());
+                HqlQuery result = doGetConditionHqlQuery(conditions.get(i), objClass, index);
+                hqlQuery.getParams().putAll(result.getParams());
                 index += result.getParams().size();
                 if (i == 0)
-                    sqlResult.append(result.getSql());
+                    hqlResult.append(result.getHql());
                 else
-                    sqlResult.append(" ").append(complexCondition.getOperator()).append(" ").append(result.getSql());
+                    hqlResult.append(" ").append(complexCondition.getOperator()).append(" ").append(result.getHql());
             }
-            sqlResult.append(")");
-            searchConditionHqlQuery.setSql(sqlResult.toString());
+            hqlResult.append(")");
+            hqlQuery.setHql(hqlResult.toString());
         }
-        return searchConditionHqlQuery;
+        return hqlQuery;
+    }
+
+    public static HqlNativeQuery nativeQuery(EntityManager entityManager, Class<?> resultClass)
+    {
+        return new HqlNativeQuery(entityManager, resultClass);
     }
 }

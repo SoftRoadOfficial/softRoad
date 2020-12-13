@@ -17,17 +17,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class UserService extends CrudService<User> {
+public class UserService extends CrudService<User>
+{
 
     @Inject
     EntityManager entityManager;
 
-    public UserService() {
+    public UserService()
+    {
         super(User.class);
     }
 
     @Override
-    public User get(Integer id) {
+    public User get(Integer id)
+    {
         User user = super.get(id);
         if (user != null)
             user.password = "";
@@ -35,32 +38,34 @@ public class UserService extends CrudService<User> {
     }
 
     @Override
-    public Response create(User obj) {
+    public Response create(User obj)
+    {
         throw new RuntimeException("User should be created through signUp method");
     }
 
     @Transactional
-    public AuthenticationResponse login(LoginUser loginUser) {
+    public AuthenticationResponse login(LoginUser loginUser)
+    {
         User user = User.find("phone_number=?1 and password=?2", loginUser.getEmail(),
                 loginUser.getPassword()).firstResult();
-        if (user == null) {
-            throw new InvalidDataException("Invalid Username or password");
-        }
+        if (user == null)
+            throw new InvalidDataException("Invalid phoneNumber or password");
         return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.phoneNumber);
     }
 
     @Transactional
-    public AuthenticationResponse signUp(User user) {
-        if (User.find("phone_number=?1", user.phoneNumber).count() > 0) {
-            throw new DuplicateDataException("Duplicated username or phoneNumber");
-        }
+    public AuthenticationResponse signUp(User user)
+    {
+        if (User.find("phone_number=?1", user.phoneNumber).count() > 0)
+            throw new DuplicateDataException("Duplicated phoneNumber");
         user.enabled = false; //FIXME users should be enabled after email or phone verification
         User.persist(user);
         return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.email);
     }
 
     @Transactional
-    public List<Role> getRolesForUser(Integer id) {
+    public List<Role> getRolesForUser(Integer id)
+    {
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
@@ -68,54 +73,50 @@ public class UserService extends CrudService<User> {
     }
 
     @Transactional
-    public List getRolesNotForUser(Integer id) {
+    public List getRolesNotForUser(Integer id)
+    {
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
         return entityManager
-                .createNativeQuery("select * from roles where roles.id not in ( select role_id from user_role where user_id=:userId )",
+                .createNativeQuery(
+                        "select * from roles where roles.id not in ( select role_id from user_role where user_id=:userId )",
                         Role.class).setParameter("userId", user.id).getResultList();
     }
 
     @Transactional
-    public Response addRolesToUser(Integer id, List<Integer> roleIds) {
+    public Response addRolesToUser(Integer id, List<Integer> roleIds)
+    {
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
         for (Integer rId : roleIds) {
             Role r = Role.findById(rId);
             if (r == null)
-                throw new InvalidDataException("Invalid user");
-//            u.roles.add(r);
-//            role.users.add(user);
-//            Role.persist(r);
+                throw new InvalidDataException("Invalid role");
             entityManager.createNativeQuery("insert into user_role(role_id, user_id) values(:roleId,:userId)")
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }
 
-//        User.persist(user);
         return Response.ok().build();
     }
 
     @Transactional
-    public Response removeRolesFromUser(Integer id, List<Integer> roleIds) {
+    public Response removeRolesFromUser(Integer id, List<Integer> roleIds)
+    {
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
         for (Integer rId : roleIds) {
             Role r = Role.findById(rId);
             if (r == null)
-                throw new InvalidDataException("Invalid user");
-//            u.roles.remove(r);
-//            role.users.remove(user);
-//            Role.persist(r);
+                throw new InvalidDataException("Invalid role");
             entityManager.createNativeQuery("delete from user_role where role_id=:roleId and user_id=:userId")
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }
 
-//        User.persist(user);
         return Response.ok().build();
     }
 }

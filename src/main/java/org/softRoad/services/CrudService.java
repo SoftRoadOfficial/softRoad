@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.SoftRoadModel;
 import org.softRoad.models.query.QueryUtils;
-import org.softRoad.models.query.SearchConditionHqlQuery;
+import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.utils.ModelUtils;
 
@@ -20,31 +20,35 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 
-public class CrudService<T extends SoftRoadModel> {
+public class CrudService<T extends SoftRoadModel>
+{
 
     private final Class<?> objClass;
 
     @Inject
     EntityManager entityManager;
 
-
-    public CrudService(Class<?> objClass) {
+    public CrudService(Class<?> objClass)
+    {
         this.objClass = objClass;
     }
 
     @Transactional
-    public Response create(T obj) {
+    public Response create(T obj)
+    {
         obj.persist();
         return Response.status(Response.Status.CREATED).build();
     }
 
     @Transactional
-    public T get(Integer id) {
+    public T get(Integer id)
+    {
         return T.find("id=?1", id).firstResult();
     }
 
     @Transactional
-    public Response update(T obj) {
+    public Response update(T obj)
+    {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder queryBuilder = new StringBuilder();
 
@@ -62,7 +66,8 @@ public class CrudService<T extends SoftRoadModel> {
                 field.setAccessible(true);
                 Column column = field.getAnnotation(Column.class);
                 JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-                String columnName = joinColumn != null ? joinColumn.name() : column == null || Strings.isNullOrEmpty(column.name()) ? fieldName : column.name();
+                String columnName = joinColumn != null ? joinColumn.name() : column == null || Strings.isNullOrEmpty(
+                        column.name()) ? fieldName : column.name();
 
                 Object value = field.get(obj);
                 if (joinColumn != null)
@@ -89,7 +94,8 @@ public class CrudService<T extends SoftRoadModel> {
     }
 
     @Transactional
-    public Response delete(Integer id) {
+    public Response delete(Integer id)
+    {
         T databaseObj = this.get(id);
         if (databaseObj == null)
             throw new InvalidDataException("Invalid id");
@@ -98,27 +104,11 @@ public class CrudService<T extends SoftRoadModel> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> getAll(SearchCriteria searchCriteria) {
-        StringBuilder queryBuilder = new StringBuilder();
-
-        String table = ModelUtils.getTableName(objClass);
-        queryBuilder.append("select * from ").append(table);
-
-        SearchConditionHqlQuery hqlQuery = QueryUtils.getConditionHqlWhereQuery(searchCriteria.getCondition(), objClass);
-        if (!hqlQuery.isEmpty())
-            queryBuilder.append(hqlQuery.getSql());
-
-        String sort = QueryUtils.getOrderBySql(searchCriteria, objClass);
-        if (sort != null)
-            queryBuilder.append(sort);
-        Query nativeQuery = entityManager.createNativeQuery(queryBuilder.toString(), objClass);
-
-        if (!hqlQuery.isEmpty())
-            for (String key : hqlQuery.getParams().keySet())
-                nativeQuery.setParameter(key, hqlQuery.getParams().get(key));
-
-        nativeQuery.setFirstResult(searchCriteria.getOffset());
-        nativeQuery.setMaxResults(searchCriteria.getPageSize());
-        return nativeQuery.getResultList();
+    public List<T> getAll(SearchCriteria searchCriteria)
+    {
+        return QueryUtils.nativeQuery(entityManager, objClass)
+                .baseQuery(new HqlQuery("select * from " + ModelUtils.getTableName(objClass)))
+                .searchCriteria(searchCriteria)
+                .build().getResultList();
     }
 }

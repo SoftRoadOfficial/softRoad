@@ -5,17 +5,13 @@
  */
 package org.softRoad.controllers;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.softRoad.models.Role;
 import org.softRoad.models.User;
 import org.softRoad.models.dao.LoginUser;

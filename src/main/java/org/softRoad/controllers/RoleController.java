@@ -62,18 +62,18 @@ public class RoleController {
         return roleService.delete(id);
     }
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/users/")
-    public List<User> getUsersForRole(@PathParam("id") Integer id) {
-        return roleService.getUsersForRole(id);
+    public List<User> getUsersForRole(@PathParam("id") Integer id, @NotNull SearchCriteria searchCriteria) {
+        return roleService.getUsersForRole(id, searchCriteria);
     }
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/users/inverse")
-    public List<User> getUsersNotForRole(@PathParam("id") Integer id) {
-        return roleService.getUsersNotForRole(id);
+    public List<User> getUsersNotForRole(@PathParam("id") Integer id, @NotNull SearchCriteria searchCriteria) {
+        return roleService.getUsersNotForRole(id, searchCriteria);
     }
 
     @POST
