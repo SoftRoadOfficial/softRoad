@@ -1,5 +1,7 @@
 package org.softRoad.models;
 
+import org.softRoad.models.query.QueryUtils;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,6 +9,13 @@ import java.util.Set;
 @Entity
 @Table(name = "consultant_profiles")
 public class ConsultantProfile extends SoftRoadModel {
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String BIO = "bio";
+    @Transient
+    public final static String DESCRIPTION = "description";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -41,5 +50,9 @@ public class ConsultantProfile extends SoftRoadModel {
     public void setDescription(String description) {
         this.description = description;
         presentFields.add("description");
+    }
+
+    public static String field(String fieldName) {
+        return QueryUtils.field(ConsultantProfile.class, fieldName);
     }
 }

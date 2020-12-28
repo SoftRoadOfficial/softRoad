@@ -3,6 +3,7 @@ package org.softRoad.services;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Role;
 import org.softRoad.models.User;
+import org.softRoad.models.UserRole;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.SearchCriteria;
@@ -19,20 +20,17 @@ import java.util.Set;
 import javax.persistence.Query;
 
 @ApplicationScoped
-public class RoleService extends CrudService<Role>
-{
+public class RoleService extends CrudService<Role> {
 
     @Inject
     EntityManager entityManager;
 
-    public RoleService()
-    {
+    public RoleService() {
         super(Role.class);
     }
 
     @Transactional
-    public Response addPermissionsToRole(Integer id, List<Permission> permissions)
-    {
+    public Response addPermissionsToRole(Integer id, List<Permission> permissions) {
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -42,8 +40,7 @@ public class RoleService extends CrudService<Role>
     }
 
     @Transactional
-    public Response removePermissionsFromRole(Integer id, List<Permission> permissions)
-    {
+    public Response removePermissionsFromRole(Integer id, List<Permission> permissions) {
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -53,8 +50,7 @@ public class RoleService extends CrudService<Role>
     }
 
     @Transactional
-    public Set<Permission> getPermissionsOfRole(Integer id)
-    {
+    public Set<Permission> getPermissionsOfRole(Integer id) {
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -62,8 +58,7 @@ public class RoleService extends CrudService<Role>
     }
 
     @Transactional
-    public Response addUsersToRole(Integer id, List<Integer> userIds)
-    {
+    public Response addUsersToRole(Integer id, List<Integer> userIds) {
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -71,7 +66,7 @@ public class RoleService extends CrudService<Role>
             User u = User.findById(uId);
             if (u == null)
                 throw new InvalidDataException("Invalid user");
-            entityManager.createNativeQuery("insert into user_role(role_id, user_id) values(:roleId,:userId)")
+            entityManager.createNativeQuery("insert into user_role(" + UserRole.ROLE_ID + ", " + UserRole.USER_ID + ") values(:roleId,:userId)")
                     .setParameter("roleId", role.id)
                     .setParameter("userId", u.id).executeUpdate();
         }
@@ -80,8 +75,7 @@ public class RoleService extends CrudService<Role>
     }
 
     @Transactional
-    public Response removeUsersFromRole(Integer id, List<Integer> userIds)
-    {
+    public Response removeUsersFromRole(Integer id, List<Integer> userIds) {
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -89,21 +83,20 @@ public class RoleService extends CrudService<Role>
             User u = User.findById(uId);
             if (u == null)
                 throw new InvalidDataException("Invalid user");
-            entityManager.createNativeQuery("delete from user_role where role_id=:roleId and user_id=:userId")
+            entityManager.createNativeQuery("delete from user_role where " + UserRole.ROLE_ID + "=:roleId and " + UserRole.USER_ID + "=:userId")
                     .setParameter("roleId", role.id)
                     .setParameter("userId", u.id).executeUpdate();
         }
         return Response.ok().build();
     }
 
-    public List<User> getUsersForRole(Integer id, @NotNull SearchCriteria searchCriteria)
-    {
+    public List<User> getUsersForRole(Integer id, @NotNull SearchCriteria searchCriteria) {
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
 
         Query q = QueryUtils.nativeQuery(entityManager, User.class)
-                .baseQuery(new HqlQuery("select u.* from user_role left join users as u on u.id=user_role.user_id"))
+                .baseQuery(new HqlQuery("select u.* from user_role left join users as u on u." + User.ID + "=" + UserRole.field(UserRole.USER_ID)))
                 .addFilter(new HqlQuery("role_id=:idd").setParameter("idd", role.id))
                 .searchCriteria(searchCriteria)
                 .build();
@@ -111,15 +104,14 @@ public class RoleService extends CrudService<Role>
         return q.getResultList();
     }
 
-    public List<User> getUsersNotForRole(Integer id, @NotNull SearchCriteria searchCriteria)
-    {
+    public List<User> getUsersNotForRole(Integer id, @NotNull SearchCriteria searchCriteria) {
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
 
         Query q = QueryUtils.nativeQuery(entityManager, User.class)
                 .baseQuery(new HqlQuery("select * from users"))
-                .addFilter(new HqlQuery("users.id not in ( select user_id from user_role where role_id=:idd )")
+                .addFilter(new HqlQuery(User.field(User.ID) + " not in ( select " + UserRole.USER_ID + " from user_role where " + UserRole.ROLE_ID + "=:idd )")
                         .setParameter("idd", role.id))
                 .searchCriteria(searchCriteria)
                 .build();

@@ -4,6 +4,7 @@ import org.softRoad.exception.DuplicateDataException;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Role;
 import org.softRoad.models.User;
+import org.softRoad.models.UserRole;
 import org.softRoad.models.dao.LoginUser;
 import org.softRoad.security.AuthenticationResponse;
 import org.softRoad.security.SecurityUtils;
@@ -46,7 +47,7 @@ public class UserService extends CrudService<User>
     @Transactional
     public AuthenticationResponse login(LoginUser loginUser)
     {
-        User user = User.find("phone_number=?1 and password=?2", loginUser.getEmail(),
+        User user = User.find(User.PHONE_NUMBER + "=?1 and " + User.PASSWORD + "=?2", loginUser.getPhoneNumber(),
                 loginUser.getPassword()).firstResult();
         if (user == null)
             throw new InvalidDataException("Invalid phoneNumber or password");
@@ -56,7 +57,7 @@ public class UserService extends CrudService<User>
     @Transactional
     public AuthenticationResponse signUp(User user)
     {
-        if (User.find("phone_number=?1", user.phoneNumber).count() > 0)
+        if (User.find(User.PHONE_NUMBER + "=?1", user.phoneNumber).count() > 0)
             throw new DuplicateDataException("Duplicated phoneNumber");
         user.enabled = false; //FIXME users should be enabled after email or phone verification
         User.persist(user);
@@ -80,7 +81,7 @@ public class UserService extends CrudService<User>
             throw new InvalidDataException("Invalid user");
         return entityManager
                 .createNativeQuery(
-                        "select * from roles where roles.id not in ( select role_id from user_role where user_id=:userId )",
+                        "select * from roles where " + Role.field((Role.ID)) + " not in ( select " + UserRole.ROLE_ID + " from user_role where " + UserRole.USER_ID + "=:userId )",
                         Role.class).setParameter("userId", user.id).getResultList();
     }
 
@@ -94,7 +95,7 @@ public class UserService extends CrudService<User>
             Role r = Role.findById(rId);
             if (r == null)
                 throw new InvalidDataException("Invalid role");
-            entityManager.createNativeQuery("insert into user_role(role_id, user_id) values(:roleId,:userId)")
+            entityManager.createNativeQuery("insert into user_role(" + UserRole.ROLE_ID + ", " + UserRole.USER_ID + ") values(:roleId,:userId)")
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }
@@ -112,7 +113,7 @@ public class UserService extends CrudService<User>
             Role r = Role.findById(rId);
             if (r == null)
                 throw new InvalidDataException("Invalid role");
-            entityManager.createNativeQuery("delete from user_role where role_id=:roleId and user_id=:userId")
+            entityManager.createNativeQuery("delete from user_role where " + UserRole.ROLE_ID + "=:roleId and " + UserRole.USER_ID + "=:userId")
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }

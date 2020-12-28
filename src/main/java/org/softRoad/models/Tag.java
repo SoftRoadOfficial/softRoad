@@ -1,6 +1,7 @@
 package org.softRoad.models;
 
 import io.quarkus.security.jpa.RolesValue;
+import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "tags")
 public class Tag extends SoftRoadModel {
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String NAME = "name";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -24,5 +30,9 @@ public class Tag extends SoftRoadModel {
     public void setName(String name) {
         this.name = name;
         presentFields.add("name");
+    }
+
+    public static String field(String fieldName) {
+        return QueryUtils.field(Tag.class, fieldName);
     }
 }

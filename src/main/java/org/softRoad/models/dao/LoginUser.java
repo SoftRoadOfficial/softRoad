@@ -8,24 +8,24 @@ import org.softRoad.security.SecurityUtils;
 
 public class LoginUser {
     @NotNull
-    private String email;
+    private String phoneNumber;
     @NotNull
     private String password;
 
-    public LoginUser(String email, String password) {
-        this.email = email;
+    public LoginUser(String phoneNumber, String password) {
+        this.phoneNumber = phoneNumber;
         this.password = password;
     }
 
     public LoginUser() {
     }
 
-    public String getEmail() {
-        return email;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPassword() {
@@ -39,7 +39,7 @@ public class LoginUser {
 
     @Override
     public String toString() {
-        return "LoginUser{" + "username=" + email + ", password=" + password + '}';
+        return "LoginUser{" + "username=" + phoneNumber + ", password=" + password + '}';
     }
 
 }

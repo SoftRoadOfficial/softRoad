@@ -1,5 +1,7 @@
 package org.softRoad.models;
 
+import org.softRoad.models.query.QueryUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -7,6 +9,17 @@ import java.time.Instant;
 @Entity
 @Table(name = "user_verifications")
 public class UserVerification extends SoftRoadModel {
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String PHONE_NUMBER = "phone_number";
+    @Transient
+    public final static String TOKEN = "token";
+    @Transient
+    public final static String VERIFIED = "verified";
+    @Transient
+    public final static String TIME = "time";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -50,5 +63,9 @@ public class UserVerification extends SoftRoadModel {
     public void setTime(Instant time) {
         this.time = time;
         presentFields.add("time");
+    }
+
+    public static String field(String fieldName) {
+        return QueryUtils.field(UserVerification.class, fieldName);
     }
 }

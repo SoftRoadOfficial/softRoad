@@ -1,12 +1,20 @@
 package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "fees")
 public class Fee extends SoftRoadModel {
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String AMOUNT = "amount";
+    @Transient
+    public final static String MINUTE = "minute";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -46,5 +54,9 @@ public class Fee extends SoftRoadModel {
     public void setCategory(Category category) {
         this.category = category;
         presentFields.add("category");
+    }
+
+    public static String field(String fieldName) {
+        return QueryUtils.field(Fee.class, fieldName);
     }
 }
