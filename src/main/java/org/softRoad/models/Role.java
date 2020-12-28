@@ -2,7 +2,6 @@ package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.security.jpa.RolesValue;
-import org.hibernate.internal.util.xml.FilteringXMLEventReader;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.security.Permission;
 
@@ -51,7 +50,7 @@ public class Role extends SoftRoadModel {
         presentFields.add("name");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Role.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Role.class, fieldName, fieldNames);
     }
 }

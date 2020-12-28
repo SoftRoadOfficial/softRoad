@@ -1,6 +1,5 @@
 package org.softRoad.models;
 
-import io.quarkus.security.jpa.RolesValue;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
@@ -32,7 +31,7 @@ public class Tag extends SoftRoadModel {
         presentFields.add("name");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Tag.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Tag.class, fieldName, fieldNames);
     }
 }

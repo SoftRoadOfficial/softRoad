@@ -9,7 +9,7 @@ public class ProcedureCities {
     public final static String PROCEDURE_ID = "procedure_id";
     public final static String CITIES_ID = "cities_id";
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(ProcedureCities.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(ProcedureCities.class, fieldName, fieldNames);
     }
 }

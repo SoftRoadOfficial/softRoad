@@ -121,7 +121,11 @@ public class QueryUtils
         return new HqlNativeQuery(entityManager, resultClass);
     }
 
-    public static String field(Class objClass, String fieldName){
-        return objClass.getSimpleName() + "." + fieldName;
+    public static String fields(Class objClass, String fieldName, String ... fieldNames){
+        String res = objClass.getSimpleName() + "." + fieldName;
+        for(String name : fieldNames){
+            res += ", " + name;
+        }
+        return res;
     }
 }

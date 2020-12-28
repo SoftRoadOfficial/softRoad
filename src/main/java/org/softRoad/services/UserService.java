@@ -92,7 +92,7 @@ public class UserService extends CrudService<User>
             throw new InvalidDataException("Invalid user");
         return entityManager
                 .createNativeQuery(
-                        "select * from roles where " + Role.field((Role.ID)) + " not in ( select " + UserRole.ROLE_ID
+                        "select * from roles where " + Role.fields((Role.ID)) + " not in ( select " + UserRole.ROLE_ID
                         + " from user_role where " + UserRole.USER_ID + "=:userId )",
                         Role.class).setParameter("userId", user.id).getResultList();
     }

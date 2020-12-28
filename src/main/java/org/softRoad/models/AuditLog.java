@@ -41,7 +41,7 @@ public class AuditLog extends SoftRoadModel {
         presentFields.add("payload");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(AuditLog.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(AuditLog.class, fieldName, fieldNames);
     }
 }

@@ -65,7 +65,7 @@ public class UserVerification extends SoftRoadModel {
         presentFields.add("time");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(UserVerification.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(UserVerification.class, fieldName, fieldNames);
     }
 }

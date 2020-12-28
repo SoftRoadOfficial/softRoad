@@ -56,7 +56,7 @@ public class Fee extends SoftRoadModel {
         presentFields.add("category");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Fee.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Fee.class, fieldName, fieldNames);
     }
 }

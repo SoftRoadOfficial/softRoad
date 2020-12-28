@@ -5,7 +5,6 @@
  */
 package org.softRoad.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
@@ -114,7 +113,7 @@ public class User extends SoftRoadModel {
                 '}';
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(User.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(User.class, fieldName, fieldNames);
     }
 }

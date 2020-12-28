@@ -43,7 +43,7 @@ public class Consultation extends SoftRoadModel {
         presentFields.add("consultant");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Consultation.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Consultation.class, fieldName, fieldNames);
     }
 }

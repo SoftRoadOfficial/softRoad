@@ -54,7 +54,7 @@ public class Category extends SoftRoadModel {
         presentFields.add("type");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Category.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Category.class, fieldName, fieldNames);
     }
 }

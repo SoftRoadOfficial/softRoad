@@ -54,7 +54,7 @@ public class Comment extends SoftRoadModel {
         presentFields.add("id");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Comment.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Comment.class, fieldName, fieldNames);
     }
 }

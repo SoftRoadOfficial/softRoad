@@ -9,7 +9,7 @@ public class ProcedureCategories {
     public final static String PROCEDURE_ID = "procedure_id";
     public final static String CATEGORIES_ID = "categories_id";
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(ProcedureCategories.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(ProcedureCategories.class, fieldName, fieldNames);
     }
 }

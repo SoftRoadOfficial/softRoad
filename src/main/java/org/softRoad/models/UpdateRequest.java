@@ -61,7 +61,7 @@ public class UpdateRequest extends SoftRoadModel {
         this.presentFields.add("procedure");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(UpdateRequest.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(UpdateRequest.class, fieldName, fieldNames);
     }
 }

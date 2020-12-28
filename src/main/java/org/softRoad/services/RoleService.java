@@ -107,7 +107,7 @@ public class RoleService extends CrudService<Role>
 
         Query q = QueryUtils.nativeQuery(entityManager, User.class)
                 .baseQuery(new HqlQuery("select u.* from user_role left join users as u on u." + User.ID + "="
-                        + UserRole.field(UserRole.USER_ID)))
+                        + UserRole.fields(UserRole.USER_ID)))
                 .addFilter(new HqlQuery("role_id=:idd").setParameter("idd", role.id))
                 .searchCriteria(searchCriteria)
                 .build();
@@ -123,7 +123,7 @@ public class RoleService extends CrudService<Role>
 
         Query q = QueryUtils.nativeQuery(entityManager, User.class)
                 .baseQuery(new HqlQuery("select * from users"))
-                .addFilter(new HqlQuery(User.field(User.ID) + " not in ( select " + UserRole.USER_ID
+                .addFilter(new HqlQuery(User.fields(User.ID) + " not in ( select " + UserRole.USER_ID
                         + " from user_role where " + UserRole.ROLE_ID + "=:idd )")
                         .setParameter("idd", role.id))
                 .searchCriteria(searchCriteria)

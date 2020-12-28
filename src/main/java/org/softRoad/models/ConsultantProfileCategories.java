@@ -9,7 +9,7 @@ public class ConsultantProfileCategories {
     public final static String CONSULTANT_PROFILE_ID = "consultant_profile_id";
     public final static String CATEGORIES_ID = "categories_id";
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(ConsultantProfileCategories.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(ConsultantProfileCategories.class, fieldName, fieldNames);
     }
 }

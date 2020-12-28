@@ -37,7 +37,7 @@ public class City extends SoftRoadModel {
         this.presentFields.add("name");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(City.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(City.class, fieldName, fieldNames);
     }
 }

@@ -49,7 +49,7 @@ public class Step extends SoftRoadModel {
         presentFields.add("procedure");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Step.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Step.class, fieldName, fieldNames);
     }
 }

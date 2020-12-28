@@ -52,7 +52,7 @@ public class ConsultantProfile extends SoftRoadModel {
         presentFields.add("description");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(ConsultantProfile.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(ConsultantProfile.class, fieldName, fieldNames);
     }
 }

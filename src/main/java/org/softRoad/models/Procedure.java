@@ -72,7 +72,7 @@ public class Procedure extends SoftRoadModel {
         this.presentFields.add("id");
     }
 
-    public static String field(String fieldName) {
-        return QueryUtils.field(Procedure.class, fieldName);
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Procedure.class, fieldName, fieldNames);
     }
 }
