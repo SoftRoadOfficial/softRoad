@@ -10,34 +10,39 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @ApplicationScoped
-
-public class CategoryService extends CrudService<Category> {
+public class CategoryService extends CrudService<Category>
+{
 
     @Inject
     EntityManager entityManager;
 
-    public CategoryService() {
+    public CategoryService()
+    {
         super(Category.class);
     }
 
     @Transactional
-    public List<Category> getCategoriesOfProcedure(Procedure procedure) {
+    public List<Category> getCategoriesOfProcedure(Procedure procedure)
+    {
+        return null;
+    }
+
+    @Transactional
+    public void setCategoryForProcedure(Procedure procedure)
+    {
 
     }
 
     @Transactional
-    public void setCategoryForProcedure(Procedure procedure) {
+    public void removeCategoryFromProcedure(Procedure procedure)
+    {
 
     }
 
     @Transactional
-    public void removeCategoryFromProcedure(Procedure procedure) {
-
-    }
-
-    @Transactional
-    public List<Procedure> getProceduresOfCategory(Category category) {
-
+    public List<Procedure> getProceduresOfCategory(Category category)
+    {
+        return null;
     }
 
 }

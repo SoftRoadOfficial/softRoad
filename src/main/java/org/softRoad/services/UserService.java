@@ -16,6 +16,8 @@ import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.softRoad.models.query.SearchCriteria;
 
 @ApplicationScoped
 public class UserService extends CrudService<User>
@@ -36,6 +38,15 @@ public class UserService extends CrudService<User>
         if (user != null)
             user.password = "";
         return user;
+    }
+
+    @Override
+    public List<User> getAll(SearchCriteria searchCriteria)
+    {
+        return super.getAll(searchCriteria).stream().map((u) -> {
+            u.password = "";
+            return u; 
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -81,7 +92,8 @@ public class UserService extends CrudService<User>
             throw new InvalidDataException("Invalid user");
         return entityManager
                 .createNativeQuery(
-                        "select * from roles where " + Role.field((Role.ID)) + " not in ( select " + UserRole.ROLE_ID + " from user_role where " + UserRole.USER_ID + "=:userId )",
+                        "select * from roles where " + Role.field((Role.ID)) + " not in ( select " + UserRole.ROLE_ID
+                        + " from user_role where " + UserRole.USER_ID + "=:userId )",
                         Role.class).setParameter("userId", user.id).getResultList();
     }
 
@@ -95,7 +107,8 @@ public class UserService extends CrudService<User>
             Role r = Role.findById(rId);
             if (r == null)
                 throw new InvalidDataException("Invalid role");
-            entityManager.createNativeQuery("insert into user_role(" + UserRole.ROLE_ID + ", " + UserRole.USER_ID + ") values(:roleId,:userId)")
+            entityManager.createNativeQuery("insert into user_role(" + UserRole.ROLE_ID + ", " + UserRole.USER_ID
+                    + ") values(:roleId,:userId)")
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }
@@ -113,7 +126,8 @@ public class UserService extends CrudService<User>
             Role r = Role.findById(rId);
             if (r == null)
                 throw new InvalidDataException("Invalid role");
-            entityManager.createNativeQuery("delete from user_role where " + UserRole.ROLE_ID + "=:roleId and " + UserRole.USER_ID + "=:userId")
+            entityManager.createNativeQuery("delete from user_role where " + UserRole.ROLE_ID + "=:roleId and "
+                    + UserRole.USER_ID + "=:userId")
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }

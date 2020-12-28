@@ -8,36 +8,42 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public class StepService extends CrudService<Step> {
+public class StepService extends CrudService<Step>
+{
     @Inject
     EntityManager entityManager;
 
-    public StepService() {
+    public StepService()
+    {
         super(Step.class);
     }
 
     @Transactional
-    public void setStepForProcedure(Step step, Integer pid) {
+    public void setStepForProcedure(Step step, Integer pid)
+    {
         Procedure procedure = Procedure.findById(pid);
 
     }
 
     @Transactional
-    public void setStepsForProcedure(List<Step> steps, Integer pid) {
+    public void setStepsForProcedure(List<Step> steps, Integer pid)
+    {
 
     }
 
     @Transactional
-    public void removeStepFromProcedure(Integer sid, Integer pid) {
+    public void removeStepFromProcedure(Integer sid, Integer pid)
+    {
         Procedure procedure = Procedure.findById(pid);
         Step step = Step.findById(sid);
 
     }
 
     @Transactional
-    public List<Step> getStepsOfProcedure(Integer pid) {
+    public List<Step> getStepsOfProcedure(Integer pid)
+    {
         Procedure procedure = Procedure.findById(pid);
-
+        return null;
     }
 
 }
