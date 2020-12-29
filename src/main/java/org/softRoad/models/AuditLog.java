@@ -23,7 +23,6 @@ public class AuditLog extends SoftRoadModel {
     @NotNull
     @Column(name = "time", nullable = false)
     public Instant time;
-
     public String payload;
 
     public void setId(Integer id) {

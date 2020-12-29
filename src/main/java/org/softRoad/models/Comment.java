@@ -24,9 +24,7 @@ public class Comment extends SoftRoadModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
-
     public String text;
-
     public Integer rate;
 
     @NotNull
