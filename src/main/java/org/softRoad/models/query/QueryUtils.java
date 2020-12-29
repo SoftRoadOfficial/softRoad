@@ -122,10 +122,10 @@ public class QueryUtils
     }
 
     public static String fields(Class objClass, String fieldName, String ... fieldNames){
-        String res = objClass.getSimpleName() + "." + fieldName;
+        StringBuilder res = new StringBuilder(objClass.getSimpleName() + "." + fieldName);
         for(String name : fieldNames){
-            res += ", " + name;
+            res.append(", ").append(objClass.getSimpleName()).append(".").append(name);
         }
-        return res;
+        return res.toString();
     }
 }
