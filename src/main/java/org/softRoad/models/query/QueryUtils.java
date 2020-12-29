@@ -121,10 +121,12 @@ public class QueryUtils
         return new HqlNativeQuery(entityManager, resultClass);
     }
 
-    public static String fields(Class objClass, String fieldName, String ... fieldNames){
-        StringBuilder res = new StringBuilder(objClass.getSimpleName() + "." + fieldName);
-        for(String name : fieldNames){
-            res.append(", ").append(objClass.getSimpleName()).append(".").append(name);
+    public static String fields(Class objClass, String fieldName, String... fieldNames)
+    {
+        String table = ModelUtils.getTableName(objClass);
+        StringBuilder res = new StringBuilder(table + "." + fieldName);
+        for (String name : fieldNames) {
+            res.append(", ").append(table).append(".").append(name);
         }
         return res.toString();
     }

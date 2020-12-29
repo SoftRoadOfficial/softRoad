@@ -1,6 +1,5 @@
 package org.softRoad.security;
 
-import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.softRoad.exception.ForbiddenException;
 import org.softRoad.models.Role;
@@ -8,7 +7,6 @@ import org.softRoad.models.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.nio.file.AccessDeniedException;
 
 @ApplicationScoped
 public class AccessControlManager {
