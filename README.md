@@ -1,5 +1,5 @@
 # softRoad project
-[![Build Status](https://travis-ci.org/SoftRoadOfficial/softRoad.svg?branch=master)](https://travis-ci.org/SoftRoadOfficial/softRoad) 
+[![Build Status](https://travis-ci.com/SoftRoadOfficial/softRoad.svg?branch=master)](https://travis-ci.com/SoftRoadOfficial/softRoad) 
 
 ## Running the application in dev mode
 
