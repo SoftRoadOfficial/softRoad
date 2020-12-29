@@ -2,6 +2,7 @@ package org.softRoad.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,15 @@ import java.util.Set;
 @Entity
 @Table(name = "procedures")
 public class Procedure extends SoftRoadModel {
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String TITLE = "title";
+    @Transient
+    public final static String DESCRIPTION = "description";
+    @Transient
+    public final static String CREATE_DATA = "created_date";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +70,9 @@ public class Procedure extends SoftRoadModel {
     public void setId(Integer id) {
         this.id = id;
         this.presentFields.add("id");
+    }
+
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Procedure.class, fieldName, fieldNames);
     }
 }

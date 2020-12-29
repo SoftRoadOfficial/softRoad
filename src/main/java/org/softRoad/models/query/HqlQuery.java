@@ -17,11 +17,16 @@ public class HqlQuery
         this.hql = hql;
     }
 
+    public HqlQuery(String format, String... args)
+    {
+        this.hql = String.format(format, args);
+    }
+
     public Map<String, Object> getParams()
     {
         return params;
     }
-    
+
     public String getHql()
     {
         return hql;

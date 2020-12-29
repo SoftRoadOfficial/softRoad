@@ -89,9 +89,11 @@ public class QueryUtils
         HqlQuery hqlQuery = new HqlQuery();
         if (searchCondition instanceof SimpleCondition) {
             SimpleCondition simpleCondition = (SimpleCondition) searchCondition;
+            String tableName = ModelUtils.getTableName(objClass);
             String columnName = ModelUtils.getColumnName(simpleCondition.getField(), objClass);
             String fieldName = simpleCondition.getField() + "_" + index;
-            hqlQuery.setHql(" " + columnName + " " + simpleCondition.getOperator().getSymbol() + " :" + fieldName);
+            hqlQuery.setHql(" " + tableName + "." + columnName + " " + simpleCondition.getOperator().getSymbol()
+                    + " :" + fieldName);
             hqlQuery.getParams().put(fieldName, simpleCondition.getOperator() != SimpleCondition.Operator.LIKE
                     ? simpleCondition.getValue() : "%" + simpleCondition.getValue() + "%");
         } else if (searchCondition instanceof ComplexCondition) {
@@ -117,5 +119,15 @@ public class QueryUtils
     public static HqlNativeQuery nativeQuery(EntityManager entityManager, Class<?> resultClass)
     {
         return new HqlNativeQuery(entityManager, resultClass);
+    }
+
+    public static String fields(Class objClass, String fieldName, String... fieldNames)
+    {
+        String table = ModelUtils.getTableName(objClass);
+        StringBuilder res = new StringBuilder(table + "." + fieldName);
+        for (String name : fieldNames) {
+            res.append(", ").append(table).append(".").append(name);
+        }
+        return res.toString();
     }
 }

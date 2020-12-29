@@ -1,6 +1,7 @@
 package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,13 +12,19 @@ import java.util.Set;
 @Entity
 @Table(name = "comments")
 public class Comment extends SoftRoadModel {
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String TEXT = "text";
+    @Transient
+    public final static String RATE = "rate";
+    @Transient
+    public final static String CREATED_DATE = "created_date";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
-
     public String text;
-
     public Integer rate;
 
     @NotNull
@@ -45,4 +52,7 @@ public class Comment extends SoftRoadModel {
         presentFields.add("id");
     }
 
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Comment.class, fieldName, fieldNames);
+    }
 }

@@ -10,6 +10,7 @@ import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
 import org.softRoad.config.Constants;
+import org.softRoad.models.query.QueryUtils;
 import org.softRoad.security.SecurityUtils;
 
 import javax.persistence.*;
@@ -24,12 +25,24 @@ import java.util.Set;
 @UserDefinition
 public class User extends SoftRoadModel {
 
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String EMAIL = "email";
+    @Transient
+    public final static String PASSWORD = "password";
+    @Transient
+    public final static String PHONE_NUMBER = "phone_number";
+    @Transient
+    public final static String DISPLAY_NAME = "display_name";
+    @Transient
+    public final static String ENABLED = "enabled";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
     @Email
-    @Pattern(regexp = Constants.PHONE_NUMBER_REGEX)
     public String email;
 
     @NotNull
@@ -38,6 +51,7 @@ public class User extends SoftRoadModel {
 
     @NotNull
     @Column(name = "phone_number", unique = true)
+    @Pattern(regexp = Constants.PHONE_NUMBER_REGEX)
     @Username
     public String phoneNumber;
 
@@ -97,5 +111,9 @@ public class User extends SoftRoadModel {
                 ", enabled=" + enabled +
                 ", roles=" + roles +
                 '}';
+    }
+
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(User.class, fieldName, fieldNames);
     }
 }

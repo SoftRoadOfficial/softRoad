@@ -1,6 +1,7 @@
 package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,13 @@ import java.util.Set;
 @Entity
 @Table(name = "categories")
 public class Category extends SoftRoadModel {
+    @Transient
+    public final static String ID = "id";
+    @Transient
+    public final static String NAME = "name";
+    @Transient
+    public final static String TYPE = "type";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -44,5 +52,9 @@ public class Category extends SoftRoadModel {
     public void setType(String type) {
         this.type = type;
         presentFields.add("type");
+    }
+
+    public static String fields(String fieldName, String ... fieldNames) {
+        return QueryUtils.fields(Category.class, fieldName, fieldNames);
     }
 }

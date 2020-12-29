@@ -1,6 +1,5 @@
 package org.softRoad.security;
 
-import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.softRoad.exception.ForbiddenException;
 import org.softRoad.models.Role;
@@ -8,7 +7,6 @@ import org.softRoad.models.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.nio.file.AccessDeniedException;
 
 @ApplicationScoped
 public class AccessControlManager {
@@ -16,30 +14,13 @@ public class AccessControlManager {
     @Inject
     JsonWebToken jwt;
 
-    private User root;
-
-    public boolean isRoot() {
-        return isRoot(getCurrentUserId());
-    }
-
-    public boolean isRoot(Integer id) {
-        return getRoot().id.equals(id);
-    }
-
-    private User getRoot() {
-        if (root == null) {
-            root = User.find("username=?1", "root").firstResult();
-        }
-        return root;
-    }
-
     public Integer getCurrentUserId() {
         User user = getCurrentUser();
         return user == null ? null : user.id;
     }
 
     public User getCurrentUser() {
-        return User.find("username=?1", jwt.getName()).firstResult();
+        return User.find(User.PHONE_NUMBER + "=?1", jwt.getName()).firstResult();
     }
 
     public boolean isCurrentUser(Integer id) {
@@ -55,8 +36,6 @@ public class AccessControlManager {
         User user = getCurrentUser();
         if (user == null)
             return false;
-        if (isRoot(user.id))
-            return true;
         for (Role role : user.roles) {
             for (Permission p : role.permissions)
                 if (p == permission)

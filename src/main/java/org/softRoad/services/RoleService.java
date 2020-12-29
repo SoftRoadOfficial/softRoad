@@ -3,6 +3,7 @@ package org.softRoad.services;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Role;
 import org.softRoad.models.User;
+import org.softRoad.models.UserRole;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.SearchCriteria;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Query;
+import static org.softRoad.models.Tables.*;
 
 @ApplicationScoped
 public class RoleService extends CrudService<Role>
@@ -71,7 +73,8 @@ public class RoleService extends CrudService<Role>
             User u = User.findById(uId);
             if (u == null)
                 throw new InvalidDataException("Invalid user");
-            entityManager.createNativeQuery("insert into user_role(role_id, user_id) values(:roleId,:userId)")
+            entityManager.createNativeQuery(String.format("insert into %s(%s, %s) values(:roleId,:userId)",
+                    USER_ROLES, UserRole.ROLE_ID, UserRole.USER_ID))
                     .setParameter("roleId", role.id)
                     .setParameter("userId", u.id).executeUpdate();
         }
@@ -89,7 +92,8 @@ public class RoleService extends CrudService<Role>
             User u = User.findById(uId);
             if (u == null)
                 throw new InvalidDataException("Invalid user");
-            entityManager.createNativeQuery("delete from user_role where role_id=:roleId and user_id=:userId")
+            entityManager.createNativeQuery(String.format("delete from %s where %s=:roleId and %s=:userId",
+                    USER_ROLES, UserRole.ROLE_ID, UserRole.USER_ID))
                     .setParameter("roleId", role.id)
                     .setParameter("userId", u.id).executeUpdate();
         }
@@ -103,11 +107,11 @@ public class RoleService extends CrudService<Role>
             throw new InvalidDataException("Invalid role");
 
         Query q = QueryUtils.nativeQuery(entityManager, User.class)
-                .baseQuery(new HqlQuery("select u.* from user_role left join users as u on u.id=user_role.user_id"))
-                .addFilter(new HqlQuery("role_id=:idd").setParameter("idd", role.id))
+                .baseQuery(new HqlQuery("select u.* from %s left join %s as u on u.%s=%s",
+                        USER_ROLES, USERS, User.ID, UserRole.fields(UserRole.USER_ID)))
+                .addFilter(new HqlQuery("%s=:idd", UserRole.ROLE_ID).setParameter("idd", role.id))
                 .searchCriteria(searchCriteria)
                 .build();
-
         return q.getResultList();
     }
 
@@ -118,8 +122,9 @@ public class RoleService extends CrudService<Role>
             throw new InvalidDataException("Invalid role");
 
         Query q = QueryUtils.nativeQuery(entityManager, User.class)
-                .baseQuery(new HqlQuery("select * from users"))
-                .addFilter(new HqlQuery("users.id not in ( select user_id from user_role where role_id=:idd )")
+                .baseQuery(new HqlQuery("select * from %s", USERS))
+                .addFilter(new HqlQuery("%s not in ( select %s from %s where %s=:idd )",
+                        User.fields(User.ID), UserRole.USER_ID, USER_ROLES, UserRole.ROLE_ID)
                         .setParameter("idd", role.id))
                 .searchCriteria(searchCriteria)
                 .build();

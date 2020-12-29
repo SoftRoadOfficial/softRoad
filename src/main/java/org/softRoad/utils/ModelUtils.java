@@ -32,6 +32,8 @@ public class ModelUtils {
     }
 
     public static String getTableName(Class<?> aClass) {
+        if (aClass == null)
+            return "";
         Table table = aClass.getAnnotation(Table.class);
         if (table != null && !Strings.isNullOrEmpty(table.name())) {
             return table.name();

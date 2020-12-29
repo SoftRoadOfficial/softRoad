@@ -4,6 +4,7 @@ import org.softRoad.exception.DuplicateDataException;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Role;
 import org.softRoad.models.User;
+import org.softRoad.models.UserRole;
 import org.softRoad.models.dao.LoginUser;
 import org.softRoad.security.AuthenticationResponse;
 import org.softRoad.security.SecurityUtils;
@@ -15,6 +16,9 @@ import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import static org.softRoad.models.Tables.*;
+import org.softRoad.models.query.SearchCriteria;
 
 @ApplicationScoped
 public class UserService extends CrudService<User>
@@ -38,6 +42,15 @@ public class UserService extends CrudService<User>
     }
 
     @Override
+    public List<User> getAll(SearchCriteria searchCriteria)
+    {
+        return super.getAll(searchCriteria).stream().map((u) -> {
+            u.password = "";
+            return u;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
     public Response create(User obj)
     {
         throw new RuntimeException("User should be created through signUp method");
@@ -46,7 +59,7 @@ public class UserService extends CrudService<User>
     @Transactional
     public AuthenticationResponse login(LoginUser loginUser)
     {
-        User user = User.find("phone_number=?1 and password=?2", loginUser.getEmail(),
+        User user = User.find(User.PHONE_NUMBER + "=?1 and " + User.PASSWORD + "=?2", loginUser.getPhoneNumber(),
                 loginUser.getPassword()).firstResult();
         if (user == null)
             throw new InvalidDataException("Invalid phoneNumber or password");
@@ -56,7 +69,7 @@ public class UserService extends CrudService<User>
     @Transactional
     public AuthenticationResponse signUp(User user)
     {
-        if (User.find("phone_number=?1", user.phoneNumber).count() > 0)
+        if (User.find(User.PHONE_NUMBER + "=?1", user.phoneNumber).count() > 0)
             throw new DuplicateDataException("Duplicated phoneNumber");
         user.enabled = false; //FIXME users should be enabled after email or phone verification
         User.persist(user);
@@ -79,8 +92,8 @@ public class UserService extends CrudService<User>
         if (user == null)
             throw new InvalidDataException("Invalid user");
         return entityManager
-                .createNativeQuery(
-                        "select * from roles where roles.id not in ( select role_id from user_role where user_id=:userId )",
+                .createNativeQuery(String.format("select * from %s where %s not in ( select %s from %s where %s=:userId )",
+                        ROLES, Role.ID, UserRole.ROLE_ID, USER_ROLES, UserRole.USER_ID),
                         Role.class).setParameter("userId", user.id).getResultList();
     }
 
@@ -94,7 +107,8 @@ public class UserService extends CrudService<User>
             Role r = Role.findById(rId);
             if (r == null)
                 throw new InvalidDataException("Invalid role");
-            entityManager.createNativeQuery("insert into user_role(role_id, user_id) values(:roleId,:userId)")
+            entityManager.createNativeQuery(String.format("insert into %s(%s, %s) values(:roleId,:userId)",
+                    USER_ROLES, UserRole.ROLE_ID, UserRole.USER_ID))
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }
@@ -112,7 +126,8 @@ public class UserService extends CrudService<User>
             Role r = Role.findById(rId);
             if (r == null)
                 throw new InvalidDataException("Invalid role");
-            entityManager.createNativeQuery("delete from user_role where role_id=:roleId and user_id=:userId")
+            entityManager.createNativeQuery(String.format("delete from %s where %s=:roleId and %s=:userId",
+                    USER_ROLES, UserRole.ROLE_ID, UserRole.USER_ID))
                     .setParameter("roleId", r.id)
                     .setParameter("userId", user.id).executeUpdate();
         }

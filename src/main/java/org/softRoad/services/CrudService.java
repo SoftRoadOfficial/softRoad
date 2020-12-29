@@ -43,7 +43,9 @@ public class CrudService<T extends SoftRoadModel>
     @Transactional
     public T get(Integer id)
     {
-        return T.find("id=?1", id).firstResult();
+        return (T) entityManager.createNativeQuery("select * from " + ModelUtils.getTableName(objClass)
+                + " where id=:id", objClass)
+                .setParameter("id", id).getResultStream().findFirst().get();
     }
 
     @Transactional
