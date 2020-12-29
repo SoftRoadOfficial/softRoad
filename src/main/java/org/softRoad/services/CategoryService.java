@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @ApplicationScoped
@@ -21,23 +22,38 @@ public class CategoryService extends CrudService<Category> {
     }
 
     @Transactional
-    public List<Category> getCategoriesOfProcedure(Procedure procedure) {
+    public List<Category> getCategoriesOfProcedure(Integer pid) {
 
+        return null;
     }
 
     @Transactional
-    public void setCategoryForProcedure(Procedure procedure) {
+    public Response setCategoryForProcedure(Integer pid, Integer cid) {
 
+        return null;
     }
 
     @Transactional
-    public void removeCategoryFromProcedure(Procedure procedure) {
+    public Response removeCategoryFromProcedure(Integer pid, Integer cid) {
 
+        return null;
     }
 
     @Transactional
-    public List<Procedure> getProceduresOfCategory(Category category) {
+    public List<Procedure> getProceduresOfCategory(Integer cid) {
 
+        return null;
     }
 
+    @Transactional
+    public Response createCategory(Category category) {
+
+        return null;
+    }
+
+    @Transactional
+    public Category getCategory(Integer cid) {
+
+        return null;
+    }
 }
