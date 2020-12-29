@@ -3,47 +3,44 @@ package org.softRoad.services;
 import org.softRoad.models.City;
 import org.softRoad.models.Procedure;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@ApplicationScoped
 public class CityService extends CrudService<City>
 {
 
     @Inject
     EntityManager entityManager;
 
-    public CityService()
-    {
+    public CityService() {
         super(City.class);
     }
 
     @Transactional
-    public List<Procedure> getProceduresOfCity(Integer cid)
-    {
+    public List<Procedure> getProceduresOfCity(Integer cid) {
         City city = City.findById(cid);
         return null;
     }
 
     @Transactional
-    public void setCityForProcedure(City city, Integer pid)
-    {
+    public void setCityForProcedure(City city, Integer pid) {
         Procedure procedure = Procedure.findById(pid);
 
     }
 
     @Transactional
-    public void removeCityFromProcedure(Integer cid, Integer pid)
-    {
+    public void removeCityFromProcedure(Integer cid, Integer pid) {
         City city = City.findById(cid);
         Procedure procedure = Procedure.findById(pid);
 
     }
 
     @Transactional
-    public List<City> getCitiesOfProcedure(Integer pid)
-    {
+    public List<City> getCitiesOfProcedure(Integer pid) {
         Procedure procedure = Procedure.findById(pid);
         return null;
 
