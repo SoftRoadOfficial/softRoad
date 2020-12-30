@@ -19,6 +19,12 @@ public class CityService extends CrudService<City> {
     }
 
     @Transactional
+    public City getCity(Integer cid) {
+
+        return null;
+    }
+
+    @Transactional
     public List<Procedure> getProceduresOfCity(Integer cid) {
         City city = City.findById(cid);
 
@@ -26,7 +32,7 @@ public class CityService extends CrudService<City> {
     }
 
     @Transactional
-    public Response setCityForProcedure(City city, Integer pid) {
+    public Response setCityForProcedure(Integer cid, Integer pid) {
         Procedure procedure = Procedure.findById(pid);
 
         return null;
@@ -47,4 +53,15 @@ public class CityService extends CrudService<City> {
         return null;
     }
 
+    @Transactional
+    public Response createCity(City city) {
+
+        return null;
+    }
+
+    @Transactional
+    public Response removeCity(Integer cid) {
+
+        return null;
+    }
 }
