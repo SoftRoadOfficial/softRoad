@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @ApplicationScoped
-
 public class CategoryService extends CrudService<Category> {
 
     @Inject

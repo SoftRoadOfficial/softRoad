@@ -7,7 +7,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class StepService extends CrudService<Step> {
     @Inject
     EntityManager entityManager;
