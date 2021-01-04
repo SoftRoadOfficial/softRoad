@@ -1,5 +1,6 @@
 package org.softRoad.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
@@ -36,6 +37,11 @@ public class ConsultantProfile extends SoftRoadModel {
             inverseJoinColumns = @JoinColumn(name = "categories_id", referencedColumnName = "id"))
     public Set<Category> categories = new HashSet<>();
 
+    @ElementCollection
+    @CollectionTable(name = "consultant_profiles_tags", joinColumns = @JoinColumn(name = "consultant_profiles_id"))
+    @Column(name = "tag")
+    @JsonIgnore
+    public Set<Tag> tags = new HashSet<>();
 
     public void setId(Integer id) {
         this.id = id;

@@ -12,6 +12,8 @@ import java.util.Set;
 public class Consultation extends SoftRoadModel {
     @Transient
     public final static String ID = "id";
+    @Transient
+    public final static String CONSULTANT = "consultant_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +27,7 @@ public class Consultation extends SoftRoadModel {
     public Set<Comment> comments = new HashSet<>();
 
     @ManyToOne
+    @JoinColumn(name = "consultant_id") // TODO: 1/4/2021 double_checking
     @JsonIgnoreProperties(value = "consultations", allowSetters = true)
     public ConsultantProfile consultant;
 

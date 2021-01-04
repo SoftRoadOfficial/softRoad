@@ -15,9 +15,9 @@ public class Fee extends SoftRoadModel {
     @Transient
     public final static String MINUTE = "minute";
     @Transient
-    public final static String CONSULTANT = "consultant";
+    public final static String CONSULTANT = "consultant_id";
     @Transient
-    public final static String CATEGORY = "category";
+    public final static String CATEGORY = "category_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +28,12 @@ public class Fee extends SoftRoadModel {
     public Integer minute;
 
     @ManyToOne
+    @JoinColumn(name = "consultant_id") // TODO: 1/4/2021 double_checking
     @JsonIgnoreProperties(value = "fees", allowSetters = true)
     public ConsultantProfile consultant;
 
     @ManyToOne
+    @JoinColumn(name = "category_id") // TODO: 1/4/2021 double_checking
     @JsonIgnoreProperties(value = "fees", allowSetters = true)
     public Category category;
 

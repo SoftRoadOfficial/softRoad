@@ -20,6 +20,12 @@ public class Comment extends SoftRoadModel {
     public final static String RATE = "rate";
     @Transient
     public final static String CREATED_DATE = "created_date";
+    @Transient
+    public final static String REPLY = "comment_id";
+    @Transient
+    public final static String CONSULTATION = "consultation_id";
+    @Transient
+    public final static String PROCEDURE = "procedure_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +41,17 @@ public class Comment extends SoftRoadModel {
     public Set<Comment> comments = new HashSet<>();
 
     @ManyToOne
+    @JoinColumn(name = "comment_id") // TODO: 1/4/2021 double_checking
     @JsonIgnoreProperties(value = "comments", allowSetters = true)
     public Comment reply;
 
     @ManyToOne
+    @JoinColumn(name = "consultation_id") // TODO: 1/4/2021 double_checking
     @JsonIgnoreProperties(value = "comments", allowSetters = true)
     public Consultation consultation;
 
     @ManyToOne
+    @JoinColumn(name = "procedure_id") // TODO: 1/4/2021 double_checking
     @JsonIgnoreProperties(value = "comments", allowSetters = true)
     public Procedure procedure;
 

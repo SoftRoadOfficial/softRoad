@@ -346,6 +346,29 @@
         </createTable>
         <dropDefaultValue tableName="audit_logs" columnName="time" columnDataType="datetime"/>
     </changeSet>
+
+    <changeSet id="create-procedure-tags-table" author="softroad">
+        <createTable tableName="procedure-tags">
+            <column name="procedure_id" type="int">
+                <constraints primaryKey="true" primaryKeyName="pk_procedure_tag" nullable="false"
+                             foreignKeyName="fk_tag_procedure_id" references="procedures(id)" deleteCascade="true"/>
+            </column>
+            <column name="tag" type="varchar(32)">
+                <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="create-consultant-profiles-tags-table" author="softroad">
+        <createTable tableName="consultant-profiles-tags">
+            <column name="consultant_profiles_id" type="int">
+                <constraints primaryKey="true" primaryKeyName="pk_procedure-tag" nullable="false"
+                             foreignKeyName="fk_tag_consultant_profiles_id" references="consultant_profiles(id)" deleteCascade="true"/>
+            </column>
+            <column name="tag" type="varchar(32)">
+                <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
 
 
