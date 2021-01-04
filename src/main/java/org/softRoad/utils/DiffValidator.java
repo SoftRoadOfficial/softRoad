@@ -10,38 +10,37 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class DiffValidator implements ConstraintValidator<Diff, Object> {
+public class DiffValidator implements ConstraintValidator<Diff, Object>
+{
 
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 
     private Class<?>[] groups;
 
     @Override
-    public void initialize(Diff annotation) {
+    public void initialize(Diff annotation)
+    {
         ConstraintValidator.super.initialize(annotation);
         groups = annotation.groups();
     }
 
     @Override
-    public boolean isValid(Object bean, ConstraintValidatorContext context) {
+    public boolean isValid(Object bean, ConstraintValidatorContext context)
+    {
         context.buildConstraintViolationWithTemplate("").addBeanNode();
 
-        if (bean == null) {
+        if (bean == null)
             return true;
-        }
 
         if (bean instanceof Collection) {
-            for (Object o : (Collection) bean) {
-                if (!isValid(o, context)) {
+            for (Object o : (Collection) bean)
+                if (!isValid(o, context))
                     return false;
-                }
-            }
         } else {
             Preconditions.checkState(bean instanceof SoftRoadModel);
             Integer id = ModelUtils.getPrimaryKeyValue(bean, bean.getClass());
-            if (id == null) {
+            if (id == null)
                 return false;
-            }
             for (String fieldName : ((SoftRoadModel) bean).presentFields) {
                 Field field = null;
                 try {
@@ -60,9 +59,8 @@ public class DiffValidator implements ConstraintValidator<Diff, Object> {
                     List<String> presentFields = item.presentFields;
                     Field pkField = ModelUtils.getPrimaryKeyField(item, item.getClass());
                     Preconditions.checkState(pkField != null);
-                    if (presentFields.size() != 1 || !presentFields.get(0).equals(pkField.getName())) {
+                    if (presentFields.size() != 1 || !presentFields.get(0).equals(pkField.getName()))
                         return false;
-                    }
                 } else {
                     Validator validator = factory.getValidator();
                     Set<ConstraintViolation<Object>> s = validator.validateProperty(bean, fieldName, groups);

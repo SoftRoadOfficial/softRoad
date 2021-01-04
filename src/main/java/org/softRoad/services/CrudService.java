@@ -89,8 +89,7 @@ public class CrudService<T extends SoftRoadModel>
         }
         queryBuilder.append(" where ").append(pkName).append("=:").append(pkName);
         Query nativeQuery = entityManager.createNativeQuery(queryBuilder.toString());
-        for (String key : params.keySet())
-            nativeQuery.setParameter(key, params.get(key));
+        params.keySet().forEach(key -> nativeQuery.setParameter(key, params.get(key)));
         nativeQuery.executeUpdate();
         return Response.ok().build();
     }
