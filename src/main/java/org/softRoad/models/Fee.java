@@ -14,6 +14,10 @@ public class Fee extends SoftRoadModel {
     public final static String AMOUNT = "amount";
     @Transient
     public final static String MINUTE = "minute";
+    @Transient
+    public final static String CONSULTANT = "consultant";
+    @Transient
+    public final static String CATEGORY = "category";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
