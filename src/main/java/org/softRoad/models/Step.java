@@ -15,6 +15,8 @@ public class Step extends SoftRoadModel {
     public final static String TITLE = "title";
     @Transient
     public final static String DESCRIPTION = "description";
+    @Transient
+    public final static String PROCEDURE = "procedure_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +28,7 @@ public class Step extends SoftRoadModel {
     public String description;
 
     @ManyToOne
+    @JoinColumn(name = "procedure_id") // TODO: 1/4/2021 double_checking
     @JsonIgnoreProperties(value = "steps", allowSetters = true)
     public Procedure procedure;
 
@@ -49,7 +52,7 @@ public class Step extends SoftRoadModel {
         presentFields.add("procedure");
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public static String fields(String fieldName, String... fieldNames) {
         return QueryUtils.fields(Step.class, fieldName, fieldNames);
     }
 }
