@@ -39,16 +39,16 @@ public class CategoryController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("set/{cid}/{pid}")
-    public Response setCategoryForProcedure(@PathParam("cid") Integer cid, @PathParam("pid") Integer pid) {
+    @Path("set")
+    public Response setCategoryForProcedure(@Valid Integer cid, @Valid Integer pid) {
         return categoryService.setCategoryForProcedure(pid, cid);
     }
 
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("delete/{cid}/{pid}")
-    public Response removeCategoryFromProcedure(@PathParam("cid") Integer cid, @PathParam("pid") Integer pid) {
+    @Path("delete")
+    public Response removeCategoryFromProcedure(@Valid Integer cid, @Valid Integer pid) {
         return categoryService.removeCategoryFromProcedure(pid, cid);
     }
 
@@ -61,7 +61,7 @@ public class CategoryController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("create}")
+    @Path("create")
     public Response setCategoryForProcedure(@Valid Category category) {
         return categoryService.createCategory(category);
     }

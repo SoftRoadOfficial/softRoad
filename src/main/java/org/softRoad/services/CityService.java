@@ -3,12 +3,14 @@ package org.softRoad.services;
 import org.softRoad.models.City;
 import org.softRoad.models.Procedure;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+@ApplicationScoped
 public class CityService extends CrudService<City> {
 
     @Inject
