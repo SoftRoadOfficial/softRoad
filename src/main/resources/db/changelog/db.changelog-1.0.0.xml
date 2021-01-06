@@ -25,6 +25,9 @@
             <column name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
+            <column name="city_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
     </changeSet>
 

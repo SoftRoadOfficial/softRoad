@@ -40,7 +40,6 @@
         <dropDefaultValue tableName="user_verifications" columnName="time" columnDataType="datetime"/>
     </changeSet>
 
-
     <changeSet id="create-fees-table" author="softroad">
         <createTable tableName="fees">
             <column name="id" type="bigint">
@@ -72,6 +71,9 @@
             <column name="description" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
@@ -102,6 +104,11 @@
     </changeSet>
 
     <changeSet id="create-consultant_profiles-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="consultant_profiles"
+                                 constraintName="user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
         <addForeignKeyConstraint baseColumnNames="consultant_profile_id"
                                  baseTableName="consultant_profile_categories"
                                  constraintName="fk_consultant_profile_categories_consultant_profile_id"
@@ -154,6 +161,14 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="create-users-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="city_id"
+                                 baseTableName="users"
+                                 constraintName="city_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="cities"/>
+    </changeSet>
+
     <changeSet id="create-procedures-table" author="softroad">
         <createTable tableName="procedures">
             <column name="id" type="bigint">
@@ -170,6 +185,9 @@
             </column>
             <column name="confirmed" type="boolean">
                 <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
         </createTable>
         <dropDefaultValue tableName="procedures" columnName="created_date" columnDataType="datetime"/>
@@ -200,6 +218,11 @@
     </changeSet>
 
     <changeSet id="create-procedures-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="procedures"
+                                 constraintName="user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
         <addForeignKeyConstraint baseColumnNames="procedure_id"
                                  baseTableName="procedure_cities"
                                  constraintName="fk_procedure_cities_procedure_id"
@@ -242,8 +265,19 @@
             <column name="procedure_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <dropDefaultValue tableName="update_requests" columnName="create_date" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="create-update_requests-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="update_requests"
+                                 constraintName="user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
     </changeSet>
 
     <changeSet id="create-update-requests-table-constraints" author="softroad">
@@ -277,11 +311,19 @@
             <column name="procedure_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <dropDefaultValue tableName="comments" columnName="created_date" columnDataType="datetime"/>
     </changeSet>
 
     <changeSet id="create-comments-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="comments"
+                                 constraintName="user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
         <addForeignKeyConstraint baseColumnNames="reply_id"
                                  baseTableName="comments"
                                  constraintName="fk_comment_reply_id"
@@ -343,8 +385,19 @@
             <column name="payload" type="varchar(255)">
                 <constraints nullable="true"/>
             </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
         <dropDefaultValue tableName="audit_logs" columnName="time" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="create-audit-logs-table-constraints" author="softroad">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="audit_logs"
+                                 constraintName="user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
     </changeSet>
 
     <changeSet id="create-procedure-tags-table" author="softroad">
