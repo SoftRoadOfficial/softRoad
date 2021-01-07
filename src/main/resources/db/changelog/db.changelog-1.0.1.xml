@@ -256,7 +256,7 @@
             <column name="accepted" type="boolean">
                 <constraints nullable="true"/>
             </column>
-            <column name="create_date" type="datetime">
+            <column name="created_date" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="payload" type="varchar(255)">
@@ -269,7 +269,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <dropDefaultValue tableName="update_requests" columnName="create_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="update_requests" columnName="created_date" columnDataType="datetime"/>
     </changeSet>
 
     <changeSet id="create-update_requests-table-constraints" author="softroad">

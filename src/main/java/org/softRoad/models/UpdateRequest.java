@@ -1,6 +1,8 @@
 package org.softRoad.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
@@ -15,9 +17,13 @@ public class UpdateRequest extends SoftRoadModel {
     @Transient
     public final static String ACCEPTED = "accepted";
     @Transient
-    public final static String CREATE_DATA = "create_date";
+    public final static String CREATED_DATA = "created_date";
     @Transient
     public final static String PAYLOAD = "payload";
+    @Transient
+    public final static String PROCEDURE = "procedure_id";
+    @Transient
+    public final static String USER = "user_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +31,21 @@ public class UpdateRequest extends SoftRoadModel {
 
     public Boolean accepted;
 
-    @NotNull
-    @Column(name = "create_date", nullable = false)
-    public Instant createDate;
+    @Column(name = "created_date", nullable = false)
+    public Instant createdDate;
 
     @NotNull
     public String payload;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "updateRequests", allowSetters = true)
+    @JoinColumn(name = "procedure_id")
+    @JsonIgnore
     public Procedure procedure;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonProperty(value = "{displayName, id}")
+    public User user;
 
     public void setId(Integer id) {
         this.id = id;
@@ -46,9 +57,9 @@ public class UpdateRequest extends SoftRoadModel {
         this.presentFields.add("accepted");
     }
 
-    public void setCreateDate(Instant createDate) {
-        this.createDate = createDate;
-        this.presentFields.add("createDate");
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+        this.presentFields.add("createdDate");
     }
 
     public void setPayload(String payload) {
@@ -59,6 +70,11 @@ public class UpdateRequest extends SoftRoadModel {
     public void setProcedure(Procedure procedure) {
         this.procedure = procedure;
         this.presentFields.add("procedure");
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        presentFields.add("user");
     }
 
     public static String fields(String fieldName, String ... fieldNames) {
