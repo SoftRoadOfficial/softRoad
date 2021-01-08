@@ -60,16 +60,15 @@ public class CommentController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user/{id}")
-    public List<Comment> getUserComments(@PathParam("id") Integer id, @NotNull SearchCriteria searchCriteria) {
-        return commentService.getUserComments(id, searchCriteria);
+    public List<Comment> getCommentsForUser(@PathParam("id") Integer id, @NotNull SearchCriteria searchCriteria) {
+        return commentService.getCommentsForUser(id, searchCriteria);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public Response updateComment(@PathParam("id") Integer id, @Valid Comment comment) {
-        commentService.delete(id);
-        return commentService.create(comment);
+    @Path("replies/{id}")
+    public List<Comment> getRepliesForComment(@PathParam("id") Integer id) {
+        return commentService.getRepliesForComment(id);
     }
 
 }
