@@ -16,4 +16,5 @@ public class AuditLogService extends CrudService<AuditLog> {
         super(AuditLog.class);
     }
 
+
 }
