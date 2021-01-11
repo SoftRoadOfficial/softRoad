@@ -10,10 +10,10 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="name" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="varchar(255)">
+            <column name="type" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -24,10 +24,10 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="phone_number" type="varchar(256)">
+            <column name="phone_number" type="varchar(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="token" type="varchar(255)">
+            <column name="token" type="varchar(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="verified" type="boolean">
@@ -106,7 +106,7 @@
     <changeSet id="create-consultant_profiles-table-constraints" author="softroad">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="consultant_profiles"
-                                 constraintName="user_id"
+                                 constraintName="fk_consultant_profiles_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
         <addForeignKeyConstraint baseColumnNames="consultant_profile_id"
@@ -220,7 +220,7 @@
     <changeSet id="create-procedures-table-constraints" author="softroad">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="procedures"
-                                 constraintName="user_id"
+                                 constraintName="fk_user_procedures_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
         <addForeignKeyConstraint baseColumnNames="procedure_id"
@@ -275,7 +275,7 @@
     <changeSet id="create-update_requests-table-constraints" author="softroad">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="update_requests"
-                                 constraintName="user_id"
+                                 constraintName="fk_update_requests_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
     </changeSet>
@@ -321,7 +321,7 @@
     <changeSet id="create-comments-table-constraints" author="softroad">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="comments"
-                                 constraintName="user_id"
+                                 constraintName="fk_comments_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
         <addForeignKeyConstraint baseColumnNames="reply_id"
@@ -379,6 +379,7 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+<!--             defaultValue="NOW() ON UPDATE NOW()"-->
             <column name="time" type="datetime">
                 <constraints nullable="false"/>
             </column>
@@ -404,7 +405,7 @@
     <changeSet id="create-audit-logs-table-constraints" author="softroad">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="audit_logs"
-                                 constraintName="user_id"
+                                 constraintName="fk_audit-logs_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
     </changeSet>
