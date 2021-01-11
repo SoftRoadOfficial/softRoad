@@ -1,7 +1,7 @@
 package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
@@ -56,7 +56,7 @@ public class ConsultantProfile extends SoftRoadModel {
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
-    @JsonProperty(value = "{displayName, id}")
+    @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
 
     public void setId(Integer id) {

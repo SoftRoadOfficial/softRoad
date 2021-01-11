@@ -1,12 +1,16 @@
 package org.softRoad.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.softRoad.exception.InvalidDataException;
+import org.softRoad.models.AuditLog;
 import org.softRoad.models.SoftRoadModel;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.SearchCriteria;
+import org.softRoad.security.AccessControlManager;
 import org.softRoad.utils.ModelUtils;
 
 import javax.inject.Inject;
@@ -17,25 +21,61 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.softRoad.exception.InternalException;
+import org.softRoad.models.AuditLog.Action;
 
 public class CrudService<T extends SoftRoadModel>
 {
-
     private final Class<?> objClass;
 
     @Inject
     EntityManager entityManager;
+
+    @Inject
+    AccessControlManager accessControlManager;
+
+    @Inject
+    ObjectMapper mapper;
 
     public CrudService(Class<?> objClass)
     {
         this.objClass = objClass;
     }
 
+    protected void log(Action type, T obj)
+    {
+        AuditLog log = new AuditLog();
+        log.user = accessControlManager.getCurrentUser();
+        log.time = Instant.now(); //FIXME double-check
+        log.action = type;
+        log.objectId = ModelUtils.getPrimaryKeyValue(obj, objClass);
+        log.objectType = objClass.getName();
+        try {
+            log.payload = mapper.writeValueAsString(convert(obj));
+        } catch (JsonProcessingException ex) {
+            throw new InternalException(ex);
+        }
+        AuditLog.persist(log);
+    }
+
+    private Map<String, String> convert(T obj)
+    {
+        Map<String, String> map = new HashMap<>();
+        obj.presentFields.forEach(fieldName -> {
+            Object columnValue = ModelUtils.getColumnValue(obj, obj.getClass(), fieldName);
+            map.put(fieldName, (columnValue == null ? null : columnValue.toString()));
+        });
+        return map;
+    }
+
     @Transactional
     public Response create(T obj)
     {
+        log(Action.CREATE, obj);
         obj.persist();
         return Response.status(Response.Status.CREATED).build();
     }
@@ -91,6 +131,7 @@ public class CrudService<T extends SoftRoadModel>
         Query nativeQuery = entityManager.createNativeQuery(queryBuilder.toString());
         params.keySet().forEach(key -> nativeQuery.setParameter(key, params.get(key)));
         nativeQuery.executeUpdate();
+        log(Action.UPDATE, obj);
         return Response.ok().build();
     }
 
@@ -101,6 +142,7 @@ public class CrudService<T extends SoftRoadModel>
         if (databaseObj == null)
             throw new InvalidDataException("Invalid id");
         databaseObj.delete();
+        log(Action.DELETE, databaseObj);
         return Response.ok().build();
     }
 

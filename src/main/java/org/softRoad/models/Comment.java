@@ -60,7 +60,7 @@ public class Comment extends SoftRoadModel {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonProperty(value = "{displayName, id}")
+    @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
 
 

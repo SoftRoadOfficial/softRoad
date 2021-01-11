@@ -6,7 +6,6 @@ import org.softRoad.services.AuditLogService;
 import org.softRoad.utils.Diff;
 
 import javax.enterprise.context.RequestScoped;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,14 +21,6 @@ public class AuditLogController {
     public AuditLogController(AuditLogService auditLogService) {
         this.auditLogService = auditLogService;
     }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("create")
-    public Response create(@Valid AuditLog auditLog) {
-        return auditLogService.create(auditLog);
-    }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

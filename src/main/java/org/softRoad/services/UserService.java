@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.softRoad.models.AuditLog;
 import static org.softRoad.models.Tables.*;
 import org.softRoad.models.query.SearchCriteria;
 
@@ -73,6 +74,7 @@ public class UserService extends CrudService<User>
             throw new DuplicateDataException("Duplicated phoneNumber");
         user.enabled = false; //FIXME users should be enabled after email or phone verification
         User.persist(user);
+        log(AuditLog.Action.CREATE, user);
         return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.email);
     }
 

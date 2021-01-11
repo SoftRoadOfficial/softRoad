@@ -2,7 +2,6 @@ package org.softRoad.security;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.softRoad.exception.ForbiddenException;
-import org.softRoad.models.Role;
 import org.softRoad.models.User;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,6 +22,8 @@ public class AccessControlManager
 
     public User getCurrentUser()
     {
+        if (jwt.getName() == null)
+            return null;
         return User.find(User.PHONE_NUMBER + "=?1", jwt.getName()).firstResult();
     }
 
@@ -42,10 +43,7 @@ public class AccessControlManager
         User user = getCurrentUser();
         if (user == null)
             return false;
-        for (Role role : user.roles)
-            if (role.permissions.contains(permission))
-                return true;
-        return false;
+        return user.roles.stream().anyMatch(role -> (role.permissions.contains(permission)));
     }
 
     public void checkPermission(Permission... permissions)

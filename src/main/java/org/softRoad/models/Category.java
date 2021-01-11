@@ -27,7 +27,7 @@ public class Category extends SoftRoadModel {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    public CategoryType type;
+    public Type type;
 
     @OneToMany(mappedBy = "category")
     @JsonIgnore
@@ -51,7 +51,7 @@ public class Category extends SoftRoadModel {
         presentFields.add("name");
     }
 
-    public void setType(CategoryType type) {
+    public void setType(Type type) {
         this.type = type;
         presentFields.add("type");
     }
@@ -60,7 +60,7 @@ public class Category extends SoftRoadModel {
         return QueryUtils.fields(Category.class, fieldName, fieldNames);
     }
 
-    public static enum CategoryType{
-        FINANCE;
+    public static enum Type{
+        FINANCE
     }
 }

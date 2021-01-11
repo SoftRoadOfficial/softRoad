@@ -3,8 +3,6 @@ package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
@@ -81,7 +79,7 @@ public class Procedure extends SoftRoadModel {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonProperty(value = "{displayName, id}")
+    @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
 
     public void setId(Integer id) {
