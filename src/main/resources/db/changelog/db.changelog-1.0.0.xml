@@ -7,7 +7,7 @@
     
     <changeSet id="create-users-table" author="softroad">
         <createTable tableName="users">
-            <column name="id" type="int" autoIncrement="true">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="email" type="varchar(256)">
@@ -33,7 +33,7 @@
 
     <changeSet id="create-roles-table" author="softroad">
         <createTable tableName="roles">
-            <column name="id" type="int" autoIncrement="true">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(32)">
@@ -44,25 +44,25 @@
 
     <changeSet id="create-user_role-table" author="softroad">
         <createTable tableName="user_role">
-            <column name="user_id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_user_role" nullable="false"
-                             foreignKeyName="fk_user_role_user_id" references="users(id)" deleteCascade="true"/>
+            <column name="user_id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk(user_role)" nullable="false"
+                             foreignKeyName="fk(user_id)" references="users(id)" deleteCascade="true"/>
             </column>
-            <column name="role_id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_user_role" nullable="false"
-                             foreignKeyName="fk_user_role_role_id" references="roles(id)" deleteCascade="true"/>
+            <column name="role_id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk(user_role)" nullable="false"
+                             foreignKeyName="fk(role_id)" references="roles(id)" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
     
     <changeSet id="create-role_permission-table" author="softroad">
         <createTable tableName="role_permission">
-            <column name="role_id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_role_permission" nullable="false"
-                             foreignKeyName="fk_role_permission_role_id" references="roles(id)" deleteCascade="true"/>
+            <column name="role_id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk(role_permission)" nullable="false"
+                             foreignKeyName="fk(role_id)" references="roles(id)" deleteCascade="true"/>
             </column>
             <column name="permission" type="varchar(32)">
-                <constraints primaryKey="true" primaryKeyName="pk_role_permission" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="pk(role_permission)" nullable="false"/>
             </column>
         </createTable>
     </changeSet>

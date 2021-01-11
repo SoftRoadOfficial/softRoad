@@ -7,7 +7,7 @@
 
     <changeSet id="create-category-table" author="softroad">
         <createTable tableName="categories">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -21,10 +21,10 @@
 
     <changeSet id="create-user_verifications-table" author="softroad">
         <createTable tableName="user_verifications">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="phone_number" type="varchar(255)">
+            <column name="phone_number" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
             <column name="token" type="varchar(255)">
@@ -42,7 +42,7 @@
 
     <changeSet id="create-fees-table" author="softroad">
         <createTable tableName="fees">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="amount" type="integer">
@@ -62,7 +62,7 @@
 
     <changeSet id="create-consultant_profiles-table" author="softroad">
         <createTable tableName="consultant_profiles">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="bio" type="varchar(255)">
@@ -93,7 +93,7 @@
 
     <changeSet id="create-consultant_profile_categories-table" author="softroad">
         <createTable tableName="consultant_profile_categories">
-            <column name="categories_id" type="bigint">
+            <column name="categories_id" type="bigint" >
                 <constraints nullable="false"/>
             </column>
             <column name="consultant_profile_id" type="bigint">
@@ -124,7 +124,7 @@
 
     <changeSet id="create-consultations-table" author="softroad">
         <createTable tableName="consultations">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="fee_id" type="bigint">
@@ -152,7 +152,7 @@
 
     <changeSet id="create-cities-table" author="softroad">
         <createTable tableName="cities">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -164,14 +164,14 @@
     <changeSet id="create-users-table-constraints" author="softroad">
         <addForeignKeyConstraint baseColumnNames="city_id"
                                  baseTableName="users"
-                                 constraintName="city_id"
+                                 constraintName="fk_user_city_id"
                                  referencedColumnNames="id"
                                  referencedTableName="cities"/>
     </changeSet>
 
     <changeSet id="create-procedures-table" author="softroad">
         <createTable tableName="procedures">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="varchar(255)">
@@ -250,7 +250,7 @@
 
     <changeSet id="create-update-requests-table" author="softroad">
         <createTable tableName="update_requests">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="accepted" type="boolean">
@@ -290,7 +290,7 @@
 
     <changeSet id="create-comments-table" author="softroad">
         <createTable tableName="comments">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="text" type="varchar(255)">
@@ -345,7 +345,7 @@
 
     <changeSet id="create-steps-table" author="softroad">
         <createTable tableName="steps">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="varchar(255)">
@@ -376,7 +376,7 @@
 
     <changeSet id="create-audit-logs-table" author="softroad">
         <createTable tableName="audit_logs">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="time" type="datetime">
@@ -387,6 +387,15 @@
             </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="true"/>
+            </column>
+            <column name="action" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="object_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="object_type" type="varchar(255)">
+                <constraints nullable="false"/>
             </column>
         </createTable>
         <dropDefaultValue tableName="audit_logs" columnName="time" columnDataType="datetime"/>
