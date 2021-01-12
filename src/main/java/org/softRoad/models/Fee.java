@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @Entity
 @Table(name = "fees")
@@ -23,7 +24,7 @@ public class Fee extends SoftRoadModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    public Integer amount;
+    public BigInteger amount;
 
     public Integer minute;
 
@@ -42,7 +43,7 @@ public class Fee extends SoftRoadModel {
         presentFields.add("id");
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigInteger amount) {
         this.amount = amount;
         presentFields.add("amount");
     }

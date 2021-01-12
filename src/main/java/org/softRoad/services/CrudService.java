@@ -50,7 +50,6 @@ public class CrudService<T extends SoftRoadModel>
     {
         AuditLog log = new AuditLog();
         log.user = accessControlManager.getCurrentUser();
-        log.time = Instant.now(); //FIXME double-check
         log.action = type;
         log.objectId = ModelUtils.getPrimaryKeyValue(obj, objClass);
         log.objectType = objClass.getName();

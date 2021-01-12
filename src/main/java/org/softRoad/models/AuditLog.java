@@ -5,7 +5,9 @@ import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "audit_logs")
@@ -54,16 +56,15 @@ public class AuditLog extends SoftRoadModel
     @Column(name = "object_type")
     public String objectType;
 
+    @PrePersist
+    private void setTime() {
+        this.time = Instant.now();
+    }
+
     public void setId(Integer id)
     {
         this.id = id;
         presentFields.add("id");
-    }
-
-    public void setTime(Instant time)
-    {
-        this.time = time;
-        presentFields.add("time");
     }
 
     public void setPayload(String payload)

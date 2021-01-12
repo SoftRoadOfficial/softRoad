@@ -379,7 +379,6 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-<!--             defaultValue="NOW() ON UPDATE NOW()"-->
             <column name="time" type="datetime">
                 <constraints nullable="false"/>
             </column>

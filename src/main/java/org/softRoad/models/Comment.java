@@ -2,6 +2,7 @@ package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Persister;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
@@ -63,6 +64,10 @@ public class Comment extends SoftRoadModel {
     @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
 
+    @PrePersist
+    private void setCreatedDate(){
+        this.createdDate = Instant.now();
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -98,8 +103,6 @@ public class Comment extends SoftRoadModel {
         this.rate = rate;
         presentFields.add("rate");
     }
-
-    // TODO: 1/7/2021 assign createDate automatically in DB
 
     public static String fields(String fieldName, String ... fieldNames) {
         return QueryUtils.fields(Comment.class, fieldName, fieldNames);

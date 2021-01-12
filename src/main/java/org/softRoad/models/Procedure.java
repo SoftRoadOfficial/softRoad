@@ -82,6 +82,11 @@ public class Procedure extends SoftRoadModel {
     @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
 
+    @PrePersist
+    private void setCreatedData(){
+        this.createdDate = Instant.now();
+    }
+
     public void setId(Integer id) {
         this.id = id;
         this.presentFields.add("id");
