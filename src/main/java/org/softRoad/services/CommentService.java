@@ -1,5 +1,6 @@
 package org.softRoad.services;
 
+import com.google.common.base.Strings;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Comment;
 import org.softRoad.models.User;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,13 @@ import static org.softRoad.models.Tables.USERS;
 public class CommentService extends CrudService<Comment> {
     @Inject
     EntityManager entityManager;
+
+    @Override
+    public Response create(Comment obj) {
+        if (obj.rate != null || !Strings.isNullOrEmpty(obj.text))
+            return super.create(obj);
+        throw new InvalidDataException("rate or text should be provided");
+    }
 
     public CommentService() {
         super(Comment.class);
