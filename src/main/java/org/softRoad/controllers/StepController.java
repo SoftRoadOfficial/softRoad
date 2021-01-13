@@ -1,23 +1,21 @@
 package org.softRoad.controllers;
 
 import org.softRoad.models.Step;
-import org.softRoad.security.AccessControlManager;
 import org.softRoad.services.StepService;
 
 import javax.enterprise.context.RequestScoped;
-import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/step")
+@Path("/steps")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class StepController {
     private final StepService stepService;
-    AccessControlManager acm;
 
     public StepController(StepService stepService) {
         this.stepService = stepService;
@@ -25,39 +23,36 @@ public class StepController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("set/step")
-    public Response setStepForProcedure(@Valid Integer sid, @Valid Integer pid) {
-        Integer userId = acm.getCurrentUserId();
-        return stepService.setStepForProcedure(userId, sid, pid);
+    @Path("{pid}/add/step")
+    public Response addStepForProcedure(Integer sid, @PathParam("pid") Integer pid) {
+        return stepService.addStepForProcedure(sid, pid);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("set/steps")
-    public Response setStepsForProcedure(@Valid List<Integer> stepIds, @Valid Integer pid) {
-        Integer userId = acm.getCurrentUserId();
-        return stepService.setStepsForProcedure(userId, stepIds, pid);
+    @Path("{pid}/add/steps")
+    public Response addStepsForProcedure(@NotNull List<Integer> stepIds, @PathParam("pid") Integer pid) {
+        return stepService.addStepsForProcedure(stepIds, pid);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
-    public Response setStepsForProcedure(@Valid Step step) {
-        Integer userId = acm.getCurrentUserId();
-        return stepService.createStep(userId, step);
+    public Response createStep(Step step) {
+        return stepService.createStep(step);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("get/{pid}")
-    public List<Step> setStepsForProcedure(@PathParam("pid") Integer pid) {
+    public List<Step> getStepsOfProcedure(@PathParam("pid") Integer pid) {
         return stepService.getStepsOfProcedure(pid);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("remove")
-    public Response setStepsForProcedure(@Valid Integer sid, @Valid Integer pid) {
+    public Response removeStepsFromProcedure(Integer sid, Integer pid) {
         return stepService.removeStepFromProcedure(sid, pid);
     }
 

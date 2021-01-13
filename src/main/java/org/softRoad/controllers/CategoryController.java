@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/category")
+@Path("/categories")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -39,9 +39,9 @@ public class CategoryController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("set")
-    public Response setCategoryForProcedure(@Valid Integer cid, @Valid Integer pid) {
-        return categoryService.setCategoryForProcedure(pid, cid);
+    @Path("add")
+    public Response addCategoryForProcedure(@Valid Integer cid, @Valid Integer pid) {
+        return categoryService.addCategoryForProcedure(pid, cid);
     }
 
 
@@ -62,7 +62,7 @@ public class CategoryController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
-    public Response setCategoryForProcedure(@Valid Category category) {
+    public Response createCategory(@Valid Category category) {
         return categoryService.createCategory(category);
     }
 

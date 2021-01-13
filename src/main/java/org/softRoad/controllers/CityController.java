@@ -39,15 +39,15 @@ public class CityController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("set")
-    public Response setCityForProcedure(@Valid Integer pid, @Valid Integer cid) {
-        return cityService.setCityForProcedure(cid, pid);
+    @Path("add")
+    public Response addCityForProcedure(@Valid Integer pid, @Valid Integer cid) {
+        return cityService.addCityForProcedure(cid, pid);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("remove")
-    public Response removeCityFromProcedure(@Valid Integer pid, @Valid Integer cid) {
+    @Path("remove/{cid}/{pid}")
+    public Response removeCityFromProcedure(@PathParam("pid") Integer pid, @PathParam("cid") Integer cid) {
         return cityService.removeCityFromProcedure(cid, pid);
     }
 
@@ -67,8 +67,8 @@ public class CityController {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("remove")
-    public Response removeCity(@Valid Integer cid) {
+    @Path("remove/{cid}")
+    public Response removeCity(@PathParam("cid") Integer cid) {
         return cityService.removeCity(cid);
     }
 }

@@ -35,7 +35,7 @@ public class CityService extends CrudService<City> {
     }
 
     @Transactional
-    public Response setCityForProcedure(Integer cid, Integer pid) {
+    public Response addCityForProcedure(Integer cid, Integer pid) {
         Procedure procedure = Procedure.findById(pid);
 
         return null;

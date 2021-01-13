@@ -27,7 +27,7 @@ public class CategoryService extends CrudService<Category> {
     }
 
     @Transactional
-    public Response setCategoryForProcedure(Integer pid, Integer cid) {
+    public Response addCategoryForProcedure(Integer pid, Integer cid) {
 
         return null;
     }
