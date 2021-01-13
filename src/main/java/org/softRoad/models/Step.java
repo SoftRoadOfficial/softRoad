@@ -1,5 +1,6 @@
 package org.softRoad.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.softRoad.models.query.QueryUtils;
 
@@ -28,8 +29,8 @@ public class Step extends SoftRoadModel {
     public String description;
 
     @ManyToOne
-    @JoinColumn(name = "procedure_id") // TODO: 1/4/2021 double_checking
-    @JsonIgnoreProperties(value = "steps", allowSetters = true)
+    @JoinColumn(name = "procedure_id")
+    @JsonIgnore
     public Procedure procedure;
 
     public void setId(Integer id) {

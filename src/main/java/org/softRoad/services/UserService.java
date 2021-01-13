@@ -23,7 +23,6 @@ import org.softRoad.models.query.SearchCriteria;
 @ApplicationScoped
 public class UserService extends CrudService<User>
 {
-
     @Inject
     EntityManager entityManager;
 
@@ -72,8 +71,8 @@ public class UserService extends CrudService<User>
         if (User.find(User.PHONE_NUMBER + "=?1", user.phoneNumber).count() > 0)
             throw new DuplicateDataException("Duplicated phoneNumber");
         user.enabled = false; //FIXME users should be enabled after email or phone verification
-        User.persist(user);
-        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.email);
+        super.create(user);
+        return new AuthenticationResponse(SecurityUtils.createJwtToken(user), user.phoneNumber);
     }
 
     @Transactional

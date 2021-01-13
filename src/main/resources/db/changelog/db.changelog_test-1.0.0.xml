@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+
+    <changeSet id="inset-test-users" author="softroad" context="test">
+        <insert tableName="users">
+            <column name="email" value="test1@test.com"/>
+            <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
+            <column name="phone_number" value="09170000000"/>
+            <column name="display_name" value="test_user1"/>
+            <column name="enabled" value="false"/>
+        </insert>
+        <insert tableName="users">
+            <column name="email" value="test2@test.com"/>
+            <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
+            <column name="phone_number" value="09170000001"/>
+            <column name="display_name" value="test_user2"/>
+            <column name="enabled" value="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

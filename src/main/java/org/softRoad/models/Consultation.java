@@ -14,13 +14,16 @@ public class Consultation extends SoftRoadModel {
     public final static String ID = "id";
     @Transient
     public final static String CONSULTANT = "consultant_id";
+    @Transient
+    public final static String FEE = "fee_id";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn(name = "fee_id", unique = true)
     public Fee fee;
 
     @OneToMany(mappedBy = "consultation")

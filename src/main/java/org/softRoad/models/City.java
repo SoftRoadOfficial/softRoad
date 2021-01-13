@@ -23,10 +23,6 @@ public class City extends SoftRoadModel {
     @NotNull
     public String name;
 
-    @ManyToMany(mappedBy = "cities")
-    @JsonIgnore
-    public Set<Procedure> procedures = new HashSet<>();
-
     public void setId(Integer id) {
         this.id = id;
         presentFields.add("id");

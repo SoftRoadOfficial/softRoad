@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.softRoad.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
@@ -37,6 +33,8 @@ public class User extends SoftRoadModel {
     public final static String DISPLAY_NAME = "display_name";
     @Transient
     public final static String ENABLED = "enabled";
+    @Transient
+    public final static String CITY = "city_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +64,27 @@ public class User extends SoftRoadModel {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @Roles
     public Set<Role> roles = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "city_id") // TODO: 1/7/2021 double checking
+    @JsonIgnore
+    public City city;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    public Set<Comment> comments = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    public Set<UpdateRequest> updateRequests = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    public Set<AuditLog> auditLogs = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    public Set<Procedure> procedures = new HashSet<>();
 
     public void setPassword(String password) {
         if (password != null && !password.isEmpty())
@@ -98,6 +117,11 @@ public class User extends SoftRoadModel {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
         this.presentFields.add("enabled");
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+        presentFields.add("city");
     }
 
     @Override

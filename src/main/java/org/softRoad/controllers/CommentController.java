@@ -18,13 +18,10 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CommentController {
-
     private final CommentService commentService;
-
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
-
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,7 +60,15 @@ public class CommentController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user/{id}")
-    public List<Comment> getUserComments(@PathParam("id") Integer id, @NotNull SearchCriteria searchCriteria) {
-        return commentService.getUserComments(id, searchCriteria);
+    public List<Comment> getCommentsForUser(@PathParam("id") Integer id, @NotNull SearchCriteria searchCriteria) {
+        return commentService.getCommentsForUser(id, searchCriteria);
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("replies/{id}")
+    public List<Comment> getRepliesForComment(@PathParam("id") Integer id) {
+        return commentService.getRepliesForComment(id);
+    }
+
 }
