@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import org.softRoad.exception.InternalException;
 import org.softRoad.models.AuditLog.Action;
+import static org.softRoad.models.Tables.*;
 
 public class CrudService<T extends SoftRoadModel>
 {

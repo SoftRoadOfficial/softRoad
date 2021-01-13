@@ -9,17 +9,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.Response;
 
+import org.softRoad.exception.ForbiddenException;
 import org.softRoad.exception.InvalidDataException;
+import org.softRoad.exception.NotFoundException;
 import org.softRoad.models.Category;
 import org.softRoad.models.City;
 import org.softRoad.models.Comment;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.ProcedureCategories;
 import org.softRoad.models.ProcedureCities;
+import org.softRoad.models.Step;
+import org.softRoad.models.Tag;
+import org.softRoad.models.UpdateRequest;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.SearchCriteria;
+import org.softRoad.security.AccessControlManager;
+
 import static org.softRoad.models.Tables.*;
 
 
@@ -28,11 +36,155 @@ public class ProcedureService extends CrudService<Procedure>
 {
     @Inject
     EntityManager entityManager;
+
+    @Inject
+    AccessControlManager accessControlManager;
     
 
     public ProcedureService() 
     {
         super(Procedure.class);
+    }
+
+    @Transactional
+    public Response addCitiesToProcedure(Integer procedureId, List<Integer> cityIds) {
+        Procedure procedure = Procedure.findById(procedureId);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        for (Integer cityId : cityIds)
+        {
+            City city = City.findById(cityId);
+            if (city == null)
+                throw new InvalidDataException("Invalid city");
+            entityManager.createNativeQuery(String.format("insert into %s(%s, %s) values(:procedureId,:cityId)",
+                    PROCEDURE_CITIES, ProcedureCities.PROCEDURE_ID, ProcedureCities.CITIES_ID))
+                    .setParameter("procedureId", procedure.id)
+                    .setParameter("cityId", city.id).executeUpdate();        
+        }
+        return Response.ok().build();
+    }   
+
+    @Transactional
+    public Response addCategoriesToProcedure(Integer procedureId, List<Integer> categoryIds) {
+        Procedure procedure = Procedure.findById(procedureId);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        for (Integer categoryId : categoryIds)
+        {
+            Category category = Category.findById(categoryId);
+            if (category == null)
+                throw new InvalidDataException("Invalid category");
+            entityManager.createNativeQuery(String.format("insert into %s(%s, %s) values(:procedureId,:categoryId)",
+                    PROCEDURE_CATEGORIES, ProcedureCategories.PROCEDURE_ID, ProcedureCategories.CATEGORIES_ID))
+                    .setParameter("procedureId", procedure.id)
+                    .setParameter("categoryId", category.id).executeUpdate();        
+        }
+        return Response.ok().build();
+    }   
+
+    @Transactional
+    public Response removeCitiesForProcedure(Integer procedureId, List<Integer> cityIds) {
+        Procedure procedure = Procedure.findById(procedureId);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        for (Integer cityId : cityIds) 
+        {
+            Category city = Category.findById(cityId);
+            if (city == null)
+                throw new InvalidDataException("Invalid city");
+            entityManager.createNativeQuery(String.format("delete from %s where %s=:procedureId and %s=:cityId",
+                    PROCEDURE_CITIES, ProcedureCities.PROCEDURE_ID, ProcedureCities.CITIES_ID))
+                    .setParameter("procedureId", procedure.id)
+                    .setParameter("cityId", city.id).executeUpdate();
+        }    
+        return Response.ok().build();
+    }   
+
+    @Transactional
+    public Response removeCategoriesForProcedure(Integer procedureId, List<Integer> categoryIds) {
+        Procedure procedure = Procedure.findById(procedureId);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        for (Integer categoryId : categoryIds) 
+        {
+            Category category = Category.findById(categoryId);
+            if (category == null)
+                throw new InvalidDataException("Invalid category");
+            entityManager.createNativeQuery(String.format("delete from %s where %s=:procedureId and %s=:categoryId",
+                    PROCEDURE_CATEGORIES, ProcedureCategories.PROCEDURE_ID, ProcedureCategories.CATEGORIES_ID))
+                    .setParameter("procedureId", procedure.id)
+                    .setParameter("categoryId", category.id).executeUpdate();
+        }    
+        return Response.ok().build();
+    }   
+    
+    @Override
+    @Transactional
+    public Response update(Procedure procedure)
+    {     
+        if (accessControlManager.getCurrentUser().id != procedure.user.id)
+            throw new ForbiddenException("Forbiden function"); 
+        Procedure oldProcedure = Procedure.findById(procedure.id);
+        if (oldProcedure == null)
+            throw new NotFoundException("Procedure Not Found");
+        super.update(procedure);
+        return Response.ok().build();
+    }
+
+    @Transactional
+    public Set<UpdateRequest> getUpdateRequestsOfProcedure(Integer id)
+    {
+        Procedure procedure = Procedure.findById(id);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        return procedure.updateRequests;
+    }
+    
+    @Transactional
+    public Set<Step> getStepsOfProcedure(Integer id)
+    {
+        Procedure procedure = Procedure.findById(id);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        return procedure.steps;
+
+    }
+
+    @Transactional
+    public Set<Comment> getCommentsOfProcedure(Integer id)
+    {
+        Procedure procedure = Procedure.findById(id);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        return procedure.comments;
+
+    }
+
+    @Transactional
+    public Set<City> getCitiesOfProcedure(Integer id)
+    {
+        Procedure procedure = Procedure.findById(id);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        return procedure.cities;
+    }
+
+    @Transactional
+    public Set<Category> getCategoriesOfProcedure(Integer id)
+    {
+        Procedure procedure = Procedure.findById(id);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        return procedure.categories;
+    }
+
+    @Transactional
+    public Set<Tag> getTagsOfProcedure(Integer id)
+    {
+        Procedure procedure = Procedure.findById(id);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        return procedure.tags;
     }
 
     @Transactional
@@ -87,7 +239,7 @@ public class ProcedureService extends CrudService<Procedure>
                         .addFilter(new HqlQuery("%s=:idd", ProcedureCategories.CATEGORIES_ID).setParameter("idd", category.id))
                 .searchCriteria(searchCriteria)
                 .build();
-        return q.getResultList();        
+        return q.getResultList();
     }
 
 }
