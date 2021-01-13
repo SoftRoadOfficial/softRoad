@@ -40,7 +40,7 @@ public class Procedure extends SoftRoadModel {
     @NotNull
     public String description;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     public Instant createdDate;
 
     public Boolean confirmed;

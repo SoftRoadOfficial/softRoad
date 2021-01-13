@@ -23,7 +23,7 @@ public class Comment extends SoftRoadModel {
     @Transient
     public final static String CREATED_DATE = "created_date";
     @Transient
-    public final static String REPLY = "comment_id";
+    public final static String REPLY = "reply_id";
     @Transient
     public final static String CONSULTATION = "consultation_id";
     @Transient
@@ -37,7 +37,6 @@ public class Comment extends SoftRoadModel {
     public String text;
     public Integer rate;
 
-    @NotNull
     @Column(name = "created_date", nullable = false)
     public Instant createdDate;
 
@@ -45,7 +44,7 @@ public class Comment extends SoftRoadModel {
     public Set<Comment> comments = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "reply_id")
     @JsonIgnoreProperties(value = "comments", allowSetters = true)
     public Comment reply;
 
