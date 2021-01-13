@@ -1,6 +1,7 @@
 package org.softRoad.services;
 
 import com.google.common.base.Strings;
+import java.time.Instant;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Comment;
 import org.softRoad.models.User;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.Transactional;
 
 import static org.softRoad.models.Tables.COMMENTS;
 import static org.softRoad.models.Tables.USERS;
@@ -27,6 +29,7 @@ public class CommentService extends CrudService<Comment> {
     EntityManager entityManager;
 
     @Override
+    @Transactional
     public Response create(Comment obj) {
         if (obj.rate != null || !Strings.isNullOrEmpty(obj.text))
             return super.create(obj);

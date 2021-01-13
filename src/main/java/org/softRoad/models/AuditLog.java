@@ -5,9 +5,7 @@ import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Date;
 
 @Entity
 @Table(name = "audit_logs")
@@ -57,7 +55,8 @@ public class AuditLog extends SoftRoadModel
     public String objectType;
 
     @PrePersist
-    private void setTime() {
+    private void setTime()
+    {
         this.time = Instant.now();
     }
 
@@ -100,6 +99,13 @@ public class AuditLog extends SoftRoadModel
     public static String fields(String fieldName, String... fieldNames)
     {
         return QueryUtils.fields(AuditLog.class, fieldName, fieldNames);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AuditLog{" + "id=" + id + ", time=" + time + ", payload=" + payload + ", user=" + user + ", action="
+                + action + ", objectId=" + objectId + ", objectType=" + objectType + '}';
     }
 
     public static enum Action

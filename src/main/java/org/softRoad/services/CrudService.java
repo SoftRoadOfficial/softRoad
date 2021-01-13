@@ -21,7 +21,6 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Field;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,8 @@ public class CrudService<T extends SoftRoadModel>
         this.objClass = objClass;
     }
 
-    protected void log(Action type, T obj)
+    @Transactional
+    private void log(Action type, T obj)
     {
         AuditLog log = new AuditLog();
         log.user = accessControlManager.getCurrentUser();
@@ -74,16 +74,16 @@ public class CrudService<T extends SoftRoadModel>
     @Transactional
     public Response create(T obj)
     {
-        log(Action.CREATE, obj);
         obj.persist();
+        log(Action.CREATE, obj);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @Transactional
     public T get(Integer id)
     {
-        return (T) entityManager.createNativeQuery("select * from " + ModelUtils.getTableName(objClass)
-                + " where id=:id", objClass)
+        return (T) entityManager.createNativeQuery(String.format("select * from %s where id=:id",
+                ModelUtils.getTableName(objClass), objClass), objClass)
                 .setParameter("id", id).getResultStream().findFirst().get();
     }
 

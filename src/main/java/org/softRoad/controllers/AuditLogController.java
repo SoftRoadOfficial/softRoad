@@ -36,12 +36,6 @@ public class AuditLogController {
         return auditLogService.getAll(searchCriteria);
     }
 
-    @PATCH
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@Diff AuditLog auditLog) {
-        return auditLogService.update(auditLog);
-    }
-
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}")

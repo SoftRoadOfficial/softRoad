@@ -3,12 +3,12 @@ package org.softRoad.security;
 public class AuthenticationResponse
 {
     private String jwtToken;
-    private String username;
+    private String phoneNumber;
 
     public AuthenticationResponse(String jwtToken, String name)
     {
         this.jwtToken = jwtToken;
-        this.username = name;
+        this.phoneNumber = name;
     }
 
     public AuthenticationResponse()
@@ -25,14 +25,14 @@ public class AuthenticationResponse
         this.jwtToken = jwtToken;
     }
 
-    public String getUsername()
+    public String getPhoneNumber()
     {
-        return username;
+        return phoneNumber;
     }
 
-    public void setUsername(String username)
+    public void setPhoneNumber(String phoneNumber)
     {
-        this.username = username;
+        this.phoneNumber = phoneNumber;
     }
 
 }

@@ -7,8 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.JoinColumn;
 
 public class ModelUtils
@@ -19,7 +17,8 @@ public class ModelUtils
         if (idField == null)
             return null;
         try {
-            return (Integer) idField.get(bean);
+            Object res = idField.get(bean);
+            return res == null ? null : (Integer) res;
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -30,9 +29,8 @@ public class ModelUtils
         Field[] fields = aClass.getFields();
         for (Field f : fields) {
             Id idField = f.getAnnotation(Id.class);
-            if (idField != null) {
+            if (idField != null)
                 return f;
-            }
         }
         return null;
     }
@@ -71,13 +69,12 @@ public class ModelUtils
             field.setAccessible(true);
             JoinColumn annotation = field.getAnnotation(JoinColumn.class);
             if (annotation != null) {
-                getPrimaryKeyValue(model, model.getClass());
+                return getPrimaryKeyValue(field.get(model), field.getType());
             } else {
                 return field.get(model);
             }
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            throw new InvalidDataException("Invalid field");
+            throw new InvalidDataException("Invalid field -> " + fieldName);
         }
-        return null;
     }
 }
