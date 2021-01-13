@@ -5,7 +5,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="create-category-table" author="softroad">
+    <changeSet id="create-category-table" author="softroad" context="prod">
         <createTable tableName="categories">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -19,7 +19,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-user_verifications-table" author="softroad">
+    <changeSet id="create-user_verifications-table" author="softroad" context="prod">
         <createTable tableName="user_verifications">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -40,7 +40,7 @@
         <dropDefaultValue tableName="user_verifications" columnName="time" columnDataType="datetime"/>
     </changeSet>
 
-    <changeSet id="create-fees-table" author="softroad">
+    <changeSet id="create-fees-table" author="softroad" context="prod">
         <createTable tableName="fees">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -60,7 +60,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-consultant_profiles-table" author="softroad">
+    <changeSet id="create-consultant_profiles-table" author="softroad" context="prod">
         <createTable tableName="consultant_profiles">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -77,7 +77,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-fees-table-constraints" author="softroad">
+    <changeSet id="create-fees-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="consultant_id"
                                  baseTableName="fees"
                                  constraintName="fk_fee_consultant_id"
@@ -91,7 +91,7 @@
                                  referencedTableName="categories"/>
     </changeSet>
 
-    <changeSet id="create-consultant_profile_categories-table" author="softroad">
+    <changeSet id="create-consultant_profile_categories-table" author="softroad" context="prod">
         <createTable tableName="consultant_profile_categories">
             <column name="categories_id" type="bigint" >
                 <constraints nullable="false"/>
@@ -103,7 +103,7 @@
         <addPrimaryKey columnNames="consultant_profile_id, categories_id" tableName="consultant_profile_categories"/>
     </changeSet>
 
-    <changeSet id="create-consultant_profiles-table-constraints" author="softroad">
+    <changeSet id="create-consultant_profiles-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="consultant_profiles"
                                  constraintName="fk_consultant_profiles_user_id"
@@ -122,7 +122,7 @@
                                  referencedTableName="categories"/>
     </changeSet>
 
-    <changeSet id="create-consultations-table" author="softroad">
+    <changeSet id="create-consultations-table" author="softroad" context="prod">
         <createTable tableName="consultations">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -136,7 +136,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-consultations-table-constraints" author="softroad">
+    <changeSet id="create-consultations-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="fee_id"
                                  baseTableName="consultations"
                                  constraintName="fk_consultation_fee_id"
@@ -150,7 +150,7 @@
                                  referencedTableName="consultant_profiles"/>
     </changeSet>
 
-    <changeSet id="create-cities-table" author="softroad">
+    <changeSet id="create-cities-table" author="softroad" context="prod">
         <createTable tableName="cities">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -161,7 +161,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-users-table-constraints" author="softroad">
+    <changeSet id="create-users-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="city_id"
                                  baseTableName="users"
                                  constraintName="fk_user_city_id"
@@ -169,7 +169,7 @@
                                  referencedTableName="cities"/>
     </changeSet>
 
-    <changeSet id="create-procedures-table" author="softroad">
+    <changeSet id="create-procedures-table" author="softroad" context="prod">
         <createTable tableName="procedures">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -193,7 +193,7 @@
         <dropDefaultValue tableName="procedures" columnName="created_date" columnDataType="datetime"/>
     </changeSet>
 
-    <changeSet id="create-procedures-relations-table" author="softroad">
+    <changeSet id="create-procedures-relations-table" author="softroad" context="prod">
         <createTable tableName="procedure_cities">
             <column name="cities_id" type="bigint">
                 <constraints nullable="false"/>
@@ -217,7 +217,7 @@
         <addPrimaryKey columnNames="procedure_id, categories_id" tableName="procedure_categories"/>
     </changeSet>
 
-    <changeSet id="create-procedures-table-constraints" author="softroad">
+    <changeSet id="create-procedures-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="procedures"
                                  constraintName="fk_user_procedures_user_id"
@@ -248,7 +248,7 @@
                                  referencedTableName="categories"/>
     </changeSet>
 
-    <changeSet id="create-update-requests-table" author="softroad">
+    <changeSet id="create-update-requests-table" author="softroad" context="prod">
         <createTable tableName="update_requests">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -272,7 +272,7 @@
         <dropDefaultValue tableName="update_requests" columnName="created_date" columnDataType="datetime"/>
     </changeSet>
 
-    <changeSet id="create-update_requests-table-constraints" author="softroad">
+    <changeSet id="create-update_requests-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="update_requests"
                                  constraintName="fk_update_requests_user_id"
@@ -280,7 +280,7 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="create-update-requests-table-constraints" author="softroad">
+    <changeSet id="create-update-requests-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="procedure_id"
                                  baseTableName="update_requests"
                                  constraintName="fk_update_request_procedure_id"
@@ -288,7 +288,7 @@
                                  referencedTableName="procedures"/>
     </changeSet>
 
-    <changeSet id="create-comments-table" author="softroad">
+    <changeSet id="create-comments-table" author="softroad" context="prod">
         <createTable tableName="comments">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -318,7 +318,7 @@
         <dropDefaultValue tableName="comments" columnName="created_date" columnDataType="datetime"/>
     </changeSet>
 
-    <changeSet id="create-comments-table-constraints" author="softroad">
+    <changeSet id="create-comments-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="comments"
                                  constraintName="fk_comments_user_id"
@@ -343,7 +343,7 @@
                                  referencedTableName="procedures"/>
     </changeSet>
 
-    <changeSet id="create-steps-table" author="softroad">
+    <changeSet id="create-steps-table" author="softroad" context="prod">
         <createTable tableName="steps">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -366,7 +366,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-steps-table-constraints" author="softroad">
+    <changeSet id="create-steps-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="procedure_id"
                                  baseTableName="steps"
                                  constraintName="fk_step_procedure_id"
@@ -374,7 +374,7 @@
                                  referencedTableName="procedures"/>
     </changeSet>
 
-    <changeSet id="create-audit-logs-table" author="softroad">
+    <changeSet id="create-audit-logs-table" author="softroad" context="prod">
         <createTable tableName="audit_logs">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -401,7 +401,7 @@
         <dropDefaultValue tableName="audit_logs" columnName="time" columnDataType="datetime"/>
     </changeSet>
 
-    <changeSet id="create-audit-logs-table-constraints" author="softroad">
+    <changeSet id="create-audit-logs-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="audit_logs"
                                  constraintName="fk_audit-logs_user_id"
@@ -409,7 +409,7 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="create-procedure-tags-table" author="softroad">
+    <changeSet id="create-procedure-tags-table" author="softroad" context="prod">
         <createTable tableName="procedure-tags">
             <column name="procedure_id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_procedure_tag" nullable="false"
@@ -420,7 +420,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="create-consultant-profiles-tags-table" author="softroad">
+    <changeSet id="create-consultant-profiles-tags-table" author="softroad" context="prod">
         <createTable tableName="consultant-profiles-tags">
             <column name="consultant_profiles_id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_procedure-tag" nullable="false"

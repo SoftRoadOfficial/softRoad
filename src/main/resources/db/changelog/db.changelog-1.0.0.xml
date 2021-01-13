@@ -5,7 +5,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     
     
-    <changeSet id="create-users-table" author="softroad">
+    <changeSet id="create-users-table" author="softroad" context="prod">
         <createTable tableName="users">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -31,7 +31,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-roles-table" author="softroad">
+    <changeSet id="create-roles-table" author="softroad" context="prod">
         <createTable tableName="roles">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -42,7 +42,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create-user_role-table" author="softroad">
+    <changeSet id="create-user_role-table" author="softroad" context="prod">
         <createTable tableName="user_role">
             <column name="user_id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_user_role" nullable="false"
@@ -55,7 +55,7 @@
         </createTable>
     </changeSet>
     
-    <changeSet id="create-role_permission-table" author="softroad">
+    <changeSet id="create-role_permission-table" author="softroad" context="prod">
         <createTable tableName="role_permission">
             <column name="role_id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_role_permission" nullable="false"
