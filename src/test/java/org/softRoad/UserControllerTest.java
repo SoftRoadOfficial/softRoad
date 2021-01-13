@@ -34,7 +34,7 @@ public class UserControllerTest {
                 .post("/users/signup")
                 .then()
                 .statusCode(200)
-                .body("username", equalTo("mhf1377@gmail.com"))
+                .body("phoneNumber", equalTo("09172009167"))
                 .body("jwtToken", CoreMatchers.notNullValue());
     }
 
