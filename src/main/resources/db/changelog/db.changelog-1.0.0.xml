@@ -50,7 +50,7 @@
             </column>
             <column name="role_id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_user_role" nullable="false"
-                             foreignKeyName="fk_user_role_role_id" references="roles(id)" deleteCascade="true"/>
+                             foreignKeyName="fk_user_role(role_id, roles(id))" references="roles(id)" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
@@ -59,7 +59,7 @@
         <createTable tableName="role_permission">
             <column name="role_id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_role_permission" nullable="false"
-                             foreignKeyName="fk_role_permission_role_id" references="roles(id)" deleteCascade="true"/>
+                             foreignKeyName="fk_role_permission(role_id, roles(id))" references="roles(id)" deleteCascade="true"/>
             </column>
             <column name="permission" type="varchar(32)">
                 <constraints primaryKey="true" primaryKeyName="pk_role_permission" nullable="false"/>

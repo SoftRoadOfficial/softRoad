@@ -46,16 +46,16 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="amount" type="integer">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="minute" type="integer">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="consultant_id" type="bigint">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="category_id" type="bigint">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -65,10 +65,10 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="bio" type="varchar(255)">
+            <column name="bio" type="varchar(2048)">
                 <constraints nullable="true"/>
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="varchar(256)">
                 <constraints nullable="true"/>
             </column>
             <column name="user_id" type="bigint">
@@ -80,13 +80,13 @@
     <changeSet id="create-fees-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="consultant_id"
                                  baseTableName="fees"
-                                 constraintName="fk_fee_consultant_id"
+                                 constraintName="fk_fees(consultant_id,consultant_profiles(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="consultant_profiles"/>
 
         <addForeignKeyConstraint baseColumnNames="category_id"
                                  baseTableName="fees"
-                                 constraintName="fk_fee_category_id"
+                                 constraintName="fk_fees(category_id,categories(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="categories"/>
     </changeSet>
@@ -106,18 +106,19 @@
     <changeSet id="create-consultant_profiles-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="consultant_profiles"
-                                 constraintName="fk_consultant_profiles_user_id"
+                                 constraintName="fk_consultant_profiles(user_id, users(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
+
         <addForeignKeyConstraint baseColumnNames="consultant_profile_id"
                                  baseTableName="consultant_profile_categories"
-                                 constraintName="fk_consultant_profile_categories_consultant_profile_id"
+                                 constraintName="fk_consultant_profile_categories(consultant_profile_id, consultant_profiles(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="consultant_profiles"/>
 
         <addForeignKeyConstraint baseColumnNames="categories_id"
                                  baseTableName="consultant_profile_categories"
-                                 constraintName="fk_consultant_profile_categories_categories_id"
+                                 constraintName="fk_consultant_profile_categories(categories_id, categories(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="categories"/>
     </changeSet>
@@ -128,10 +129,10 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="fee_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_consultation_fee_id"/>
+                <constraints nullable="true"/>
             </column>
             <column name="consultant_id" type="bigint">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -139,13 +140,13 @@
     <changeSet id="create-consultations-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="fee_id"
                                  baseTableName="consultations"
-                                 constraintName="fk_consultation_fee_id"
+                                 constraintName="fk_consultations(fee_id, fees(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="fees"/>
 
         <addForeignKeyConstraint baseColumnNames="consultant_id"
                                  baseTableName="consultations"
-                                 constraintName="fk_consultation_consultant_id"
+                                 constraintName="fk_consultations(consultant_id, consultant_profiles(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="consultant_profiles"/>
     </changeSet>
@@ -155,7 +156,7 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="name" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -164,7 +165,7 @@
     <changeSet id="create-users-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="city_id"
                                  baseTableName="users"
-                                 constraintName="fk_user_city_id"
+                                 constraintName="fk_users(city_id, cities(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="cities"/>
     </changeSet>
@@ -174,10 +175,10 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="title" type="varchar(255)">
+            <column name="title" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_date" type="datetime">
@@ -194,8 +195,8 @@
     </changeSet>
 
     <changeSet id="create-procedures-relations-table" author="softroad" context="prod">
-        <createTable tableName="procedure_cities">
-            <column name="cities_id" type="bigint">
+        <createTable tableName="procedure_city">
+            <column name="city_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="procedure_id" type="bigint">
@@ -203,10 +204,10 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="procedure_id, cities_id" tableName="procedure_cities"/>
+        <addPrimaryKey columnNames="procedure_id, city_id" tableName="procedure_city"/>
 
-        <createTable tableName="procedure_categories">
-            <column name="categories_id" type="bigint">
+        <createTable tableName="procedure_category">
+            <column name="category_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="procedure_id" type="bigint">
@@ -214,36 +215,37 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="procedure_id, categories_id" tableName="procedure_categories"/>
+        <addPrimaryKey columnNames="procedure_id, category_id" tableName="procedure_category"/>
     </changeSet>
 
     <changeSet id="create-procedures-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="procedures"
-                                 constraintName="fk_user_procedures_user_id"
+                                 constraintName="fk_procedures(user_id, users(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
+
         <addForeignKeyConstraint baseColumnNames="procedure_id"
-                                 baseTableName="procedure_cities"
-                                 constraintName="fk_procedure_cities_procedure_id"
+                                 baseTableName="procedure_city"
+                                 constraintName="fk_procedure_city(procedure_id, procedures(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="procedures"/>
 
-        <addForeignKeyConstraint baseColumnNames="cities_id"
-                                 baseTableName="procedure_cities"
-                                 constraintName="fk_procedure_cities_cities_id"
+        <addForeignKeyConstraint baseColumnNames="city_id"
+                                 baseTableName="procedure_city"
+                                 constraintName="fk_procedure_city(cities_id, cities(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="cities"/>
 
         <addForeignKeyConstraint baseColumnNames="procedure_id"
-                                 baseTableName="procedure_categories"
-                                 constraintName="fk_procedure_categories_procedure_id"
+                                 baseTableName="procedure_category"
+                                 constraintName="fk_procedure_category(procedure_id, procedures(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="procedures"/>
 
-        <addForeignKeyConstraint baseColumnNames="categories_id"
-                                 baseTableName="procedure_categories"
-                                 constraintName="fk_procedure_categories_categories_id"
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="procedure_category"
+                                 constraintName="fk_procedure_category(category_id, categories(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="categories"/>
     </changeSet>
@@ -259,11 +261,11 @@
             <column name="created_date" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="payload" type="varchar(255)">
+            <column name="payload" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
             <column name="procedure_id" type="bigint">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
@@ -275,7 +277,7 @@
     <changeSet id="create-update_requests-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="update_requests"
-                                 constraintName="fk_update_requests_user_id"
+                                 constraintName="fk_update_requests(user_id, users(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
     </changeSet>
@@ -283,7 +285,7 @@
     <changeSet id="create-update-requests-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="procedure_id"
                                  baseTableName="update_requests"
-                                 constraintName="fk_update_request_procedure_id"
+                                 constraintName="fk_update_requests(procedure_id, procedures(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="procedures"/>
     </changeSet>
@@ -293,7 +295,7 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="text" type="varchar(255)">
+            <column name="text" type="varchar(256)">
                 <constraints nullable="true"/>
             </column>
             <column name="rate" type="integer">
@@ -321,24 +323,24 @@
     <changeSet id="create-comments-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="comments"
-                                 constraintName="fk_comments_user_id"
+                                 constraintName="fk_comments(user_id, users(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
         <addForeignKeyConstraint baseColumnNames="reply_id"
                                  baseTableName="comments"
-                                 constraintName="fk_comment_reply_id"
+                                 constraintName="fk_comments(reply_id, comments(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="comments"/>
 
         <addForeignKeyConstraint baseColumnNames="consultation_id"
                                  baseTableName="comments"
-                                 constraintName="fk_comment_consultation_id"
+                                 constraintName="fk_comments(consultation_id, consultations(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="consultations"/>
 
         <addForeignKeyConstraint baseColumnNames="procedure_id"
                                  baseTableName="comments"
-                                 constraintName="fk_comment_procedure_id"
+                                 constraintName="fk_comments(procedure_id, procedures(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="procedures"/>
     </changeSet>
@@ -348,16 +350,17 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="title" type="varchar(255)">
+            <column name="title" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="varchar(256)">
                 <constraints nullable="true"/>
             </column>
             <column name="picture" type="longblob">
+<!--                double checking-->
                 <constraints nullable="true"/>
             </column>
-            <column name="picture_content_type" type="varchar(255)">
+            <column name="picture_content_type" type="varchar(32)">
                 <constraints nullable="true"/>
             </column>
             <column name="procedure_id" type="bigint">
@@ -369,7 +372,7 @@
     <changeSet id="create-steps-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="procedure_id"
                                  baseTableName="steps"
-                                 constraintName="fk_step_procedure_id"
+                                 constraintName="fk_steps(procedure_id, procedures(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="procedures"/>
     </changeSet>
@@ -382,19 +385,19 @@
             <column name="time" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="payload" type="varchar(255)">
+            <column name="payload" type="varchar(256)">
                 <constraints nullable="true"/>
             </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
-            <column name="action" type="varchar(255)">
+            <column name="action" type="varchar(128)">
                 <constraints nullable="false"/>
             </column>
             <column name="object_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="object_type" type="varchar(255)">
+            <column name="object_type" type="varchar(128)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -404,7 +407,7 @@
     <changeSet id="create-audit-logs-table-constraints" author="softroad" context="prod">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="audit_logs"
-                                 constraintName="fk_audit-logs_user_id"
+                                 constraintName="fk_audit-logs(user_id, users(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
     </changeSet>
@@ -412,8 +415,9 @@
     <changeSet id="create-procedure-tags-table" author="softroad" context="prod">
         <createTable tableName="procedure-tags">
             <column name="procedure_id" type="int">
+<!--                double check deleteCascade-->
                 <constraints primaryKey="true" primaryKeyName="pk_procedure_tag" nullable="false"
-                             foreignKeyName="fk_tag_procedure_id" references="procedures(id)" deleteCascade="true"/>
+                             foreignKeyName="fk_procedure-tags(procedure_id, procedures(id))" references="procedures(id)" deleteCascade="true"/>
             </column>
             <column name="tag" type="varchar(32)">
                 <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>
@@ -424,7 +428,7 @@
         <createTable tableName="consultant-profiles-tags">
             <column name="consultant_profiles_id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_procedure-tag" nullable="false"
-                             foreignKeyName="fk_tag_consultant_profiles_id" references="consultant_profiles(id)" deleteCascade="true"/>
+                             foreignKeyName="fk_consultant-profiles-tags(consultant_profiles_id,consultant_profiles(id))" references="consultant_profiles(id)" deleteCascade="true"/>
             </column>
             <column name="tag" type="varchar(32)">
                 <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>

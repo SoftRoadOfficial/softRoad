@@ -36,9 +36,13 @@ public class UserVerification extends SoftRoadModel {
     @Column(name = "verified", nullable = false)
     public Boolean verified;
 
-    @NotNull
     @Column(name = "time", nullable = false)
     public Instant time;
+
+    @PrePersist
+    private void setTime(){
+        this.time = Instant.now();
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -58,11 +62,6 @@ public class UserVerification extends SoftRoadModel {
     public void setVerified(Boolean verified) {
         this.verified = verified;
         presentFields.add("verified");
-    }
-
-    public void setTime(Instant time) {
-        this.time = time;
-        presentFields.add("time");
     }
 
     public static String fields(String fieldName, String ... fieldNames) {
