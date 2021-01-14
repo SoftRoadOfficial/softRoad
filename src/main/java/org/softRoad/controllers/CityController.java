@@ -30,12 +30,6 @@ public class CityController {
         return cityService.getCity(cid);
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("procedures/{cid}")
-    public List<Procedure> getProceduresOfCity(@PathParam("cid") Integer cid) {
-        return cityService.getProceduresOfCity(cid);
-    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,13 +56,13 @@ public class CityController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
     public Response createCity(@Valid City city) {
-        return cityService.createCity(city);
+        return cityService.create(city);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("remove/{cid}")
     public Response removeCity(@PathParam("cid") Integer cid) {
-        return cityService.removeCity(cid);
+        return cityService.delete(cid);
     }
 }

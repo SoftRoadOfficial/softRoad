@@ -27,7 +27,7 @@ public class CategoryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{cid}")
     public Category getCategory(@PathParam("cid") Integer cid) {
-        return categoryService.getCategory(cid);
+        return categoryService.get(cid);
     }
 
     @GET
@@ -63,7 +63,7 @@ public class CategoryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
     public Response createCategory(@Valid Category category) {
-        return categoryService.createCategory(category);
+        return categoryService.create(category);
     }
 
 

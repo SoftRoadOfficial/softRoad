@@ -39,7 +39,7 @@ public class StepController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
     public Response createStep(Step step) {
-        return stepService.createStep(step);
+        return stepService.create(step);
     }
 
     @GET

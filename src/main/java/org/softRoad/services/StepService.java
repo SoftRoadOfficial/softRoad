@@ -1,6 +1,7 @@
 package org.softRoad.services;
 
 import org.softRoad.exception.InvalidDataException;
+import org.softRoad.exception.NotFoundException;
 import org.softRoad.exception.SoftroadException;
 import org.softRoad.models.*;
 import org.softRoad.security.AccessControlManager;
@@ -10,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +35,10 @@ public class StepService extends CrudService<Step> {
             throw new SoftroadException("User has no access");
         Procedure procedure = Procedure.findById(pid);
         if (procedure == null)
-            throw new InvalidDataException("Invalid procedure");
+            throw new NotFoundException("Procedure not found");
         Step step = Step.findById(sid);
         if (step == null)
-            throw new InvalidDataException("Invalid step");
+            throw new NotFoundException("Step not found");
         entityManager.createNativeQuery(
                 String.format("insert into %s(%s, %s) values(:sid,:pid)",
                         STEPS,
@@ -64,10 +64,10 @@ public class StepService extends CrudService<Step> {
             throw new SoftroadException("User has no access");
         Procedure procedure = Procedure.findById(pid);
         if (procedure == null)
-            throw new InvalidDataException("Invalid procedure");
+            throw new NotFoundException("Procedure not found");
         Step step = Step.findById(sid);
         if (step == null)
-            throw new InvalidDataException("Invalid step");
+            throw new NotFoundException("Step not found");
         entityManager.createNativeQuery(
                 String.format("delete from %s where %s=:sid and %s=:pid",
                         STEPS,
@@ -83,15 +83,7 @@ public class StepService extends CrudService<Step> {
     public List<Step> getStepsOfProcedure(Integer pid) {
         Procedure procedure = Procedure.findById(pid);
         if (procedure == null)
-            throw new InvalidDataException("Invalid procedure");
+            throw new NotFoundException("Procedure not found");
         return new ArrayList<>(procedure.steps);
     }
-
-    @Transactional
-    public Response createStep(@Valid Step step) {
-        if (step.title != null)
-            return super.create(step);
-        throw new InvalidDataException("Step title is null");
-    }
-
 }
