@@ -7,6 +7,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,6 +23,7 @@ import org.softRoad.models.Tag;
 import org.softRoad.models.UpdateRequest;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.services.ProcedureService;
+import org.softRoad.utils.Diff;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
@@ -49,10 +51,9 @@ public class ProcedureController
         return procedureService.create(procedure);
     }
 
-    @POST
+    @PATCH
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("update")
-    public Response update(@Valid Procedure procedure) 
+    public Response update(@Diff Procedure procedure)
     {
         return procedureService.update(procedure);
     }

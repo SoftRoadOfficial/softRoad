@@ -57,7 +57,7 @@ public class ProcedureService extends CrudService<Procedure>
             if (city == null)
                 throw new InvalidDataException("Invalid city");
             entityManager.createNativeQuery(String.format("insert into %s(%s, %s) values(:procedureId,:cityId)",
-                    PROCEDURE_CITIES, ProcedureCity.PROCEDURE_ID, ProcedureCity.CITIES_ID))
+                    PROCEDURE_CITY, ProcedureCity.PROCEDURE_ID, ProcedureCity.CITIES_ID))
                     .setParameter("procedureId", procedure.id)
                     .setParameter("cityId", city.id).executeUpdate();        
         }
@@ -75,7 +75,7 @@ public class ProcedureService extends CrudService<Procedure>
             if (category == null)
                 throw new InvalidDataException("Invalid category");
             entityManager.createNativeQuery(String.format("insert into %s(%s, %s) values(:procedureId,:categoryId)",
-                    PROCEDURE_CATEGORIES, ProcedureCategory.PROCEDURE_ID, ProcedureCategory.CATEGORIES_ID))
+                    PROCEDURE_CATEGORY, ProcedureCategory.PROCEDURE_ID, ProcedureCategory.CATEGORIES_ID))
                     .setParameter("procedureId", procedure.id)
                     .setParameter("categoryId", category.id).executeUpdate();        
         }
@@ -93,7 +93,7 @@ public class ProcedureService extends CrudService<Procedure>
             if (city == null)
                 throw new InvalidDataException("Invalid city");
             entityManager.createNativeQuery(String.format("delete from %s where %s=:procedureId and %s=:cityId",
-                    PROCEDURE_CITIES, ProcedureCity.PROCEDURE_ID, ProcedureCity.CITIES_ID))
+                    PROCEDURE_CITY, ProcedureCity.PROCEDURE_ID, ProcedureCity.CITIES_ID))
                     .setParameter("procedureId", procedure.id)
                     .setParameter("cityId", city.id).executeUpdate();
         }    
@@ -111,7 +111,7 @@ public class ProcedureService extends CrudService<Procedure>
             if (category == null)
                 throw new InvalidDataException("Invalid category");
             entityManager.createNativeQuery(String.format("delete from %s where %s=:procedureId and %s=:categoryId",
-                    PROCEDURE_CATEGORIES, ProcedureCategory.PROCEDURE_ID, ProcedureCategory.CATEGORIES_ID))
+                    PROCEDURE_CATEGORY, ProcedureCategory.PROCEDURE_ID, ProcedureCategory.CATEGORIES_ID))
                     .setParameter("procedureId", procedure.id)
                     .setParameter("categoryId", category.id).executeUpdate();
         }    
@@ -197,7 +197,7 @@ public class ProcedureService extends CrudService<Procedure>
         
         Query q = QueryUtils.nativeQuery(entityManager, Procedure.class)
         .baseQuery(new HqlQuery("select u.* from %s as u right join %s on u.%s=%s",
-                        PROCEDURES, PROCEDURE_CITIES, Procedure.ID, ProcedureCity.fields(ProcedureCity.PROCEDURE_ID)))
+                        PROCEDURES, PROCEDURE_CITY, Procedure.ID, ProcedureCity.fields(ProcedureCity.PROCEDURE_ID)))
                         .addFilter(new HqlQuery("%s=:idd", ProcedureCity.CITIES_ID).setParameter("idd", city.id))
                 .searchCriteria(searchCriteria)
                 .build();
@@ -214,7 +214,7 @@ public class ProcedureService extends CrudService<Procedure>
         
         Query q = QueryUtils.nativeQuery(entityManager, Procedure.class)
         .baseQuery(new HqlQuery("select u.* from %s as u right join %s on u.%s=%s",
-        PROCEDURES, PROCEDURE_CATEGORIES, Procedure.ID, ProcedureCategory.fields(ProcedureCategory.PROCEDURE_ID)))
+        PROCEDURES, PROCEDURE_CATEGORY, Procedure.ID, ProcedureCategory.fields(ProcedureCategory.PROCEDURE_ID)))
         .addFilter(new HqlQuery("%s=:idd", ProcedureCategory.CATEGORIES_ID).setParameter("idd", category.id))
         .searchCriteria(searchCriteria)
         .build();
@@ -234,7 +234,7 @@ public class ProcedureService extends CrudService<Procedure>
         
         Query q = QueryUtils.nativeQuery(entityManager, Procedure.class)
         .baseQuery(new HqlQuery("select u.* from %s as p right join %s as pc on p.%s=pc.%s right join %s as pcat on p.%s=pcat.%s",
-                        PROCEDURES, PROCEDURE_CITIES, Procedure.ID, ProcedureCity.PROCEDURE_ID, Procedure.ID, ProcedureCategory.PROCEDURE_ID))
+                        PROCEDURES, PROCEDURE_CITY, Procedure.ID, ProcedureCity.PROCEDURE_ID, Procedure.ID, ProcedureCategory.PROCEDURE_ID))
                         .addFilter(new HqlQuery("%s=:idd", ProcedureCity.CITIES_ID).setParameter("idd", city.id))
                         .addFilter(new HqlQuery("%s=:idd", ProcedureCategory.CATEGORIES_ID).setParameter("idd", category.id))
                 .searchCriteria(searchCriteria)
