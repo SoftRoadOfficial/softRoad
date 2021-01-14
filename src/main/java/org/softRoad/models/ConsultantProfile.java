@@ -46,9 +46,9 @@ public class ConsultantProfile extends SoftRoadModel {
     public Set<Fee> fees = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "consultant_profile_categories",
-            joinColumns = @JoinColumn(name = "consultant_profile_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "categories_id", referencedColumnName = "id"))
+    @JoinTable(name = "consultant_profile_category",
+            joinColumns = @JoinColumn(name = "consultant_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
     public Set<Category> categories = new HashSet<>();
 
     @ManyToMany
