@@ -59,21 +59,22 @@ public class Procedure extends SoftRoadModel {
 
     @ManyToMany
     @JsonIgnore
-    @JoinTable(name = "procedure_cities",
+    @JoinTable(name = "procedure_city",
             joinColumns = @JoinColumn(name = "procedure_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "cities_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"))
     public Set<City> cities = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "procedure_categories",
+    @JoinTable(name = "procedure_category",
             joinColumns = @JoinColumn(name = "procedure_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "categories_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
     public Set<Category> categories = new HashSet<>();
 
 
-    @ElementCollection
-    @CollectionTable(name = "procedure_tags", joinColumns = @JoinColumn(name = "procedure_id"))
-    @Column(name = "tag")
+    @ManyToMany
+    @JoinTable(name = "procedure_tag",
+            joinColumns = @JoinColumn(name = "procedure_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     @JsonIgnore
     public Set<Tag> tags = new HashSet<>();
 

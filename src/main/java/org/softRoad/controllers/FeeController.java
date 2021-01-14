@@ -3,6 +3,7 @@ package org.softRoad.controllers;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,7 +12,6 @@ import javax.ws.rs.core.Response;
 import org.softRoad.models.Fee;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.services.FeeService;
-import org.softRoad.utils.Diff;
 
 @Path("/fees")
 @RequestScoped
@@ -30,25 +30,24 @@ public class FeeController
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("add")
-    public Response add(Fee fee) 
+    @Path("create")
+    public Response createFeesForConsultant(List<@Valid Fee> fees) 
     {
-        return feeService.addFeeForConsultant(fee);
+        return feeService.createFeesForConsultant(fees);
     }
 
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@Diff Fee fee)
+    public Response updateFeesOfConsultant(List<@Valid Fee> fees)
     {
-        return feeService.update(fee);
+        return feeService.updateFeesOfConsultant(fees);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public Response delete(@PathParam("id") Integer id)
+    public Response deleteFeesOfConsultant(List<Integer> feeIds)
     {
-        return feeService.delete(id);
+        return feeService.deleteFeesOfConsultant(feeIds);
     }
 
     @POST
@@ -58,7 +57,5 @@ public class FeeController
     {
         return feeService.getAll(searchCriteria);   
     }
-
-    
     
 }

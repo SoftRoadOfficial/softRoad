@@ -65,6 +65,9 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="national_id" type="varchar(32)">
+                <constraints unique="true" nullable="false"/>
+            </column>
             <column name="bio" type="varchar(2048)">
                 <constraints nullable="true"/>
             </column>
@@ -91,16 +94,16 @@
                                  referencedTableName="categories"/>
     </changeSet>
 
-    <changeSet id="create-consultant_profile_categories-table" author="softroad" context="prod">
-        <createTable tableName="consultant_profile_categories">
-            <column name="categories_id" type="bigint" >
+    <changeSet id="create-consultant_profile_category-table" author="softroad" context="prod">
+        <createTable tableName="consultant_profile_category">
+            <column name="category_id" type="bigint" >
                 <constraints nullable="false"/>
             </column>
-            <column name="consultant_profile_id" type="bigint">
+            <column name="consultant_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey columnNames="consultant_profile_id, categories_id" tableName="consultant_profile_categories"/>
+        <addPrimaryKey columnNames="consultant_id, category_id" tableName="consultant_profile_category"/>
     </changeSet>
 
     <changeSet id="create-consultant_profiles-table-constraints" author="softroad" context="prod">
@@ -110,15 +113,15 @@
                                  referencedColumnNames="id"
                                  referencedTableName="users"/>
 
-        <addForeignKeyConstraint baseColumnNames="consultant_profile_id"
-                                 baseTableName="consultant_profile_categories"
-                                 constraintName="fk_consultant_profile_categories(consultant_profile_id, consultant_profiles(id))"
+        <addForeignKeyConstraint baseColumnNames="consultant_id"
+                                 baseTableName="consultant_profile_category"
+                                 constraintName="fk_consultant_profile_category(consultant_id, consultant_profiles(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="consultant_profiles"/>
 
-        <addForeignKeyConstraint baseColumnNames="categories_id"
-                                 baseTableName="consultant_profile_categories"
-                                 constraintName="fk_consultant_profile_categories(categories_id, categories(id))"
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="consultant_profile_category"
+                                 constraintName="fk_consultant_profile_category(category_id, categories(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="categories"/>
     </changeSet>
@@ -412,29 +415,65 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="create-procedure-tags-table" author="softroad" context="prod">
-        <createTable tableName="procedure-tags">
-            <column name="procedure_id" type="int">
-<!--                double check deleteCascade-->
-                <constraints primaryKey="true" primaryKeyName="pk_procedure_tag" nullable="false"
-                             foreignKeyName="fk_procedure-tags(procedure_id, procedures(id))" references="procedures(id)" deleteCascade="true"/>
+    <changeSet id="create-tags-table" author="softroad" context="prod">
+        <createTable tableName="tags">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="tag" type="varchar(32)">
-                <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>
+            <column name="name" type="varchar(256)">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="create-consultant-profiles-tags-table" author="softroad" context="prod">
-        <createTable tableName="consultant-profiles-tags">
-            <column name="consultant_profiles_id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_procedure-tag" nullable="false"
-                             foreignKeyName="fk_consultant-profiles-tags(consultant_profiles_id,consultant_profiles(id))" references="consultant_profiles(id)" deleteCascade="true"/>
+
+    <changeSet id="create-tags-relation" author="softroad" context="prod">
+        <createTable tableName="procedure_tag">
+            <column name="procedure_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
-            <column name="tag" type="varchar(32)">
-                <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
         </createTable>
+        <addPrimaryKey columnNames="procedure_id, tag_id" tableName="procedure_tag"/>
+
+        <createTable tableName="consultant_profile_tag">
+            <column name="consultant_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="consultant_id, tag_id" tableName="consultant_profile_tag"/>
     </changeSet>
+
+    <changeSet id="create-tags-table-constraints" author="softroad" context="prod">
+        <addForeignKeyConstraint baseTableName="procedure_tag"
+                                 baseColumnNames="procedure_id"
+                                 constraintName="fk_procedure_tag(procedure_id,procedures(id))"
+                                 referencedColumnNames="id"
+                                 referencedTableName="procedures"/>
+
+        <addForeignKeyConstraint baseTableName="procedure_tag"
+                                 baseColumnNames="tag_id"
+                                 constraintName="fk_procedure_tag(tag_id,tags(id))"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tags"/>
+
+        <addForeignKeyConstraint baseTableName="consultant_profile_tag"
+                                 baseColumnNames="consultant_id"
+                                 constraintName="fk_consultant_profile_tag(consultant_id,consultant_profiles(id))"
+                                 referencedColumnNames="id"
+                                 referencedTableName="consultant_profiles"/>
+
+        <addForeignKeyConstraint baseTableName="consultant_profile_tag"
+                                 baseColumnNames="tag_id"
+                                 constraintName="fk_consultant_profile_tag(tag_id,tags(id))"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tags"/>
+    </changeSet>
+
 </databaseChangeLog>
 
 

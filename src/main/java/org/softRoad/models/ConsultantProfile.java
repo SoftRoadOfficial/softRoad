@@ -20,13 +20,16 @@ public class ConsultantProfile extends SoftRoadModel {
     public final static String DESCRIPTION = "description";
     @Transient
     public final static String USER = "user_id";
+    @Transient
+    public final static String NATIONAL_ID = "national_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
     @NotNull
-    public String nationalCode; // TODO: 1/7/2021 nationalCode validation
+    @Column(name = "national_id", unique = true, nullable = false)
+    public String nationalID; // TODO: 1/7/2021 nationalCode validation
 
     @Transient
     public Double rate;
@@ -43,14 +46,15 @@ public class ConsultantProfile extends SoftRoadModel {
     public Set<Fee> fees = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "consultant_profile_categories",
-            joinColumns = @JoinColumn(name = "consultant_profile_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "categories_id", referencedColumnName = "id"))
+    @JoinTable(name = "consultant_profile_category",
+            joinColumns = @JoinColumn(name = "consultant_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
     public Set<Category> categories = new HashSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "consultant_profiles_tags", joinColumns = @JoinColumn(name = "consultant_profiles_id"))
-    @Column(name = "tag")
+    @ManyToMany
+    @JoinTable(name = "consultant_profile_tag",
+            joinColumns = @JoinColumn(name = "consultant_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     @JsonIgnore
     public Set<Tag> tags = new HashSet<>();
 
@@ -74,9 +78,9 @@ public class ConsultantProfile extends SoftRoadModel {
         presentFields.add("description");
     }
 
-    public void setNationalCode(String nationalCode) {
-        this.nationalCode = nationalCode;
-        presentFields.add("nationalCode");
+    public void setNationalID(String nationalID) {
+        this.nationalID = nationalID;
+        presentFields.add("nationalID");
     }
 
     public void setUser(User user) {
