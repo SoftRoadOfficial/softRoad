@@ -65,6 +65,9 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="national_id" type="varchar(32)">
+                <constraints unique="true" nullable="false"/>
+            </column>
             <column name="bio" type="varchar(2048)">
                 <constraints nullable="true"/>
             </column>
@@ -412,29 +415,39 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="create-procedure-tags-table" author="softroad" context="prod">
-        <createTable tableName="procedure-tags">
-            <column name="procedure_id" type="int">
-<!--                double check deleteCascade-->
-                <constraints primaryKey="true" primaryKeyName="pk_procedure_tag" nullable="false"
-                             foreignKeyName="fk_procedure-tags(procedure_id, procedures(id))" references="procedures(id)" deleteCascade="true"/>
+    <changeSet id="create-tags-table" author="softroad" context="prod">
+        <createTable tableName="tags">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="tag" type="varchar(32)">
-                <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>
+            <column name="name" type="varchar(256)">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="create-consultant-profiles-tags-table" author="softroad" context="prod">
-        <createTable tableName="consultant-profiles-tags">
-            <column name="consultant_profiles_id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_procedure-tag" nullable="false"
-                             foreignKeyName="fk_consultant-profiles-tags(consultant_profiles_id,consultant_profiles(id))" references="consultant_profiles(id)" deleteCascade="true"/>
+
+    <changeSet id="create-tags-relation" author="softroad" context="prod">
+        <createTable tableName="procedure_tag">
+            <column name="procedure_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
-            <column name="tag" type="varchar(32)">
-                <constraints primaryKey="true" primaryKeyName="pk_tag" nullable="false"/>
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
         </createTable>
+        <addPrimaryKey columnNames="procedure_id, tag_id" tableName="procedure_tag"/>
+
+        <createTable tableName="consultant_profile_tag">
+            <column name="consultant_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="consultant_id, tag_id" tableName="procedure_tag"/>
     </changeSet>
+
 </databaseChangeLog>
 
 

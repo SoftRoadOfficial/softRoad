@@ -1,9 +1,12 @@
 package org.softRoad.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tags")
@@ -20,6 +23,14 @@ public class Tag extends SoftRoadModel {
     @NotNull
     @Column(name = "name", nullable = false, unique = true)
     public String name;
+
+    @ManyToMany(mappedBy = "tags")
+    @JsonIgnore
+    public Set<Procedure> procedures = new HashSet<>();
+
+    @ManyToMany(mappedBy = "tags")
+    @JsonIgnore
+    public Set<ConsultantProfile> consultants = new HashSet<>();
 
     public void setId(Integer id) {
         this.id = id;
