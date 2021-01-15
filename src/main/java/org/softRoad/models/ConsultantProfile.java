@@ -43,6 +43,7 @@ public class ConsultantProfile extends SoftRoadModel {
     public Set<Consultation> consultations = new HashSet<>();
 
     @OneToMany(mappedBy = "consultant")
+    @JsonIgnore
     public Set<Fee> fees = new HashSet<>();
 
     @ManyToMany

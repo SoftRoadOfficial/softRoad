@@ -165,4 +165,18 @@
         </insert>
     </changeSet>
 
+    <changeSet id="insert-test-cities" author="softroad" context="test">
+        <insert tableName="cities">
+            <column name="name" value="Tehran"/>
+        </insert>
+
+        <insert tableName="cities">
+            <column name="name" value="Isfahan"/>
+        </insert>
+
+        <insert tableName="cities">
+            <column name="name" value="Tabriz"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

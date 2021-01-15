@@ -4,6 +4,7 @@ import org.softRoad.exception.DuplicateDataException;
 import org.softRoad.models.Fee;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 
 
@@ -15,11 +16,12 @@ public class FeeService extends CrudService<Fee> {
     }
 
     @Override
+    @Transactional
     public Response create(Fee fee) {
         long count = Fee.count(Fee.CONSULTANT + "=?1 and " + Fee.CATEGORY + "=?2 and " + Fee.MINUTE + "=?3",
                 fee.consultant.id, fee.category.id, fee.minute);
         if (count > 0)
-            throw new DuplicateDataException("Duplicate fee for this category!");
+            throw new DuplicateDataException("Duplicate fee for this category-minute-consultant !");
         return super.create(fee);
     }
 }

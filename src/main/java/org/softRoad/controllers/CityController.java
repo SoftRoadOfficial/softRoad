@@ -1,10 +1,12 @@
 package org.softRoad.controllers;
 
 import org.softRoad.models.City;
+import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.services.CityService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -42,6 +44,13 @@ public class CityController {
     @Path("{cid}/{pid}")
     public Response removeCityFromProcedure(@PathParam("pid") Integer pid, @PathParam("cid") Integer cid) {
         return cityService.removeCityFromProcedure(cid, pid);
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getAll")
+    public List<City> getAll(@NotNull SearchCriteria searchCriteria) {
+        return cityService.getAll(searchCriteria);
     }
 
     @GET
