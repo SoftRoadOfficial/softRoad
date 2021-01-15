@@ -14,7 +14,7 @@ public class CityControllerTest {
 
     @Test
     @TestTransaction
-    public void testSignUpEndpoint() {
+    public void testCreateEndpoint() {
         City city = new City();
         city.name = "Shiraz";
 
@@ -22,9 +22,9 @@ public class CityControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(city)
                 .when()
-                .post("/city/create")
+                .post("/cities/create")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
     }
 
 //    @Test
@@ -36,7 +36,7 @@ public class CityControllerTest {
 //                .header("Content-Type", MediaType.APPLICATION_JSON)
 //                .body(searchCriteria)
 //                .when()
-//                .post("/city/getAll")
+//                .post("/cities/getAll")
 //                .then()
 //                .statusCode(200);
 //                .body("$.size()", is(1));

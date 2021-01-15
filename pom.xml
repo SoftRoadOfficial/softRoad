@@ -119,6 +119,7 @@
         <configuration>
           <includes>
             <include>src\main\resources\db\changelog\db.changelog-master.xml</include>
+            <include>org.softRoad.**</include>
           </includes>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>

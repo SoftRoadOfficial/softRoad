@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
 @Entity
@@ -24,8 +25,10 @@ public class Fee extends SoftRoadModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
+    @NotNull
     public BigInteger amount;
 
+    @NotNull
     public Integer minute;
 
     @ManyToOne

@@ -1,7 +1,6 @@
 package org.softRoad.controllers;
 
 import org.softRoad.models.City;
-import org.softRoad.models.Procedure;
 import org.softRoad.services.CityService;
 
 import javax.enterprise.context.RequestScoped;
@@ -11,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/city")
+@Path("/cities")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,8 +24,8 @@ public class CityController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{cid}")
-    public City getCity(@PathParam("cid") Integer cid) {
+    @Path("{id}")
+    public City getCity(@PathParam("id") Integer cid) {
         return cityService.getCity(cid);
     }
 

@@ -25,7 +25,7 @@ public class RoleControllerTest {
                 .when()
                 .post("/roles/create")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test

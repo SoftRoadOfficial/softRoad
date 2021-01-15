@@ -23,8 +23,8 @@ public class CategoryControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(category)
                 .when()
-                .post("/category/create")
+                .post("/categories/create")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
     }
 }
