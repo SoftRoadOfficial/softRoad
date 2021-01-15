@@ -18,4 +18,8 @@ public class SecurityUtils {
         return BcryptUtil.bcryptHash(password, 10,
                 ConfigProvider.getConfig().getValue("bcryptHash.salt", String.class).getBytes());
     }
+
+    public static String getAuthorizationHeader(User user) {
+        return "Bearer " + createJwtToken(user);
+    }
 }

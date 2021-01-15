@@ -50,6 +50,6 @@ public class UserControllerTest {
                 .post("/users/getAll")
                 .then()
                 .statusCode(200)
-                .body("$.size()", is(2));
+                .body("$.size()", is(3));
     }
 }

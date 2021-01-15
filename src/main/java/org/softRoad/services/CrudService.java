@@ -4,13 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import org.softRoad.exception.InternalException;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.AuditLog;
+import org.softRoad.models.AuditLog.Action;
 import org.softRoad.models.SoftRoadModel;
-import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.HqlQuery;
+import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.AccessControlManager;
+import org.softRoad.security.Permission;
 import org.softRoad.utils.ModelUtils;
 
 import javax.inject.Inject;
@@ -24,12 +27,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.softRoad.exception.InternalException;
-import org.softRoad.models.AuditLog.Action;
-import static org.softRoad.models.Tables.*;
 
-public class CrudService<T extends SoftRoadModel>
-{
+public class CrudService<T extends SoftRoadModel> {
     private final Class<?> objClass;
 
     @Inject
@@ -41,14 +40,12 @@ public class CrudService<T extends SoftRoadModel>
     @Inject
     ObjectMapper mapper;
 
-    public CrudService(Class<?> objClass)
-    {
+    public CrudService(Class<?> objClass) {
         this.objClass = objClass;
     }
 
     @Transactional
-    private void log(Action type, T obj)
-    {
+    private void log(Action type, T obj) {
         AuditLog log = new AuditLog();
         log.user = accessControlManager.getCurrentUser();
         log.action = type;
@@ -62,8 +59,11 @@ public class CrudService<T extends SoftRoadModel>
         AuditLog.persist(log);
     }
 
-    private Map<String, String> convert(T obj)
-    {
+    protected void checkPermission(PermissionType type) {
+//        accessControlManager.checkPermission(Permission.valueOf(type.name() + "_" + objClass.getSimpleName().toUpperCase()));
+    }
+
+    private Map<String, String> convert(T obj) {
         Map<String, String> map = new HashMap<>();
         obj.presentFields.forEach(fieldName -> {
             Object columnValue = ModelUtils.getColumnValue(obj, obj.getClass(), fieldName);
@@ -73,24 +73,24 @@ public class CrudService<T extends SoftRoadModel>
     }
 
     @Transactional
-    public Response create(T obj)
-    {
+    public Response create(T obj) {
+        checkPermission(PermissionType.CREATE);
         obj.persist();
         log(Action.CREATE, obj);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @Transactional
-    public T get(Integer id)
-    {
+    public T get(Integer id) {
+        checkPermission(PermissionType.READ);
         return (T) entityManager.createNativeQuery(String.format("select * from %s where id=:id",
                 ModelUtils.getTableName(objClass), objClass), objClass)
                 .setParameter("id", id).getResultStream().findFirst().get();
     }
 
     @Transactional
-    public Response update(T obj)
-    {
+    public Response update(T obj) {
+        checkPermission(PermissionType.UPDATE);
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder queryBuilder = new StringBuilder();
 
@@ -136,8 +136,8 @@ public class CrudService<T extends SoftRoadModel>
     }
 
     @Transactional
-    public Response delete(Integer id)
-    {
+    public Response delete(Integer id) {
+        checkPermission(PermissionType.DELETE);
         T databaseObj = this.get(id);
         if (databaseObj == null)
             throw new InvalidDataException("Invalid id");
@@ -147,11 +147,18 @@ public class CrudService<T extends SoftRoadModel>
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> getAll(SearchCriteria searchCriteria)
-    {
+    public List<T> getAll(SearchCriteria searchCriteria) {
+        checkPermission(PermissionType.READ);
         return QueryUtils.nativeQuery(entityManager, objClass)
                 .baseQuery(new HqlQuery("select * from " + ModelUtils.getTableName(objClass)))
                 .searchCriteria(searchCriteria)
                 .build().getResultList();
+    }
+
+    protected enum PermissionType {
+        CREATE,
+        DELETE,
+        UPDATE,
+        READ
     }
 }
