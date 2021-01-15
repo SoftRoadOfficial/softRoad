@@ -14,6 +14,8 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.softRoad.models.Tables.PROCEDURE_CITY;
+
 
 @ApplicationScoped
 public class CityService extends CrudService<City> {
@@ -26,14 +28,6 @@ public class CityService extends CrudService<City> {
     }
 
     @Transactional
-    public City getCity(Integer cid) {
-        City city = City.findById(cid);
-        if (city == null)
-            throw new NotFoundException("City not found");
-        return city;
-    }
-
-    @Transactional
     public Response addCityForProcedure(Integer cid, Integer pid) {
         if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
             throw new SoftroadException("User has no access");
@@ -43,7 +37,16 @@ public class CityService extends CrudService<City> {
             throw new NotFoundException("City not found");
         if (procedure == null)
             throw new NotFoundException("Procedure not found");
-        procedure.cities.add(city);
+
+        entityManager.createNativeQuery(
+                String.format("insert into %s(%s, %s) values(:cid,:pid)",
+                        PROCEDURE_CITY,
+                        City.ID,
+                        Procedure.ID
+                )).setParameter("cid", cid)
+                .setParameter("pid", pid)
+                .executeUpdate();
+
         return Response.ok().build();
     }
 
@@ -51,11 +54,20 @@ public class CityService extends CrudService<City> {
     public Response removeCityFromProcedure(Integer cid, Integer pid) {
         City city = City.findById(cid);
         Procedure procedure = Procedure.findById(pid);
-        procedure.cities.remove(city);
         if (city == null)
             throw new NotFoundException("City not found");
         if (procedure == null)
             throw new NotFoundException("Procedure not found");
+
+        entityManager.createNativeQuery(
+                String.format("delete from %s where %s=:cid and %s=:pid",
+                        PROCEDURE_CITY,
+                        City.ID,
+                        Procedure.ID
+                )).setParameter("cid", cid)
+                .setParameter("pid", pid)
+                .executeUpdate();
+
         return Response.ok().build();
     }
 

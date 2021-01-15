@@ -24,9 +24,9 @@ public class CityController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public City getCity(@PathParam("id") Integer cid) {
-        return cityService.getCity(cid);
+    @Path("{cid}")
+    public City getCity(@PathParam("cid") Integer cid) {
+        return cityService.get(cid);
     }
 
 
@@ -39,7 +39,7 @@ public class CityController {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("remove/{cid}/{pid}")
+    @Path("{cid}/{pid}")
     public Response removeCityFromProcedure(@PathParam("pid") Integer pid, @PathParam("cid") Integer cid) {
         return cityService.removeCityFromProcedure(cid, pid);
     }
@@ -54,14 +54,14 @@ public class CityController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
-    public Response createCity(@Valid City city) {
+    public Response create(@Valid City city) {
         return cityService.create(city);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("remove/{cid}")
-    public Response removeCity(@PathParam("cid") Integer cid) {
+    @Path("{cid}")
+    public Response delete(@PathParam("cid") Integer cid) {
         return cityService.delete(cid);
     }
 }

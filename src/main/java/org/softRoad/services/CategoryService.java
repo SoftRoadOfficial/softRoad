@@ -1,18 +1,25 @@
 package org.softRoad.services;
 
 import org.softRoad.exception.NotFoundException;
-import org.softRoad.exception.SoftroadException;
 import org.softRoad.models.Category;
 import org.softRoad.models.Procedure;
-import org.softRoad.security.Permission;
+import org.softRoad.models.ProcedureCategory;
+import org.softRoad.models.query.HqlQuery;
+import org.softRoad.models.query.QueryUtils;
+import org.softRoad.models.query.SearchCriteria;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.softRoad.models.Tables.CATEGORIES;
+import static org.softRoad.models.Tables.PROCEDURE_CATEGORY;
 
 @ApplicationScoped
 public class CategoryService extends CrudService<Category> {
@@ -32,38 +39,68 @@ public class CategoryService extends CrudService<Category> {
 
     @Transactional
     public Response addCategoryForProcedure(Integer pid, Integer cid) {
-        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
-            throw new SoftroadException("User has no access");
+//        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
+//            throw new SoftroadException("User has no access");
         Procedure procedure = Procedure.findById(pid);
         Category category = Category.findById(cid);
         if (procedure == null)
             throw new NotFoundException("Procedure not found");
         if (category == null)
             throw new NotFoundException("Category not found");
-        procedure.categories.add(category);
+
+        entityManager.createNativeQuery(
+                String.format("insert into %s(%s, %s) values(:cid,:pid)",
+                        PROCEDURE_CATEGORY,
+                        Category.ID,
+                        Procedure.ID
+                )).setParameter("cid", cid)
+                .setParameter("pid", pid)
+                .executeUpdate();
+
         return Response.ok().build();
     }
 
     @Transactional
     public Response removeCategoryFromProcedure(Integer pid, Integer cid) {
-        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
-            throw new SoftroadException("User has no access");
+//        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
+//            throw new SoftroadException("User has no access");
         Procedure procedure = Procedure.findById(pid);
         Category category = Category.findById(cid);
         if (procedure == null)
             throw new NotFoundException("Procedure not found");
         if (category == null)
             throw new NotFoundException("Category not found");
-        procedure.categories.remove(category);
+
+        entityManager.createNativeQuery(
+                String.format("delete from %s where %s=:cid and %s=:pid",
+                        PROCEDURE_CATEGORY,
+                        Category.ID,
+                        Procedure.ID
+                )).setParameter("cid", cid)
+                .setParameter("pid", pid)
+                .executeUpdate();
+
         return Response.ok().build();
     }
 
     @Transactional
-    public List<Procedure> getProceduresOfCategory(Integer cid) {
-        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
-            throw new SoftroadException("User has no access");
+    public List<Procedure> getProceduresOfCategory(Integer cid, @NotNull SearchCriteria searchCriteria) {
+//        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
+//            throw new SoftroadException("User has no access");
         Category category = Category.findById(cid);
-        return new ArrayList<>(category.procedures);
+        if (category == null)
+            throw new NotFoundException("Category not found");
+
+        Query q = QueryUtils.nativeQuery(entityManager, Procedure.class)
+                .baseQuery(new HqlQuery("select u.* from %s left join %s as u on u.%s=%s",
+                        PROCEDURE_CATEGORY,
+                        CATEGORIES,
+                        Category.ID,
+                        ProcedureCategory.fields(ProcedureCategory.CATEGORIES_ID)))
+                .addFilter(new HqlQuery("%s=:idd", Category.ID).setParameter("idd", category.id))
+                .searchCriteria(searchCriteria)
+                .build();
+        return q.getResultList();
     }
 
 }
