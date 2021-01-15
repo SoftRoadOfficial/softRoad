@@ -2,10 +2,12 @@ package org.softRoad.controllers;
 
 import org.softRoad.models.Category;
 import org.softRoad.models.Procedure;
+import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.services.CategoryService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -55,8 +57,8 @@ public class CategoryController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("procedures/{cid}")
-    public List<Procedure> getProceduresOfCategory(@PathParam("cid") Integer cid) {
-        return categoryService.getProceduresOfCategory(cid);
+    public List<Procedure> getProceduresOfCategory(@PathParam("cid") Integer cid, @NotNull SearchCriteria searchCriteria) {
+        return categoryService.getProceduresOfCategory(cid, searchCriteria);
     }
 
     @POST

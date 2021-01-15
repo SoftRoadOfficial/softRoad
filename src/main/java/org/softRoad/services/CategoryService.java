@@ -39,8 +39,6 @@ public class CategoryService extends CrudService<Category> {
 
     @Transactional
     public Response addCategoryForProcedure(Integer pid, Integer cid) {
-//        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
-//            throw new SoftroadException("User has no access");
         Procedure procedure = Procedure.findById(pid);
         Category category = Category.findById(cid);
         if (procedure == null)
@@ -62,8 +60,6 @@ public class CategoryService extends CrudService<Category> {
 
     @Transactional
     public Response removeCategoryFromProcedure(Integer pid, Integer cid) {
-//        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
-//            throw new SoftroadException("User has no access");
         Procedure procedure = Procedure.findById(pid);
         Category category = Category.findById(cid);
         if (procedure == null)
@@ -85,8 +81,6 @@ public class CategoryService extends CrudService<Category> {
 
     @Transactional
     public List<Procedure> getProceduresOfCategory(Integer cid, @NotNull SearchCriteria searchCriteria) {
-//        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
-//            throw new SoftroadException("User has no access");
         Category category = Category.findById(cid);
         if (category == null)
             throw new NotFoundException("Category not found");

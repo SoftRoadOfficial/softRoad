@@ -29,8 +29,6 @@ public class CityService extends CrudService<City> {
 
     @Transactional
     public Response addCityForProcedure(Integer cid, Integer pid) {
-        if (!accessControlManager.hasPermission(Permission.WRITE_ROLE))
-            throw new SoftroadException("User has no access");
         Procedure procedure = Procedure.findById(pid);
         City city = City.findById(cid);
         if (city == null)
