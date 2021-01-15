@@ -28,7 +28,15 @@
             <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
             <column name="phone_number" value="09170000002"/>
             <column name="display_name" value="test_user3"/>
-            <column name="enabled" value="false"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="email" value="test4@test.com"/>
+            <!--password:    test_password-->
+            <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
+            <column name="phone_number" value="09170000004"/>
+            <column name="display_name" value="test_user4"/>
+            <column name="enabled" value="true"/>
         </insert>
     </changeSet>
 
@@ -45,6 +53,12 @@
             <column name="description" value="test description"/>
             <column name="user_id" value="2"/>
         </insert>
+        <insert tableName="consultant_profiles">
+            <column name="national_id" value="2282758085"/>
+            <column name="bio" value="I am just for fun, I'm awesome!"/>
+            <column name="description" value="awesomeness description"/>
+            <column name="user_id" value="3"/>
+        </insert>
     </changeSet>
 
     <changeSet id="insert-test-categories" author="softroad" context="test">
@@ -55,6 +69,10 @@
         <insert tableName="categories">
             <column name="name" value="Medical"/>
             <column name="type" value="MEDICAL"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="business"/>
+            <column name="type" value="BUSINESS"/>
         </insert>
     </changeSet>
 
@@ -76,6 +94,74 @@
             <column name="minute" value="1"/>
             <column name="consultant_id" value="2"/>
             <column name="category_id" value="1"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-test-procedures" author="softroad" context="test">
+        <insert tableName="procedures">
+            <column name="title" value="the main procedure1"/>
+            <column name="description" value="this is very important procedure1"/>
+            <column name="user_id" value="1"/>
+            <column name="confirmed" value="true"/>
+            <column name="created_date" value="now()"/>
+        </insert>
+
+        <insert tableName="procedures">
+            <column name="title" value="the main procedure2"/>
+            <column name="description" value="this is very important procedure2"/>
+            <column name="user_id" value="1"/>
+            <column name="confirmed" value="false"/>
+            <column name="created_date" value="now()"/>
+        </insert>
+
+        <insert tableName="procedures">
+            <column name="title" value="the main procedure3"/>
+            <column name="description" value="this is very important procedure3"/>
+            <column name="user_id" value="2"/>
+            <column name="confirmed" value="true"/>
+            <column name="created_date" value="now()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-test-comments" author="softroad" context="test">
+        <insert tableName="comments">
+            <column name="text" value="very good"/>
+            <column name="rate" value="4"/>
+            <column name="procedure_id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="created_date" value="now()"/>
+        </insert>
+
+        <insert tableName="comments">
+            <column name="text" value="very good!!!"/>
+            <column name="rate" value="5"/>
+            <column name="procedure_id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="created_date" value="now()"/>
+        </insert>
+
+        <insert tableName="comments">
+            <column name="text" value="very bad"/>
+            <column name="rate" value="1"/>
+            <column name="procedure_id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="created_date" value="now()"/>
+        </insert>
+
+        <insert tableName="comments">
+            <column name="text" value="bad"/>
+            <column name="rate" value="1"/>
+            <column name="procedure_id" value="2"/>
+            <column name="user_id" value="2"/>
+            <column name="created_date" value="now()"/>
+        </insert>
+
+        <insert tableName="comments">
+            <column name="text" value="very very good"/>
+            <column name="rate" value="5"/>
+            <column name="procedure_id" value="3"/>
+            <column name="user_id" value="3"/>
+            <column name="created_date" value="now()"/>
         </insert>
     </changeSet>
 

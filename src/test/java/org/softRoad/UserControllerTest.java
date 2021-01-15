@@ -12,7 +12,8 @@ import org.softRoad.models.query.SearchCriteria;
 import javax.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 @QuarkusTestResource(H2DatabaseTestResource.class)
@@ -50,6 +51,6 @@ public class UserControllerTest {
                 .post("/users/getAll")
                 .then()
                 .statusCode(200)
-                .body("$.size()", is(3));
+                .body("$.size()", is(4));
     }
 }
