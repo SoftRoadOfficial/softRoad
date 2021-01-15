@@ -8,6 +8,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.User;
 import org.softRoad.models.query.SearchCriteria;
+import org.softRoad.security.SecurityUtils;
 
 import javax.ws.rs.core.MediaType;
 
@@ -28,8 +29,12 @@ public class UserControllerTest {
         user.password = "theMostSecurePassword";
         user.displayName = "Mahdi";
 
+        User user1 = User.findById(1);
+
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
+                // TODO: Really bro?!
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user1))
                 .body(user)
                 .when()
                 .post("/users/signup")
@@ -44,8 +49,11 @@ public class UserControllerTest {
     public void testGetAllEndpoint() {
         SearchCriteria searchCriteria = new SearchCriteria();
 
+        User user = User.findById(1);
+
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .body(searchCriteria)
                 .when()
                 .post("/users/getAll")

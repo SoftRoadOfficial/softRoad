@@ -4,7 +4,9 @@ import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Role;
+import org.softRoad.models.User;
 import org.softRoad.models.query.SearchCriteria;
+import org.softRoad.security.SecurityUtils;
 
 import javax.ws.rs.core.MediaType;
 
@@ -19,8 +21,11 @@ public class RoleControllerTest {
         Role role = new Role();
         role.name = "MainAdmin";
 
+        User user = User.findById(1);
+
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .body(role)
                 .when()
                 .post("/roles/create")
@@ -33,8 +38,11 @@ public class RoleControllerTest {
     public void testGetAllEndpoint() {
         SearchCriteria searchCriteria = new SearchCriteria();
 
+        User user = User.findById(1);
+
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .body(searchCriteria)
                 .when()
                 .post("/roles/getAll")

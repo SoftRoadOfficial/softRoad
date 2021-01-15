@@ -22,8 +22,11 @@ public class CityControllerTest {
         City city = new City();
         city.name = "Shiraz";
 
+        User user = User.findById(1);
+
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .body(city)
                 .when()
                 .post("/cities/create")
