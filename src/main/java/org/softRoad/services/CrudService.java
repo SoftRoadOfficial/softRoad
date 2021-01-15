@@ -60,7 +60,7 @@ public class CrudService<T extends SoftRoadModel> {
     }
 
     protected void checkPermission(PermissionType type) {
-//        accessControlManager.checkPermission(Permission.valueOf(type.name() + "_" + objClass.getSimpleName().toUpperCase()));
+        accessControlManager.checkPermission(Permission.valueOf(type.name() + "_" + objClass.getSimpleName().toUpperCase()));
     }
 
     private Map<String, String> convert(T obj) {

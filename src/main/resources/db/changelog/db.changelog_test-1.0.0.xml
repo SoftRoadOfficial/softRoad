@@ -179,4 +179,313 @@
         </insert>
     </changeSet>
 
+    <changeSet id="insert-test-roles" author="softroad" context="test">
+        <insert tableName="roles">
+            <column name="name" value="admin"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-test-user_role" author="softroad" context="test">
+        <insert tableName="user_role">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="1"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-test-role_permission" author="softroad" context="test">
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_USER"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_USER"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_USER"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_USER"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_ROLE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_ROLE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_ROLE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_ROLE"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_AUDIT_LOG"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_AUDIT_LOG"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_AUDIT_LOG"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_AUDIT_LOG"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_CATEGORY"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_CATEGORY"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_CATEGORY"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_CATEGORY"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_CITY"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_CITY"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_CITY"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_CITY"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_COMMENT"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_COMMENT"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_COMMENT"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_COMMENT"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_CONSULTANT_PROFILE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_CONSULTANT_PROFILE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_CONSULTANT_PROFILE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_CONSULTANT_PROFILE"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_CONSULTATION"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_CONSULTATION"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_CONSULTATION"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_CONSULTATION"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_FEE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_FEE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_FEE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_FEE"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_PROCEDURE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_PROCEDURE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_PROCEDURE"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_PROCEDURE"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_STEP"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_STEP"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_STEP"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_STEP"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_TAG"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_TAG"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_TAG"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_TAG"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_UPDATE_REQUEST"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_UPDATE_REQUEST"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_UPDATE_REQUEST"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_UPDATE_REQUEST"/>
+        </insert>
+        <!-- crud -->
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="READ_USER_VERIFICATION"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="CREATE_USER_VERIFICATION"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="UPDATE_USER_VERIFICATION"/>
+        </insert>
+
+        <insert tableName="role_permission">
+            <column name="role_id" value="1"/>
+            <column name="permission" value="DELETE_USER_VERIFICATION"/>
+        </insert>
+        <!-- crud -->
+
+    </changeSet>
 </databaseChangeLog>

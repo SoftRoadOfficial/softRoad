@@ -27,10 +27,7 @@ public class CommentControllerTest {
         User user = User.findById(1);
         comment.user = user;
 
-        Procedure procedure = new Procedure();
-        procedure.id = 2;
-        comment.procedure = procedure;
-//        comment.procedure = Procedure.findById(2);
+        comment.procedure = Procedure.findById(2);
 
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
