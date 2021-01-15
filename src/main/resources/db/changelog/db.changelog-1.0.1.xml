@@ -75,7 +75,7 @@
                 <constraints nullable="true"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints unique="true" nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -92,6 +92,10 @@
                                  constraintName="fk_fees(category_id,categories(id))"
                                  referencedColumnNames="id"
                                  referencedTableName="categories"/>
+
+        <addUniqueConstraint tableName="fees"
+                             columnNames="minute, consultant_id, category_id"
+                             constraintName="ux_fees(minute,consultant_id,category_id)"/>
     </changeSet>
 
     <changeSet id="create-consultant_profile_category-table" author="softroad" context="prod">

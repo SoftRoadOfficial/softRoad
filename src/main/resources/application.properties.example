@@ -1,3 +1,10 @@
+# To config the program to work with remote database just add the following line to application properties
+# %dev.quarkus.datasource.db-kind = postgresql
+# %dev.quarkus.datasource.username = [USERNAME]
+# %dev.quarkus.datasource.password = [PASSWORD]
+# %dev.quarkus.datasource.jdbc.url = jdbc:postgresql://[IP:PORT]/softroadDB
+
+
 
 #
 # The name of the application.

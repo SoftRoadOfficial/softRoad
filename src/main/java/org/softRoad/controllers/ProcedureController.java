@@ -64,26 +64,40 @@ public class ProcedureController
     public Response addCitiesToProcedure(@PathParam("id") Integer id, @NotNull List<Integer> cityIds) {
         return procedureService.addCitiesToProcedure(id, cityIds);
     }
-
+    
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/cities/remove")
     public Response removeCitiesForProcedure(@PathParam("id") Integer id, @NotNull List<Integer> cityIds) {
         return procedureService.removeCitiesForProcedure(id, cityIds);
     }
-
+    
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/categories/add")
     public Response addCategoriesToProcedure(@PathParam("id") Integer id, @NotNull List<Integer> categoryIds) {
         return procedureService.addCategoriesToProcedure(id, categoryIds);
     }
-
+    
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/categories/remove")
     public Response removeCategoriesForProcedure(@PathParam("id") Integer id, @NotNull List<Integer> categoryIds) {
         return procedureService.removeCategoriesForProcedure(id, categoryIds);
+    }
+    
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}/tags/add")
+    public Response addTagsToProcedure(@PathParam("id") Integer id, @NotNull List<Integer> tagIds) {
+        return procedureService.addTagsToProcedure(id, tagIds);
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}/tags/remove")
+    public Response removeTagsForProcedure(@PathParam("id") Integer id, @NotNull List<Integer> tagIds) {
+        return procedureService.removeTagsForProcedure(id, tagIds);
     }
     
     @POST

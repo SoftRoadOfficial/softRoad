@@ -20,6 +20,7 @@ import org.softRoad.models.Comment;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.ProcedureCategory;
 import org.softRoad.models.ProcedureCity;
+import org.softRoad.models.ProcedureTag;
 import org.softRoad.models.Step;
 import org.softRoad.models.Tag;
 import org.softRoad.models.UpdateRequest;
@@ -47,7 +48,8 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Response addCitiesToProcedure(Integer procedureId, List<Integer> cityIds) {
+    public Response addCitiesToProcedure(Integer procedureId, List<Integer> cityIds)
+    {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -65,7 +67,8 @@ public class ProcedureService extends CrudService<Procedure>
     }   
 
     @Transactional
-    public Response addCategoriesToProcedure(Integer procedureId, List<Integer> categoryIds) {
+    public Response addCategoriesToProcedure(Integer procedureId, List<Integer> categoryIds) 
+    {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -83,7 +86,27 @@ public class ProcedureService extends CrudService<Procedure>
     }   
 
     @Transactional
-    public Response removeCitiesForProcedure(Integer procedureId, List<Integer> cityIds) {
+    public Response addTagsToProcedure(Integer procedureId, List<Integer> tagIds) 
+    {
+        Procedure procedure = Procedure.findById(procedureId);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        for (Integer tagId : tagIds)
+        {
+            Tag tag = Tag.findById(tagId);
+            if (tag == null)
+                throw new InvalidDataException("Invalid tag");
+            entityManager.createNativeQuery(String.format("insert into %s(%s, %s) values(:procedureId,:tagId)",
+                    PROCEDURE_TAG, ProcedureTag.PROCEDURE_ID, ProcedureTag.TAG_ID))
+                    .setParameter("procedureId", procedure.id)
+                    .setParameter("tagId", tag.id).executeUpdate();        
+        }
+        return Response.ok().build();
+    }   
+
+    @Transactional
+    public Response removeCitiesForProcedure(Integer procedureId, List<Integer> cityIds) 
+    {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -101,7 +124,8 @@ public class ProcedureService extends CrudService<Procedure>
     }   
 
     @Transactional
-    public Response removeCategoriesForProcedure(Integer procedureId, List<Integer> categoryIds) {
+    public Response removeCategoriesForProcedure(Integer procedureId, List<Integer> categoryIds) 
+    {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -114,6 +138,25 @@ public class ProcedureService extends CrudService<Procedure>
                     PROCEDURE_CATEGORY, ProcedureCategory.PROCEDURE_ID, ProcedureCategory.CATEGORIES_ID))
                     .setParameter("procedureId", procedure.id)
                     .setParameter("categoryId", category.id).executeUpdate();
+        }    
+        return Response.ok().build();
+    }
+
+    @Transactional
+    public Response removeTagsForProcedure(Integer procedureId, List<Integer> tagIds) 
+    {
+        Procedure procedure = Procedure.findById(procedureId);
+        if (procedure == null)
+            throw new InvalidDataException("Invalid procedure");
+        for (Integer tagId : tagIds) 
+        {
+            Tag tag = Tag.findById(tagId);
+            if (tag == null)
+                throw new InvalidDataException("Invalid tag");
+            entityManager.createNativeQuery(String.format("delete from %s where %s=:procedureId and %s=:tagId",
+                    PROCEDURE_TAG, ProcedureTag.PROCEDURE_ID, ProcedureTag.TAG_ID))
+                    .setParameter("procedureId", procedure.id)
+                    .setParameter("tagId", tag.id).executeUpdate();
         }    
         return Response.ok().build();
     }   

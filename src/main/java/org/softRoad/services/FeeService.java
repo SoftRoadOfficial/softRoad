@@ -16,8 +16,8 @@ public class FeeService extends CrudService<Fee> {
 
     @Override
     public Response create(Fee fee) {
-        long count = Fee.count(Fee.CONSULTANT + "=?1 and " + Fee.CATEGORY + "=?2 and " + Fee.AMOUNT + "=?3",
-                fee.consultant.id, fee.category.id, fee.amount);
+        long count = Fee.count(Fee.CONSULTANT + "=?1 and " + Fee.CATEGORY + "=?2 and " + Fee.MINUTE + "=?3",
+                fee.consultant.id, fee.category.id, fee.minute);
         if (count > 0)
             throw new DuplicateDataException("Duplicate fee for this category!");
         return super.create(fee);

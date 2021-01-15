@@ -5,9 +5,10 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="inset-test-users" author="softroad" context="test">
+    <changeSet id="insert-test-users" author="softroad" context="test">
         <insert tableName="users">
             <column name="email" value="test1@test.com"/>
+            <!--password:    test_password-->
             <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
             <column name="phone_number" value="09170000000"/>
             <column name="display_name" value="test_user1"/>
@@ -15,10 +16,66 @@
         </insert>
         <insert tableName="users">
             <column name="email" value="test2@test.com"/>
+            <!--password:    test_password-->
             <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
             <column name="phone_number" value="09170000001"/>
             <column name="display_name" value="test_user2"/>
             <column name="enabled" value="false"/>
+        </insert>
+        <insert tableName="users">
+            <column name="email" value="test3@test.com"/>
+            <!--password:    test_password-->
+            <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
+            <column name="phone_number" value="09170000002"/>
+            <column name="display_name" value="test_user3"/>
+            <column name="enabled" value="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-test-consultant_profiles" author="softroad" context="test">
+        <insert tableName="consultant_profiles">
+            <column name="national_id" value="2282673311"/>
+            <column name="bio" value="I am just for test"/>
+            <column name="description" value="test description"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert tableName="consultant_profiles">
+            <column name="national_id" value="2282758099"/>
+            <column name="bio" value="I am just for test, I'm amazing"/>
+            <column name="description" value="test description"/>
+            <column name="user_id" value="2"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-test-categories" author="softroad" context="test">
+        <insert tableName="categories">
+            <column name="name" value="Finance"/>
+            <column name="type" value="FINANCE"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Medical"/>
+            <column name="type" value="MEDICAL"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="inset-test-fees" author="softroad" context="test">
+        <insert tableName="fees">
+            <column name="amount" value="1000"/>
+            <column name="minute" value="10"/>
+            <column name="consultant_id" value="1"/>
+            <column name="category_id" value="1"/>
+        </insert>
+        <insert tableName="fees">
+            <column name="amount" value="1000"/>
+            <column name="minute" value="1"/>
+            <column name="consultant_id" value="1"/>
+            <column name="category_id" value="1"/>
+        </insert>
+        <insert tableName="fees">
+            <column name="amount" value="1000"/>
+            <column name="minute" value="1"/>
+            <column name="consultant_id" value="2"/>
+            <column name="category_id" value="1"/>
         </insert>
     </changeSet>
 
