@@ -7,6 +7,7 @@ import org.softRoad.models.User;
 import org.softRoad.models.UserRole;
 import org.softRoad.models.dao.LoginUser;
 import org.softRoad.security.AuthenticationResponse;
+import org.softRoad.security.Permission;
 import org.softRoad.security.SecurityUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,23 +18,37 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import static org.softRoad.models.Tables.*;
+
 import org.softRoad.models.query.SearchCriteria;
 
 @ApplicationScoped
-public class UserService extends CrudService<User>
-{
+public class UserService extends CrudService<User> {
+
     @Inject
     EntityManager entityManager;
 
-    public UserService()
-    {
+    public UserService() {
         super(User.class);
     }
 
     @Override
-    public User get(Integer id)
-    {
+    protected boolean hasPermission(PermissionType type) {
+        if (type == PermissionType.DELETE)
+            return super.hasPermission(type);
+        return true;
+    }
+
+    @Override
+    public Response update(User obj) {
+        checkState(acm.getCurrentUserId().equals(obj.id) || hasPermission(PermissionType.UPDATE));
+        return super.update(obj);
+    }
+
+    @Override
+    public User get(Integer id) {
+        checkState(acm.getCurrentUserId().equals(id) || hasPermission(PermissionType.READ));
         User user = super.get(id);
         if (user != null)
             user.password = "";
@@ -41,8 +56,8 @@ public class UserService extends CrudService<User>
     }
 
     @Override
-    public List<User> getAll(SearchCriteria searchCriteria)
-    {
+    public List<User> getAll(SearchCriteria searchCriteria) {
+        checkState(hasPermission(PermissionType.READ));
         return super.getAll(searchCriteria).stream().map((u) -> {
             u.password = "";
             return u;
@@ -50,14 +65,12 @@ public class UserService extends CrudService<User>
     }
 
     @Override
-    public Response create(User obj)
-    {
+    public Response create(User obj) {
         throw new RuntimeException("User should be created through signUp method");
     }
 
     @Transactional
-    public AuthenticationResponse login(LoginUser loginUser)
-    {
+    public AuthenticationResponse login(LoginUser loginUser) {
         User user = User.find(User.PHONE_NUMBER + "=?1 and " + User.PASSWORD + "=?2", loginUser.getPhoneNumber(),
                 loginUser.getPassword()).firstResult();
         if (user == null)
@@ -66,8 +79,7 @@ public class UserService extends CrudService<User>
     }
 
     @Transactional
-    public AuthenticationResponse signUp(User user)
-    {
+    public AuthenticationResponse signUp(User user) {
         if (User.find(User.PHONE_NUMBER + "=?1", user.phoneNumber).count() > 0)
             throw new DuplicateDataException("Duplicated phoneNumber");
         user.enabled = false; //FIXME users should be enabled after email or phone verification
@@ -76,8 +88,9 @@ public class UserService extends CrudService<User>
     }
 
     @Transactional
-    public List<Role> getRolesForUser(Integer id)
-    {
+    public List<Role> getRolesForUser(Integer id) {
+        checkState(hasPermission(PermissionType.READ));
+        acm.checkPermission(Permission.READ_ROLE);
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
@@ -85,8 +98,9 @@ public class UserService extends CrudService<User>
     }
 
     @Transactional
-    public List getRolesNotForUser(Integer id)
-    {
+    public List getRolesNotForUser(Integer id) {
+        checkState(hasPermission(PermissionType.READ));
+        acm.checkPermission(Permission.READ_ROLE);
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
@@ -97,8 +111,8 @@ public class UserService extends CrudService<User>
     }
 
     @Transactional
-    public Response addRolesToUser(Integer id, List<Integer> roleIds)
-    {
+    public Response addRolesToUser(Integer id, List<Integer> roleIds) {
+        checkState(hasPermission(PermissionType.UPDATE));
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
@@ -116,8 +130,8 @@ public class UserService extends CrudService<User>
     }
 
     @Transactional
-    public Response removeRolesFromUser(Integer id, List<Integer> roleIds)
-    {
+    public Response removeRolesFromUser(Integer id, List<Integer> roleIds) {
+        checkState(hasPermission(PermissionType.UPDATE));
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");

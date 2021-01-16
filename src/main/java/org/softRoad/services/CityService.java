@@ -1,9 +1,9 @@
 package org.softRoad.services;
 
 import org.softRoad.exception.NotFoundException;
-import org.softRoad.exception.SoftroadException;
 import org.softRoad.models.City;
 import org.softRoad.models.Procedure;
+import org.softRoad.models.ProcedureCity;
 import org.softRoad.security.Permission;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -36,12 +36,12 @@ public class CityService extends CrudService<City> {
         if (procedure == null)
             throw new NotFoundException("Procedure not found");
 
+        checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
+
         entityManager.createNativeQuery(
                 String.format("insert into %s(%s, %s) values(:cid,:pid)",
-                        PROCEDURE_CITY,
-                        City.ID,
-                        Procedure.ID
-                )).setParameter("cid", cid)
+                        PROCEDURE_CITY, ProcedureCity.CITY_ID, ProcedureCity.PROCEDURE_ID))
+                .setParameter("cid", cid)
                 .setParameter("pid", pid)
                 .executeUpdate();
 
@@ -57,12 +57,12 @@ public class CityService extends CrudService<City> {
         if (procedure == null)
             throw new NotFoundException("Procedure not found");
 
+        checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
+
         entityManager.createNativeQuery(
                 String.format("delete from %s where %s=:cid and %s=:pid",
-                        PROCEDURE_CITY,
-                        City.ID,
-                        Procedure.ID
-                )).setParameter("cid", cid)
+                        PROCEDURE_CITY, ProcedureCity.CITY_ID, ProcedureCity.PROCEDURE_ID))
+                .setParameter("cid", cid)
                 .setParameter("pid", pid)
                 .executeUpdate();
 

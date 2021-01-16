@@ -16,5 +16,10 @@ public class AuditLogService extends CrudService<AuditLog> {
         super(AuditLog.class);
     }
 
-
+    @Override
+    protected boolean hasPermission(PermissionType type) {
+        if (type == PermissionType.CREATE)
+            return true;
+        return super.hasPermission(type);
+    }
 }

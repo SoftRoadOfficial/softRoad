@@ -7,6 +7,7 @@ import org.softRoad.models.ProcedureCategory;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.SearchCriteria;
+import org.softRoad.security.Permission;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,6 +32,13 @@ public class CategoryService extends CrudService<Category> {
         super(Category.class);
     }
 
+    @Override
+    protected boolean hasPermission(PermissionType type) {
+        if (type == PermissionType.READ)
+            return true;
+        return super.hasPermission(type);
+    }
+
     @Transactional
     public List<Category> getCategoriesOfProcedure(Integer pid) {
         Procedure procedure = Procedure.findById(pid);
@@ -46,12 +54,12 @@ public class CategoryService extends CrudService<Category> {
         if (category == null)
             throw new NotFoundException("Category not found");
 
+        checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
+
         entityManager.createNativeQuery(
                 String.format("insert into %s(%s, %s) values(:cid,:pid)",
-                        PROCEDURE_CATEGORY,
-                        Category.ID,
-                        Procedure.ID
-                )).setParameter("cid", cid)
+                        PROCEDURE_CATEGORY, ProcedureCategory.CATEGORIES_ID, ProcedureCategory.PROCEDURE_ID))
+                .setParameter("cid", cid)
                 .setParameter("pid", pid)
                 .executeUpdate();
 
@@ -67,12 +75,12 @@ public class CategoryService extends CrudService<Category> {
         if (category == null)
             throw new NotFoundException("Category not found");
 
+        checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
+
         entityManager.createNativeQuery(
                 String.format("delete from %s where %s=:cid and %s=:pid",
-                        PROCEDURE_CATEGORY,
-                        Category.ID,
-                        Procedure.ID
-                )).setParameter("cid", cid)
+                        PROCEDURE_CATEGORY, ProcedureCategory.CATEGORIES_ID, ProcedureCategory.PROCEDURE_ID))
+                .setParameter("cid", cid)
                 .setParameter("pid", pid)
                 .executeUpdate();
 
@@ -86,11 +94,8 @@ public class CategoryService extends CrudService<Category> {
             throw new NotFoundException("Category not found");
 
         Query q = QueryUtils.nativeQuery(entityManager, Procedure.class)
-                .baseQuery(new HqlQuery("select u.* from %s left join %s as u on u.%s=%s",
-                        PROCEDURE_CATEGORY,
-                        CATEGORIES,
-                        Category.ID,
-                        ProcedureCategory.fields(ProcedureCategory.CATEGORIES_ID)))
+                .baseQuery(new HqlQuery("select c.* from %s left join %s as c on c.%s=%s",
+                        PROCEDURE_CATEGORY, CATEGORIES, Category.ID, ProcedureCategory.fields(ProcedureCategory.CATEGORIES_ID)))
                 .addFilter(new HqlQuery("%s=:idd", Category.ID).setParameter("idd", category.id))
                 .searchCriteria(searchCriteria)
                 .build();

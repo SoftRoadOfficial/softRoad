@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import org.softRoad.exception.ForbiddenException;
 import org.softRoad.exception.InternalException;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.AuditLog;
@@ -27,6 +28,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class CrudService<T extends SoftRoadModel> {
     private final Class<?> objClass;
@@ -35,7 +37,7 @@ public class CrudService<T extends SoftRoadModel> {
     EntityManager entityManager;
 
     @Inject
-    AccessControlManager accessControlManager;
+    protected AccessControlManager acm;
 
     @Inject
     ObjectMapper mapper;
@@ -47,7 +49,7 @@ public class CrudService<T extends SoftRoadModel> {
     @Transactional
     private void log(Action type, T obj) {
         AuditLog log = new AuditLog();
-        log.user = accessControlManager.getCurrentUser();
+        log.user = acm.getCurrentUser();
         log.action = type;
         log.objectId = ModelUtils.getPrimaryKeyValue(obj, objClass);
         log.objectType = objClass.getName();
@@ -60,7 +62,16 @@ public class CrudService<T extends SoftRoadModel> {
     }
 
     protected void checkPermission(PermissionType type) {
-        accessControlManager.checkPermission(Permission.valueOf(type.name() + "_" + objClass.getSimpleName().toUpperCase()));
+        checkState(hasPermission(type));
+    }
+
+    protected boolean hasPermission(PermissionType type) {
+        return acm.hasPermission(Permission.valueOf(type.name() + "_" + objClass.getSimpleName().toUpperCase()));
+    }
+
+    protected void checkState(boolean b) {
+        if (!b)
+            throw new ForbiddenException("Permission denied");
     }
 
     private Map<String, String> convert(T obj) {

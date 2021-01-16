@@ -29,12 +29,8 @@ public class UserControllerTest {
         user.password = "theMostSecurePassword";
         user.displayName = "Mahdi";
 
-        User user1 = User.findById(1);
-
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
-                // TODO: Really bro?!
-                .header("Authorization", SecurityUtils.getAuthorizationHeader(user1))
                 .body(user)
                 .when()
                 .post("/users/signup")

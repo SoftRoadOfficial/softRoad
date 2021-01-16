@@ -23,20 +23,6 @@ public class StepController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{pid}/add/step")
-    public Response addStepForProcedure(Integer sid, @PathParam("pid") Integer pid) {
-        return stepService.addStepForProcedure(sid, pid);
-    }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{pid}/add/steps")
-    public Response addStepsForProcedure(@NotNull List<Integer> stepIds, @PathParam("pid") Integer pid) {
-        return stepService.addStepsForProcedure(stepIds, pid);
-    }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
     public Response createStep(Step step) {
         return stepService.create(step);
@@ -48,12 +34,4 @@ public class StepController {
     public List<Step> getStepsOfProcedure(@PathParam("pid") Integer pid) {
         return stepService.getStepsOfProcedure(pid);
     }
-
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("remove")
-    public Response removeStepsFromProcedure(Integer sid, Integer pid) {
-        return stepService.removeStepFromProcedure(sid, pid);
-    }
-
 }

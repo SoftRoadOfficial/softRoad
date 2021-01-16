@@ -34,6 +34,7 @@ public class RoleService extends CrudService<Role> {
 
     @Transactional
     public Response addPermissionsToRole(Integer id, List<Permission> permissions) {
+        checkState(hasPermission(PermissionType.UPDATE));
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -44,6 +45,7 @@ public class RoleService extends CrudService<Role> {
 
     @Transactional
     public Response removePermissionsFromRole(Integer id, List<Permission> permissions) {
+        checkState(hasPermission(PermissionType.UPDATE));
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -54,6 +56,7 @@ public class RoleService extends CrudService<Role> {
 
     @Transactional
     public Set<Permission> getPermissionsOfRole(Integer id) {
+        checkState(hasPermission(PermissionType.READ));
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -62,6 +65,7 @@ public class RoleService extends CrudService<Role> {
 
     @Transactional
     public Response addUsersToRole(Integer id, List<Integer> userIds) {
+        acm.checkPermission(Permission.UPDATE_USER);
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -80,6 +84,7 @@ public class RoleService extends CrudService<Role> {
 
     @Transactional
     public Response removeUsersFromRole(Integer id, List<Integer> userIds) {
+        acm.checkPermission(Permission.UPDATE_USER);
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -96,6 +101,7 @@ public class RoleService extends CrudService<Role> {
     }
 
     public List<User> getUsersForRole(Integer id, @NotNull SearchCriteria searchCriteria) {
+        acm.checkPermission(Permission.READ_USER);
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
@@ -110,6 +116,7 @@ public class RoleService extends CrudService<Role> {
     }
 
     public List<User> getUsersNotForRole(Integer id, @NotNull SearchCriteria searchCriteria) {
+        acm.checkPermission(Permission.READ_USER);
         Role role = Role.findById(id);
         if (role == null)
             throw new InvalidDataException("Invalid role");
