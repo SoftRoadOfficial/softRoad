@@ -28,6 +28,7 @@ public class TagService extends CrudService<Tag> {
     }
 
     @Override
+    @Transactional
     public Response create(Tag tag) {
         long count = Tag.count(Tag.NAME + "=?1", tag.name);
         if (count > 0)

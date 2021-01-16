@@ -57,4 +57,120 @@ public class UserControllerTest {
                 .statusCode(200)
                 .body("$.size()", is(4));
     }
+
+//    @Test
+//    @TestTransaction
+//    public void testLoginEndpoint() {
+//        LoginUser loginUser = new LoginUser();
+//        loginUser.setPhoneNumber("09170000000");
+//        loginUser.setPassword("test_password");
+//
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .body(loginUser)
+//                .when()
+//                .post("/users/login")
+//                .then()
+//                .statusCode(200)
+//                .body("phoneNumber", equalTo("09170000000"))
+//                .body("jwtToken", CoreMatchers.notNullValue());
+//    }
+//
+//    @Test
+//    @TestTransaction
+//    public void testGetEndpoint() {
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .when()
+//                .get("/users/1")
+//                .then()
+//                .statusCode(200);
+////                .body("phoneNumber", equalTo("09170000000"))
+////                .body("jwtToken", CoreMatchers.notNullValue());
+//    }
+//
+//    @Test
+//    @TestTransaction
+//    public void testUpdateEndpoint() {
+//        User user = User.findById(1);
+//        user.displayName = "Mahdi";
+//
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .body(user)
+//                .when()
+//                .patch("/users/1")
+//                .then()
+//                .statusCode(200)
+//                .body("phoneNumber", equalTo("09170000000"))
+//                .body("jwtToken", CoreMatchers.notNullValue());
+//    }
+//
+//    @Test
+//    @TestTransaction
+//    public void testDeleteEndpoint() {
+//        User user = User.findById(1);
+//
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .body(user)
+//                .when()
+//                .delete("/users/1")
+//                .then()
+//                .statusCode(200);
+//    }
+//
+//    @Test
+//    @TestTransaction
+//    public void testGetRolesForUserEndpoint() {
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .when()
+//                .get("/users/1/roles")
+//                .then()
+//                .statusCode(200);
+//                // TODO: check the list
+//    }
+//
+//    @Test
+//    @TestTransaction
+//    public void testGetRolesNotForUserEndpoint() {
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .when()
+//                .get("/users/2/roles/inverse")
+//                .then()
+//                .statusCode(200);
+//                // TODO: check the list
+//    }
+//
+//    @Test
+//    @TestTransaction
+//    public void testAddRolesToUserEndpoint() {
+//        User user = User.findById(2);
+//
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .body(user) // list of role_ids
+//                .when()
+//                .post("/users/2/roles/add")
+//                .then()
+//                .statusCode(200);
+//    }
+//
+//    @Test
+//    @TestTransaction
+//    public void testRemoveRolesFromUserEndpoint() {
+//        User user = User.findById(2);
+//
+//        given()
+//                .header("Content-Type", MediaType.APPLICATION_JSON)
+//                .body(user) // list of role_ids
+//                .when()
+//                .post("/users/1/roles/remove")
+//                .then()
+//                .statusCode(200);
+//    }
+
+
 }
