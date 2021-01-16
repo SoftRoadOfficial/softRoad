@@ -11,6 +11,7 @@ import org.softRoad.security.SecurityUtils;
 import javax.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 public class RoleControllerTest {
@@ -47,7 +48,7 @@ public class RoleControllerTest {
                 .when()
                 .post("/roles/getAll")
                 .then()
-                .statusCode(200);
-//                .body("$.size()", is(1));
+                .statusCode(200)
+                .body("$.size()", is(1));
     }
 }

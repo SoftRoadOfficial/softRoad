@@ -486,6 +486,24 @@
             <column name="permission" value="DELETE_USER_VERIFICATION"/>
         </insert>
         <!-- crud -->
-
     </changeSet>
+
+    <changeSet id="insert-test-tags" author="softroad" context="test">
+        <insert tableName="tags">
+            <column name="name" value="finance"/>
+        </insert>
+
+        <insert tableName="tags">
+            <column name="name" value="market"/>
+        </insert>
+
+        <insert tableName="tags">
+            <column name="name" value="exams"/>
+        </insert>
+
+        <insert tableName="tags">
+            <column name="name" value="courses"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
