@@ -59,7 +59,7 @@ public class CommentController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("replies/{id}")
+    @Path("{id}/replies")
     public List<Comment> getRepliesForComment(@PathParam("id") Integer id) {
         return commentService.getRepliesForComment(id);
     }

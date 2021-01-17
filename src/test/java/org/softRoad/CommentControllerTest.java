@@ -2,6 +2,7 @@ package org.softRoad;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Comment;
 import org.softRoad.models.Procedure;
@@ -12,7 +13,7 @@ import org.softRoad.security.SecurityUtils;
 import javax.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
 public class CommentControllerTest {
@@ -54,6 +55,78 @@ public class CommentControllerTest {
                 .post("/comments/getAll")
                 .then()
                 .statusCode(200)
-                .body("$.size()", is(5));
+                .body("$.size()", is(4));
     }
+
+    @Test
+    @TestTransaction
+    public void testGetEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("id", 2)
+                .get("/comments/{id}")
+                .then()
+                .statusCode(200)
+                .body("id", CoreMatchers.equalTo(2))
+                .body("text", equalTo("very good!!!"))
+                .body("rate", equalTo(5))
+                .body("user", notNullValue());
+
+    }
+
+    @Test
+    @TestTransaction
+    public void testUpdateEndpoint() {
+        User user = User.findById(1);
+
+        Comment comment = Comment.findById(2);
+        comment.text = "very good (changed)";
+        comment.rate = 5;
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .body(comment)
+                .when()
+                .patch("/comments")
+                .then();
+//                .statusCode(200);
+//                .body("X", hasItem("X"));
+    }
+
+    @Test
+    @TestTransaction
+    public void testDeleteEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("id", 1)
+                .delete("/comments/{id}")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    @TestTransaction
+    public void testGetRepliesForCommentEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("id", 2)
+                .get("/comments/{id}/replies")
+                .then()
+                .statusCode(200)
+                .body("$.size", is(0));
+    }
+
 }
