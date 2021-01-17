@@ -59,7 +59,7 @@ public class ConsultantProfile extends SoftRoadModel {
     @JsonIgnore
     public Set<Tag> tags = new HashSet<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", unique = true)
     @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;

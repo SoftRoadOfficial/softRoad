@@ -12,7 +12,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-public class Role extends SoftRoadModel {
+public class Role extends SoftRoadModel
+{
     @Transient
     public final static String ID = "id";
     @Transient
@@ -40,17 +41,26 @@ public class Role extends SoftRoadModel {
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
     public Set<User> users = new HashSet<>();
 
-    public void setId(Integer id) {
+    public void setId(Integer id)
+    {
         this.id = id;
         presentFields.add("id");
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
         presentFields.add("name");
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public static String fields(String fieldName, String... fieldNames)
+    {
         return QueryUtils.fields(Role.class, fieldName, fieldNames);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Role{" + "id=" + id + ", name=" + name + '}';
     }
 }

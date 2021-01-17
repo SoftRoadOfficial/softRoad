@@ -15,11 +15,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.HashSet;
 import java.util.Set;
+import org.gradle.internal.impldep.com.google.common.base.Strings;
 
 @Entity
 @Table(name = "users")
 @UserDefinition
-public class User extends SoftRoadModel {
+public class User extends SoftRoadModel
+{
 
     @Transient
     public final static String ID = "id";
@@ -86,58 +88,61 @@ public class User extends SoftRoadModel {
     @JsonIgnore
     public Set<Procedure> procedures = new HashSet<>();
 
-    public void setPassword(String password) {
-        if (password != null && !password.isEmpty())
+    public void setPassword(String password)
+    {
+        if (Strings.isNullOrEmpty(this.password))
             this.password = SecurityUtils.hashPassword(password);
         else
             this.password = password;
         this.presentFields.add("password");
     }
 
-    public void setId(Integer id) {
+    public void setId(Integer id)
+    {
         this.id = id;
         this.presentFields.add("id");
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email)
+    {
         this.email = email;
         this.presentFields.add("email");
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber)
+    {
         this.phoneNumber = phoneNumber;
         this.presentFields.add("phoneNumber");
     }
 
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(String displayName)
+    {
         this.displayName = displayName;
         this.presentFields.add("displayName");
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(Boolean enabled)
+    {
         this.enabled = enabled;
         this.presentFields.add("enabled");
     }
 
-    public void setCity(City city) {
+    public void setCity(City city)
+    {
         this.city = city;
         presentFields.add("city");
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                '}';
+    public String toString()
+    {
+        return "User{" + "id=" + id + ", email='" + email + '\'' + ", password='" + password + '\'' + ", phoneNumber='"
+                + phoneNumber + '\'' + ", displayName='" + displayName + '\'' + ", enabled=" + enabled + ", roles="
+                + roles + '}';
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public static String fields(String fieldName, String... fieldNames)
+    {
         return QueryUtils.fields(User.class, fieldName, fieldNames);
     }
 }

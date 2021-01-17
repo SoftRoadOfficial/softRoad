@@ -6,10 +6,12 @@ import org.softRoad.models.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class AccessControlManager
 {
+    private static final Logger LOGGER = Logger.getLogger(AccessControlManager.class);
 
     @Inject
     JsonWebToken jwt;
@@ -33,9 +35,9 @@ public class AccessControlManager
         return currentUserId != null && currentUserId.equals(id);
     }
 
-    public boolean isCurrentUser(String username)
+    public boolean isCurrentUser(String phoneNumber)
     {
-        return jwt.getName() != null && jwt.getName().equals(username);
+        return jwt.getName() != null && jwt.getName().equals(phoneNumber);
     }
 
     public boolean hasPermission(Permission permission)
@@ -43,6 +45,7 @@ public class AccessControlManager
         User user = getCurrentUser();
         if (user == null)
             return false;
+        LOGGER.debug(user.displayName + " with roles: " + user.roles + " is checking for " + permission);
         return user.roles.stream().anyMatch(role -> (role.permissions.contains(permission)));
     }
 

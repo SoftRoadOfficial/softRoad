@@ -5,50 +5,55 @@ import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Comment;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.softRoad.security.Permission;
 
 @ApplicationScoped
-public class CommentService extends CrudService<Comment> {
+public class CommentService extends CrudService<Comment>
+{
 
-    public CommentService() {
+    public CommentService()
+    {
         super(Comment.class);
     }
 
     @Override
-    protected boolean hasPermission(PermissionType type) {
+    protected boolean hasPermission(PermissionType type)
+    {
         return true;
     }
 
     @Override
     @Transactional
-    public Response create(Comment obj) {
+    public Response create(Comment obj)
+    {
         if (obj.rate != null || !Strings.isNullOrEmpty(obj.text))
             return super.create(obj);
         throw new InvalidDataException("rate or text should be provided");
     }
 
     @Override
-    public Response delete(Integer id) {
+    public Response delete(Integer id)
+    {
         Comment comment = Comment.findById(id);
-        checkState(comment.user.id.equals(acm.getCurrentUserId()) || hasPermission(PermissionType.DELETE));
+        checkState(comment.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.DELETE_COMMENT));
         return super.delete(id);
     }
 
     @Override
-    public Response update(Comment obj) {
+    public Response update(Comment obj)
+    {
         Comment comment = Comment.findById(obj.id);
-        checkState(comment.user.id.equals(acm.getCurrentUserId()) || hasPermission(PermissionType.UPDATE));
+        checkState(comment.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_COMMENT));
         return super.update(obj);
     }
 
     @Transactional
-    public List<Comment> getRepliesForComment(Integer id) {
+    public List<Comment> getRepliesForComment(Integer id)
+    {
         Comment comment = Comment.findById(id);
         if (comment == null)
             throw new InvalidDataException("Invalid comment");

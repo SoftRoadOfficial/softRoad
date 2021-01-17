@@ -24,31 +24,37 @@ import static org.softRoad.models.Tables.*;
 import org.softRoad.models.query.SearchCriteria;
 
 @ApplicationScoped
-public class UserService extends CrudService<User> {
+public class UserService extends CrudService<User>
+{
 
     @Inject
     EntityManager entityManager;
 
-    public UserService() {
+    public UserService()
+    {
         super(User.class);
     }
 
     @Override
-    protected boolean hasPermission(PermissionType type) {
+    protected boolean hasPermission(PermissionType type)
+    {
         if (type == PermissionType.DELETE)
             return super.hasPermission(type);
         return true;
     }
 
     @Override
-    public Response update(User obj) {
-        checkState(acm.getCurrentUserId().equals(obj.id) || hasPermission(PermissionType.UPDATE));
+    @Transactional
+    public Response update(User obj)
+    {
+        checkState(acm.isCurrentUser(obj.id) || acm.hasPermission(Permission.UPDATE_USER));
         return super.update(obj);
     }
 
     @Override
-    public User get(Integer id) {
-        checkState(acm.getCurrentUserId().equals(id) || hasPermission(PermissionType.READ));
+    public User get(Integer id)
+    {
+        checkState(acm.isCurrentUser(id) || acm.hasPermission(Permission.READ_USER));
         User user = super.get(id);
         if (user != null)
             user.password = "";
@@ -56,8 +62,9 @@ public class UserService extends CrudService<User> {
     }
 
     @Override
-    public List<User> getAll(SearchCriteria searchCriteria) {
-        checkState(hasPermission(PermissionType.READ));
+    public List<User> getAll(SearchCriteria searchCriteria)
+    {
+        acm.checkPermission(Permission.READ_USER);
         return super.getAll(searchCriteria).stream().map((u) -> {
             u.password = "";
             return u;
@@ -65,12 +72,14 @@ public class UserService extends CrudService<User> {
     }
 
     @Override
-    public Response create(User obj) {
+    public Response create(User obj)
+    {
         throw new RuntimeException("User should be created through signUp method");
     }
 
     @Transactional
-    public AuthenticationResponse login(LoginUser loginUser) {
+    public AuthenticationResponse login(LoginUser loginUser)
+    {
         User user = User.find(User.PHONE_NUMBER + "=?1 and " + User.PASSWORD + "=?2", loginUser.getPhoneNumber(),
                 loginUser.getPassword()).firstResult();
         if (user == null)
@@ -79,7 +88,8 @@ public class UserService extends CrudService<User> {
     }
 
     @Transactional
-    public AuthenticationResponse signUp(User user) {
+    public AuthenticationResponse signUp(User user)
+    {
         if (User.find(User.PHONE_NUMBER + "=?1", user.phoneNumber).count() > 0)
             throw new DuplicateDataException("Duplicated phoneNumber");
         user.enabled = false; //FIXME users should be enabled after email or phone verification
@@ -88,9 +98,9 @@ public class UserService extends CrudService<User> {
     }
 
     @Transactional
-    public List<Role> getRolesForUser(Integer id) {
-        checkState(hasPermission(PermissionType.READ));
-        acm.checkPermission(Permission.READ_ROLE);
+    public List<Role> getRolesForUser(Integer id)
+    {
+        acm.checkPermission(Permission.READ_USER, Permission.READ_ROLE);
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
@@ -98,21 +108,23 @@ public class UserService extends CrudService<User> {
     }
 
     @Transactional
-    public List getRolesNotForUser(Integer id) {
-        checkState(hasPermission(PermissionType.READ));
-        acm.checkPermission(Permission.READ_ROLE);
+    public List getRolesNotForUser(Integer id)
+    {
+        acm.checkPermission(Permission.READ_USER, Permission.READ_ROLE);
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
         return entityManager
-                .createNativeQuery(String.format("select * from %s where %s not in ( select %s from %s where %s=:userId )",
+                .createNativeQuery(String.format(
+                        "select * from %s where %s not in ( select %s from %s where %s=:userId )",
                         ROLES, Role.ID, UserRole.ROLE_ID, USER_ROLES, UserRole.USER_ID),
                         Role.class).setParameter("userId", user.id).getResultList();
     }
 
     @Transactional
-    public Response addRolesToUser(Integer id, List<Integer> roleIds) {
-        checkState(hasPermission(PermissionType.UPDATE));
+    public Response addRolesToUser(Integer id, List<Integer> roleIds)
+    {
+        acm.checkPermission(Permission.UPDATE_USER);
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
@@ -130,8 +142,9 @@ public class UserService extends CrudService<User> {
     }
 
     @Transactional
-    public Response removeRolesFromUser(Integer id, List<Integer> roleIds) {
-        checkState(hasPermission(PermissionType.UPDATE));
+    public Response removeRolesFromUser(Integer id, List<Integer> roleIds)
+    {
+        acm.checkPermission(Permission.UPDATE_USER);
         User user = User.findById(id);
         if (user == null)
             throw new InvalidDataException("Invalid user");
