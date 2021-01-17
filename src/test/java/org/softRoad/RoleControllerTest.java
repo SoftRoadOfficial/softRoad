@@ -49,6 +49,6 @@ public class RoleControllerTest {
                 .post("/roles/getAll")
                 .then()
                 .statusCode(200)
-                .body("$.size()", is(1));
+                .body("$.size()", is(2));
     }
 }

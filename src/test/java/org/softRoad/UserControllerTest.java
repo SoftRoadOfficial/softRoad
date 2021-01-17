@@ -7,26 +7,24 @@ import io.quarkus.test.junit.QuarkusTest;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.User;
+import org.softRoad.models.dao.LoginUser;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.SecurityUtils;
 
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import org.softRoad.models.dao.LoginUser;
 
 @QuarkusTest
 @QuarkusTestResource(H2DatabaseTestResource.class)
-public class UserControllerTest
-{
+public class UserControllerTest {
 
     @Test
     @TestTransaction
-    public void testSignUpEndpoint()
-    {
+    public void testSignUpEndpoint() {
         User user = new User();
         user.phoneNumber = "09172009167";
         user.email = "mhf1377@gmail.com";
@@ -46,8 +44,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testGetAllEndpoint()
-    {
+    public void testGetAllEndpoint() {
         SearchCriteria searchCriteria = new SearchCriteria();
 
         User user = User.findById(1);
@@ -65,8 +62,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testLoginEndpoint()
-    {
+    public void testLoginEndpoint() {
         LoginUser loginUser = new LoginUser("09170000000", "test_password");
 
         given()
@@ -82,8 +78,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testGetEndpoint()
-    {
+    public void testGetEndpoint() {
         User user = User.findById(1);
 
         given()
@@ -99,8 +94,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testUpdateEndpoint()
-    {
+    public void testUpdateEndpoint() {
         User user = User.findById(1); //FIXME jsonMapper validates based on User -> complete user is not needed here
         user.displayName = "Mahdi";
 
@@ -132,8 +126,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testGetRolesForUserEndpoint()
-    {
+    public void testGetRolesForUserEndpoint() {
         User user = User.findById(1);
 
         given()
@@ -149,8 +142,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testGetRolesNotForUserEndpoint()
-    {
+    public void testGetRolesNotForUserEndpoint() {
         User user = User.findById(1);
 
         given()
@@ -166,8 +158,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testAddRolesToUserEndpoint()
-    {
+    public void testAddRolesToUserEndpoint() {
         User user = User.findById(1);
 
         given()
@@ -183,8 +174,7 @@ public class UserControllerTest
 
     @Test
     @TestTransaction
-    public void testRemoveRolesFromUserEndpoint()
-    {
+    public void testRemoveRolesFromUserEndpoint() {
         User user = User.findById(1);
 
         given()

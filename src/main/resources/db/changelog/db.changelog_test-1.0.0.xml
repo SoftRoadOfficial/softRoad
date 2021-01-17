@@ -184,7 +184,7 @@
             <column name="name" value="admin"/>
         </insert>
         <insert tableName="roles">
-            <column name="name" value="noramlUser"/>
+            <column name="name" value="normalUser"/>
         </insert>
     </changeSet>
 
