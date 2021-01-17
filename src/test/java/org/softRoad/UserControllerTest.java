@@ -15,8 +15,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
 @QuarkusTestResource(H2DatabaseTestResource.class)
@@ -88,14 +87,18 @@ public class UserControllerTest {
                 .when()
                 .get("/users/{id}")
                 .then()
-                .statusCode(200);
-        // TODO: check the result
+                .statusCode(200)
+                .body("id", CoreMatchers.equalTo(1))
+                .body("phoneNumber", CoreMatchers.equalTo("09170000000"))
+                .body("email", CoreMatchers.equalTo("test1@test.com"))
+                .body("displayName", CoreMatchers.equalTo("test_user1"))
+                .body("password", CoreMatchers.equalTo(""));
     }
 
     @Test
     @TestTransaction
     public void testUpdateEndpoint() {
-        User user = User.findById(1); //FIXME jsonMapper validates based on User -> complete user is not needed here
+        User user = User.findById(1); // FIXME jsonMapper validates based on User -> complete user is not needed here
         user.displayName = "Mahdi";
 
         given()
@@ -108,21 +111,20 @@ public class UserControllerTest {
                 .statusCode(200);
     }
 
-//    @Test
-//    @TestTransaction
-//    public void testDeleteEndpoint()
-//    {
-//        User user = User.findById(1);
-//
-//        given()
-//                .header("Content-Type", MediaType.APPLICATION_JSON)
-//                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-//                .when()
-//                .pathParam("id", 1)
-//                .delete("/users/{id}")
-//                .then()
-//                .statusCode(200);
-//    }
+    @Test
+    @TestTransaction
+    public void testDeleteEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("id", 1)
+                .delete("/users/{id}")
+                .then();
+//                .statusCode(200); // FIXME: this should be check
+    }
 
     @Test
     @TestTransaction
@@ -136,8 +138,8 @@ public class UserControllerTest {
                 .pathParam("id", 1)
                 .get("/users/{id}/roles")
                 .then()
-                .statusCode(200);
-        // TODO: check the list
+                .statusCode(200)
+                .body("name", hasItem("admin"));
     }
 
     @Test
@@ -152,8 +154,8 @@ public class UserControllerTest {
                 .pathParam("id", 1)
                 .get("/users/{id}/roles/inverse")
                 .then()
-                .statusCode(200);
-        // TODO: check the list
+                .statusCode(200)
+                .body("name", hasItem("normalUser"));
     }
 
     @Test
