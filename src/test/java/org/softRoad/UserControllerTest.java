@@ -120,10 +120,10 @@ public class UserControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .when()
-                .pathParam("id", 1)
+                .pathParam("id", 5)
                 .delete("/users/{id}")
-                .then();
-//                .statusCode(200); // FIXME: this should be check
+                .then()
+                .statusCode(200);
     }
 
     @Test

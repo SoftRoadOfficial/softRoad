@@ -1,8 +1,13 @@
 package org.softRoad.services;
 
 import com.google.common.base.Strings;
+import org.jose4j.jwk.Use;
+import org.softRoad.exception.BadRequestException;
+import org.softRoad.exception.ForbiddenException;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Comment;
+import org.softRoad.models.User;
+import org.softRoad.models.UserRole;
 import org.softRoad.security.Permission;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,6 +31,13 @@ public class CommentService extends CrudService<Comment> {
     @Override
     @Transactional
     public Response create(Comment obj) {
+        if (obj.user == null) {
+            User user = acm.getCurrentUser();
+            if (user != null)
+                obj.user = user;
+            else
+                throw new ForbiddenException("Comment.user must not be null");
+        }
         if (obj.rate != null || !Strings.isNullOrEmpty(obj.text))
             return super.create(obj);
         throw new InvalidDataException("rate or text should be provided");
@@ -42,8 +54,9 @@ public class CommentService extends CrudService<Comment> {
     @Override
     @Transactional
     public Response update(Comment obj) {
+        if (obj.presentFields.contains("user"))
+            throw new BadRequestException("Comment.user can not get changed");
         Comment comment = Comment.findById(obj.id);
-//        System.out.println(comment.user);
         checkState(comment.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_COMMENT));
         return super.update(obj);
     }

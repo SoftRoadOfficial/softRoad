@@ -100,7 +100,7 @@
 
     <changeSet id="create-consultant_profile_category-table" author="softroad" context="prod">
         <createTable tableName="consultant_profile_category">
-            <column name="category_id" type="bigint" >
+            <column name="category_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="consultant_id" type="bigint">
@@ -195,7 +195,7 @@
                 <constraints nullable="true"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
         <dropDefaultValue tableName="procedures" columnName="created_date" columnDataType="datetime"/>
@@ -230,7 +230,8 @@
                                  baseTableName="procedures"
                                  constraintName="fk_procedures(user_id, users(id))"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="users"
+                                 onDelete="SET NULL"/>
 
         <addForeignKeyConstraint baseColumnNames="procedure_id"
                                  baseTableName="procedure_city"
@@ -321,7 +322,7 @@
                 <constraints nullable="true"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
         <dropDefaultValue tableName="comments" columnName="created_date" columnDataType="datetime"/>
@@ -332,7 +333,9 @@
                                  baseTableName="comments"
                                  constraintName="fk_comments(user_id, users(id))"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="users"
+                                 onDelete="SET NULL"/>
+
         <addForeignKeyConstraint baseColumnNames="reply_id"
                                  baseTableName="comments"
                                  constraintName="fk_comments(reply_id, comments(id))"
@@ -364,7 +367,6 @@
                 <constraints nullable="true"/>
             </column>
             <column name="picture" type="longblob">
-<!--                double checking-->
                 <constraints nullable="true"/>
             </column>
             <column name="picture_content_type" type="varchar(32)">
@@ -416,7 +418,8 @@
                                  baseTableName="audit_logs"
                                  constraintName="fk_audit-logs(user_id, users(id))"
                                  referencedColumnNames="id"
-                                 referencedTableName="users"/>
+                                 referencedTableName="users"
+                                 onDelete="SET NULL"/>
     </changeSet>
 
     <changeSet id="create-tags-table" author="softroad" context="prod">

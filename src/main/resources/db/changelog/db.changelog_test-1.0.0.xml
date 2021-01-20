@@ -38,6 +38,14 @@
             <column name="display_name" value="test_user4"/>
             <column name="enabled" value="true"/>
         </insert>
+        <insert tableName="users">
+            <column name="email" value="test5@test.com"/>
+            <!--password:    test_password-->
+            <column name="password" value="$2a$10$MU7AQBH2LzfXL1L1aRLmLOOtQ4wLXtG9GPdWJsf0V6J2SbNwuMnry"/>
+            <column name="phone_number" value="09170000005"/>
+            <column name="display_name" value="test_user5"/>
+            <column name="enabled" value="true"/>
+        </insert>
     </changeSet>
 
     <changeSet id="insert-test-consultant_profiles" author="softroad" context="test">

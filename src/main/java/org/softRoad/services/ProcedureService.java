@@ -11,40 +11,30 @@ import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 
+import org.softRoad.exception.BadRequestException;
 import org.softRoad.exception.ForbiddenException;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.exception.NotFoundException;
-import org.softRoad.models.Category;
-import org.softRoad.models.City;
-import org.softRoad.models.Comment;
-import org.softRoad.models.Procedure;
-import org.softRoad.models.ProcedureCategory;
-import org.softRoad.models.ProcedureCity;
-import org.softRoad.models.ProcedureTag;
-import org.softRoad.models.Step;
-import org.softRoad.models.Tag;
-import org.softRoad.models.UpdateRequest;
+import org.softRoad.models.*;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.AccessControlManager;
+import org.softRoad.security.Permission;
 
 import static org.softRoad.models.Tables.*;
 
 @ApplicationScoped
-public class ProcedureService extends CrudService<Procedure>
-{
+public class ProcedureService extends CrudService<Procedure> {
     @Inject
     EntityManager entityManager;
 
-    public ProcedureService()
-    {
+    public ProcedureService() {
         super(Procedure.class);
     }
 
     @Transactional
-    public Response addCitiesToProcedure(Integer procedureId, List<Integer> cityIds)
-    {
+    public Response addCitiesToProcedure(Integer procedureId, List<Integer> cityIds) {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -61,8 +51,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Response addCategoriesToProcedure(Integer procedureId, List<Integer> categoryIds)
-    {
+    public Response addCategoriesToProcedure(Integer procedureId, List<Integer> categoryIds) {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -79,8 +68,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Response addTagsToProcedure(Integer procedureId, List<Integer> tagIds)
-    {
+    public Response addTagsToProcedure(Integer procedureId, List<Integer> tagIds) {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -97,8 +85,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Response removeCitiesForProcedure(Integer procedureId, List<Integer> cityIds)
-    {
+    public Response removeCitiesForProcedure(Integer procedureId, List<Integer> cityIds) {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -115,8 +102,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Response removeCategoriesForProcedure(Integer procedureId, List<Integer> categoryIds)
-    {
+    public Response removeCategoriesForProcedure(Integer procedureId, List<Integer> categoryIds) {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -133,8 +119,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Response removeTagsForProcedure(Integer procedureId, List<Integer> tagIds)
-    {
+    public Response removeTagsForProcedure(Integer procedureId, List<Integer> tagIds) {
         Procedure procedure = Procedure.findById(procedureId);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -152,10 +137,11 @@ public class ProcedureService extends CrudService<Procedure>
 
     @Override
     @Transactional
-    public Response update(Procedure procedure)
-    {
-        acm.isCurrentUser(procedure.user.id);
+    public Response update(Procedure procedure) {
+        if (procedure.presentFields.contains("user")) // FIXME: 1/20/2021
+            throw new BadRequestException("Procedure.user can not get changed");
         Procedure oldProcedure = Procedure.findById(procedure.id);
+        checkState(acm.isCurrentUser(oldProcedure.user.id) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
         if (oldProcedure == null)
             throw new NotFoundException("Procedure Not Found");
         super.update(procedure);
@@ -163,8 +149,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Set<UpdateRequest> getUpdateRequestsOfProcedure(Integer id)
-    {
+    public Set<UpdateRequest> getUpdateRequestsOfProcedure(Integer id) {
         Procedure procedure = Procedure.findById(id);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -172,8 +157,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Set<Step> getStepsOfProcedure(Integer id)
-    {
+    public Set<Step> getStepsOfProcedure(Integer id) {
         Procedure procedure = Procedure.findById(id);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -182,8 +166,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Set<Comment> getCommentsOfProcedure(Integer id)
-    {
+    public Set<Comment> getCommentsOfProcedure(Integer id) {
         Procedure procedure = Procedure.findById(id);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -192,8 +175,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Set<City> getCitiesOfProcedure(Integer id)
-    {
+    public Set<City> getCitiesOfProcedure(Integer id) {
         Procedure procedure = Procedure.findById(id);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -201,8 +183,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Set<Category> getCategoriesOfProcedure(Integer id)
-    {
+    public Set<Category> getCategoriesOfProcedure(Integer id) {
         Procedure procedure = Procedure.findById(id);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -210,8 +191,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public Set<Tag> getTagsOfProcedure(Integer id)
-    {
+    public Set<Tag> getTagsOfProcedure(Integer id) {
         Procedure procedure = Procedure.findById(id);
         if (procedure == null)
             throw new InvalidDataException("Invalid procedure");
@@ -219,8 +199,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public List<Procedure> getProceduresForCity(Integer id, @NotNull SearchCriteria searchCriteria)
-    {
+    public List<Procedure> getProceduresForCity(Integer id, @NotNull SearchCriteria searchCriteria) {
 
         City city = City.findById(id);
         if (city == null)
@@ -236,8 +215,7 @@ public class ProcedureService extends CrudService<Procedure>
     }
 
     @Transactional
-    public List<Procedure> getProceduresForCategory(Integer id, @NotNull SearchCriteria searchCriteria)
-    {
+    public List<Procedure> getProceduresForCategory(Integer id, @NotNull SearchCriteria searchCriteria) {
 
         Category category = Category.findById(id);
         if (category == null)
@@ -246,7 +224,7 @@ public class ProcedureService extends CrudService<Procedure>
         Query q = QueryUtils.nativeQuery(entityManager, Procedure.class)
                 .baseQuery(new HqlQuery("select u.* from %s as u right join %s on u.%s=%s",
                         PROCEDURES, PROCEDURE_CATEGORY, Procedure.ID, ProcedureCategory.fields(
-                                ProcedureCategory.PROCEDURE_ID)))
+                        ProcedureCategory.PROCEDURE_ID)))
                 .addFilter(new HqlQuery("%s=:idd", ProcedureCategory.CATEGORIES_ID).setParameter("idd", category.id))
                 .searchCriteria(searchCriteria)
                 .build();
@@ -255,8 +233,7 @@ public class ProcedureService extends CrudService<Procedure>
 
     @Transactional
     public List<Procedure> getProceduresForCategoryInCity(Integer cityId, Integer categoryId,
-            @NotNull SearchCriteria searchCriteria)
-    {
+                                                          @NotNull SearchCriteria searchCriteria) {
 
         City city = City.findById(cityId);
         if (city == null)
@@ -277,4 +254,16 @@ public class ProcedureService extends CrudService<Procedure>
         return q.getResultList();
     }
 
+    @Transactional
+    @Override
+    public Response create(Procedure obj) {
+        if (obj.user == null) {
+            User user = acm.getCurrentUser();
+            if (user != null)
+                obj.user = user;
+            else
+                throw new ForbiddenException("Procedure.user must not be null");
+        }
+        return super.create(obj);
+    }
 }

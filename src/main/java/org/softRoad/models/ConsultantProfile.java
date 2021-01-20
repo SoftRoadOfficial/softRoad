@@ -42,7 +42,7 @@ public class ConsultantProfile extends SoftRoadModel {
     @JsonIgnore
     public Set<Consultation> consultations = new HashSet<>();
 
-    @OneToMany(mappedBy = "consultant")
+    @OneToMany(mappedBy = "consultant", cascade = CascadeType.REMOVE)
     @JsonIgnore
     public Set<Fee> fees = new HashSet<>();
 
@@ -59,7 +59,7 @@ public class ConsultantProfile extends SoftRoadModel {
     @JsonIgnore
     public Set<Tag> tags = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id", unique = true)
     @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
@@ -94,7 +94,7 @@ public class ConsultantProfile extends SoftRoadModel {
         return rate;
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public static String fields(String fieldName, String... fieldNames) {
         return QueryUtils.fields(ConsultantProfile.class, fieldName, fieldNames);
     }
 }
