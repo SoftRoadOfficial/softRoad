@@ -7,26 +7,22 @@ import javax.persistence.JoinColumn;
 import javax.validation.*;
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-public class DiffValidator implements ConstraintValidator<Diff, Object>
-{
+public class DiffValidator implements ConstraintValidator<Diff, Object> {
 
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 
     private Class<?>[] groups;
 
     @Override
-    public void initialize(Diff annotation)
-    {
+    public void initialize(Diff annotation) {
         ConstraintValidator.super.initialize(annotation);
         groups = annotation.groups();
     }
 
     @Override
-    public boolean isValid(Object bean, ConstraintValidatorContext context)
-    {
+    public boolean isValid(Object bean, ConstraintValidatorContext context) {
         context.buildConstraintViolationWithTemplate("").addBeanNode();
 
         if (bean == null)
@@ -52,15 +48,14 @@ public class DiffValidator implements ConstraintValidator<Diff, Object>
                 if (joinColumn != null) {
                     SoftRoadModel item = null;
                     try {
+                        field.setAccessible(true);
                         item = ((SoftRoadModel) field.get(bean));
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
-                    List<String> presentFields = item.presentFields;
                     Field pkField = ModelUtils.getPrimaryKeyField(item, item.getClass());
                     Preconditions.checkState(pkField != null);
-                    if (presentFields.size() != 1 || !presentFields.get(0).equals(pkField.getName()))
-                        return false;
+                    return item.presentFields.contains(pkField.getName());
                 } else {
                     Validator validator = factory.getValidator();
                     Set<ConstraintViolation<Object>> s = validator.validateProperty(bean, fieldName, groups);

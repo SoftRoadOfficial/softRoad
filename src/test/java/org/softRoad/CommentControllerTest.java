@@ -93,8 +93,8 @@ public class CommentControllerTest {
                 .body(comment)
                 .when()
                 .patch("/comments")
-                .then();
-//                .statusCode(200);
+                .then()
+                .statusCode(200);
 //                .body("X", hasItem("X"));
     }
 
