@@ -1,9 +1,9 @@
-package org.softRoad;
+package org.softRoad.controllers;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import org.softRoad.models.Procedure;
+import org.softRoad.models.City;
 import org.softRoad.models.User;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.SecurityUtils;
@@ -14,25 +14,22 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
-public class ProcedureControllerTest {
+public class CityControllerTest {
 
     @Test
     @TestTransaction
     public void testCreateEndpoint() {
-        Procedure procedure = new Procedure();
-        procedure.title = "someNewProcedure";
-        procedure.description = "someNewProcedureDescription";
-        procedure.confirmed = true;
+        City city = new City();
+        city.name = "Shiraz";
 
         User user = User.findById(1);
-        procedure.user = user;
 
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .body(procedure)
+                .body(city)
                 .when()
-                .post("/procedures/create")
+                .post("/cities/create")
                 .then()
                 .statusCode(201);
     }
@@ -49,10 +46,9 @@ public class ProcedureControllerTest {
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .body(searchCriteria)
                 .when()
-                .post("/procedures/getAll")
+                .post("/cities/getAll")
                 .then()
                 .statusCode(200)
                 .body("$.size()", is(3));
     }
-
 }

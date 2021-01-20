@@ -1,4 +1,4 @@
-package org.softRoad;
+package org.softRoad.controllers;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;

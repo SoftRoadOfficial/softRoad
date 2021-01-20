@@ -1,4 +1,4 @@
-package org.softRoad;
+package org.softRoad.controllers;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.QuarkusTestResource;
@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import java.util.HashMap;
+import java.util.Map;
 import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
@@ -98,13 +100,16 @@ public class UserControllerTest {
     @Test
     @TestTransaction
     public void testUpdateEndpoint() {
-        User user = User.findById(1); // FIXME jsonMapper validates based on User -> complete user is not needed here
-        user.displayName = "Mahdi";
+        User user = User.findById(1);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put(User.ID, 1);
+        data.put("displayName", "Mahdi"); //FIXME there should be a static field for displayName somewhere !
 
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .body(user)
+                .body(data)
                 .when()
                 .patch("/users")
                 .then()

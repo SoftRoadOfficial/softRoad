@@ -10,10 +10,7 @@ import org.softRoad.config.Constants;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.security.SecurityUtils;
 
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

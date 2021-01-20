@@ -1,5 +1,6 @@
-package org.softRoad;
+package org.softRoad.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.hamcrest.CoreMatchers;
@@ -13,6 +14,9 @@ import org.softRoad.security.SecurityUtils;
 import javax.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
+import io.restassured.mapper.ObjectMapperType;
+import java.util.HashMap;
+import java.util.Map;
 import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
@@ -83,19 +87,18 @@ public class CommentControllerTest {
     public void testUpdateEndpoint() {
         User user = User.findById(1);
 
-        Comment comment = Comment.findById(2);
-        comment.text = "very good (changed)";
-        comment.rate = 5;
+        Map<String, Object> data = new HashMap<>();
+        data.put(Comment.ID, 2);
+        data.put(Comment.TEXT, "very good (updated)");
 
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .body(comment)
+                .body(data)
                 .when()
                 .patch("/comments")
                 .then()
                 .statusCode(200);
-//                .body("X", hasItem("X"));
     }
 
     @Test

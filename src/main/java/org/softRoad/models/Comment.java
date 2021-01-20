@@ -2,20 +2,16 @@ package org.softRoad.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.Persister;
 import org.softRoad.models.query.QueryUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "comments")
-public class Comment extends SoftRoadModel
-{
+public class Comment extends SoftRoadModel {
     @Transient
     public final static String ID = "id";
     @Transient
@@ -67,63 +63,53 @@ public class Comment extends SoftRoadModel
     public User user;
 
     @PrePersist
-    private void setCreatedDate()
-    {
+    private void setCreatedDate() {
         this.createdDate = Instant.now();
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
         presentFields.add("id");
     }
 
-    public void setReply(Comment reply)
-    {
+    public void setReply(Comment reply) {
         this.reply = reply;
         presentFields.add("reply");
     }
 
-    public void setConsultation(Consultation consultation)
-    {
+    public void setConsultation(Consultation consultation) {
         this.consultation = consultation;
         presentFields.add("consultation");
     }
 
-    public void setProcedure(Procedure procedure)
-    {
+    public void setProcedure(Procedure procedure) {
         this.procedure = procedure;
         presentFields.add("procedure");
     }
 
-    public void setUser(User user)
-    {
+    public void setUser(User user) {
         this.user = user;
         presentFields.add("user");
     }
 
-    public void setText(String text)
-    {
+    public void setText(String text) {
         this.text = text;
         presentFields.add("text");
     }
 
-    public void setRate(Integer rate)
-    {
+    public void setRate(Integer rate) {
         this.rate = rate;
         presentFields.add("rate");
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Comment{" + "id=" + id + ", text=" + text + ", rate=" + rate + ", createdDate=" + createdDate
                 + ", comments=" + comments + ", reply=" + reply + ", consultation=" + consultation + ", procedure="
                 + procedure + ", user=" + user + '}';
     }
 
-    public static String fields(String fieldName, String... fieldNames)
-    {
+    public static String fields(String fieldName, String... fieldNames) {
         return QueryUtils.fields(Comment.class, fieldName, fieldNames);
     }
 }
