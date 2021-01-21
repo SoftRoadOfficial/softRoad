@@ -1,21 +1,5 @@
 package org.softRoad.controllers;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.enterprise.context.RequestScoped;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.softRoad.models.ConsultantProfile;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.Tag;
@@ -23,16 +7,23 @@ import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.services.TagService;
 import org.softRoad.utils.Diff;
 
+import javax.enterprise.context.RequestScoped;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
+
 @Path("/tags")
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TagController 
-{
+public class TagController {
     private final TagService tagService;
-    
-    public TagController(TagService tagService)
-    {
+
+    public TagController(TagService tagService) {
         this.tagService = tagService;
     }
 
@@ -66,16 +57,14 @@ public class TagController
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("procedures")
-    public Set<Procedure> getProceduresForTags(List<Integer> tagIds)
-    {
+    public Set<Procedure> getProceduresForTags(List<Integer> tagIds) {
         return tagService.getProceduresForTags(tagIds);
-    } 
+    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("consultants")
-    public Set<ConsultantProfile> getConsultantsForTags(List<Integer> tagIds)
-    {
+    public Set<ConsultantProfile> getConsultantsForTags(List<Integer> tagIds) {
         return tagService.getConsultantsForTags(tagIds);
     } 
     
