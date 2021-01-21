@@ -1,6 +1,6 @@
 package org.softRoad.services;
 
-import org.softRoad.exception.NotFoundException;
+import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.City;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.ProcedureCity;
@@ -32,9 +32,9 @@ public class CityService extends CrudService<City> {
         Procedure procedure = Procedure.findById(pid);
         City city = City.findById(cid);
         if (city == null)
-            throw new NotFoundException("City not found");
+            throw new InvalidDataException("City not found");
         if (procedure == null)
-            throw new NotFoundException("Procedure not found");
+            throw new InvalidDataException("Procedure not found");
 
         checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
 
@@ -53,9 +53,9 @@ public class CityService extends CrudService<City> {
         City city = City.findById(cid);
         Procedure procedure = Procedure.findById(pid);
         if (city == null)
-            throw new NotFoundException("City not found");
+            throw new InvalidDataException("City not found");
         if (procedure == null)
-            throw new NotFoundException("Procedure not found");
+            throw new InvalidDataException("Procedure not found");
 
         checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
 
@@ -73,7 +73,7 @@ public class CityService extends CrudService<City> {
     public List<City> getCitiesOfProcedure(Integer pid) {
         Procedure procedure = Procedure.findById(pid);
         if (procedure == null)
-            throw new NotFoundException("Procedure not found");
+            throw new InvalidDataException("Procedure not found");
         return new ArrayList<>(procedure.cities);
     }
 

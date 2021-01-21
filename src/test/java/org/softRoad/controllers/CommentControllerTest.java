@@ -1,9 +1,7 @@
 package org.softRoad.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Comment;
 import org.softRoad.models.Procedure;
@@ -12,11 +10,10 @@ import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.SecurityUtils;
 
 import javax.ws.rs.core.MediaType;
-
-import static io.restassured.RestAssured.given;
-import io.restassured.mapper.ObjectMapperType;
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
@@ -75,11 +72,10 @@ public class CommentControllerTest {
                 .get("/comments/{id}")
                 .then()
                 .statusCode(200)
-                .body("id", CoreMatchers.equalTo(2))
+                .body("id", equalTo(2))
                 .body("text", equalTo("very good!!!"))
                 .body("rate", equalTo(5))
                 .body("user", notNullValue());
-
     }
 
     @Test

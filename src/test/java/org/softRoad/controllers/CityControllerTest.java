@@ -11,6 +11,7 @@ import org.softRoad.security.SecurityUtils;
 import javax.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
@@ -38,7 +39,6 @@ public class CityControllerTest {
     @TestTransaction
     public void testGetAllEndpoint() {
         SearchCriteria searchCriteria = new SearchCriteria();
-
         User user = User.findById(1);
 
         given()
@@ -49,6 +49,88 @@ public class CityControllerTest {
                 .post("/cities/getAll")
                 .then()
                 .statusCode(200)
-                .body("$.size()", is(3));
+                .body("$.size()", is(2));
     }
+
+    @Test
+    @TestTransaction
+    public void testGetCityEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("cid", 2)
+                .get("/cities/{cid}")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(2))
+                .body("name", equalTo("Isfahan"));
+    }
+
+    @Test
+    @TestTransaction
+    public void testAddCityForProcedureEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("pid", 1)
+                .pathParam("cid", 2)
+                .post("/cities/procedure/{pid}/add/{cid}")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    @TestTransaction
+    public void testRemoveCityFromProcedureEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("pid", 2)
+                .pathParam("cid", 1)
+                .delete("/cities/{cid}/{pid}")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    @TestTransaction
+    public void testGetCitiesOfProcedureEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("pid", 2)
+                .get("/cities/procedure/{pid}")
+                .then()
+                .statusCode(200)
+                .body("$.size", is(0));
+    }
+
+    @Test
+    @TestTransaction
+    public void testDeleteEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("cid", 1)
+                .delete("/cities/{cid}")
+                .then()
+                .statusCode(200);
+    }
+
+
 }

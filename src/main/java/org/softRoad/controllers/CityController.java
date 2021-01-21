@@ -34,8 +34,8 @@ public class CityController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("add")
-    public Response addCityForProcedure(@Valid Integer pid, @Valid Integer cid) {
+    @Path("procedure/{pid}/add/{cid}")
+    public Response addCityForProcedure(@PathParam("pid") Integer pid, @PathParam("cid") Integer cid) {
         return cityService.addCityForProcedure(cid, pid);
     }
 
