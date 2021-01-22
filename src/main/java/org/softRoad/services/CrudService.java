@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CrudService<T extends SoftRoadModel> {
     private final Class<?> objClass;
@@ -93,9 +94,12 @@ public class CrudService<T extends SoftRoadModel> {
     @Transactional
     public T get(Integer id) {
         checkPermission(PermissionType.READ);
-        return (T) entityManager.createNativeQuery(String.format("select * from %s where id=:id",
+        Optional first = entityManager.createNativeQuery(String.format("select * from %s where id=:id",
                 ModelUtils.getTableName(objClass), objClass), objClass)
-                .setParameter("id", id).getResultStream().findFirst().get();
+                .setParameter("id", id).getResultStream().findFirst();
+        if (first.isEmpty())
+            throw new InvalidDataException("Invalid id");
+        return (T) first.get();
     }
 
     @Transactional
@@ -171,4 +175,5 @@ public class CrudService<T extends SoftRoadModel> {
         UPDATE,
         READ
     }
+
 }
