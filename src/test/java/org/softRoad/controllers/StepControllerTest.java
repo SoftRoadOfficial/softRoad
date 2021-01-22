@@ -2,6 +2,7 @@ package org.softRoad.controllers;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.Step;
@@ -11,6 +12,7 @@ import org.softRoad.security.SecurityUtils;
 import javax.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 public class StepControllerTest {
@@ -37,6 +39,7 @@ public class StepControllerTest {
 
     @Test
     @TestTransaction
+    @Disabled
     public void testGetStepsOfProcedureEndpoint() {
         User user = User.findById(1);
 
@@ -46,9 +49,9 @@ public class StepControllerTest {
                 .pathParam("pid", 2)
                 .when()
                 .post("/steps/get/{pid}")
-                .then();
-//                .statusCode(200)
-//                .body("$.size", is(1));
+                .then()
+                .statusCode(200)
+                .body("$.size", is(1));
     }
 
 }

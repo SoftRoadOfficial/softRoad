@@ -2,6 +2,7 @@ package org.softRoad.controllers;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Category;
 import org.softRoad.models.User;
@@ -69,40 +70,43 @@ public class CategoryControllerTest {
                 .body("$.size", is(0));
     }
 
-//    @Test
-//    @TestTransaction
-//    public void testAddCategoryForProcedureEndpoint() {
-//        User user = User.findById(1);
-//
-//        given()
-//                .header("Content-Type", MediaType.APPLICATION_JSON)
-//                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-//                .when()
-//                .pathParam("pid", 2)
-//                .pathParam("cid", 1)
-//                .post("/categories/add")
-//                .then();
-//                .statusCode(200);
-//    }
+    @Test
+    @TestTransaction
+    @Disabled
+    public void testAddCategoryForProcedureEndpoint() {
+        User user = User.findById(1);
 
-//    @Test
-//    @TestTransaction
-//    public void testRemoveCategoryFromProcedureEndpoint() {
-//        User user = User.findById(1);
-//
-//        given()
-//                .header("Content-Type", MediaType.APPLICATION_JSON)
-//                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-//                .when()
-//                .pathParam("pid", 2)
-//                .pathParam("cid", 1)
-//                .delete("/categories/delete")
-//                .then();
-//                .statusCode(200);
-//    }
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("pid", 2)
+                .pathParam("cid", 1)
+                .post("/categories/add")
+                .then()
+                .statusCode(200);
+    }
 
     @Test
     @TestTransaction
+    @Disabled
+    public void testRemoveCategoryFromProcedureEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("pid", 2)
+                .pathParam("cid", 1)
+                .delete("/categories/delete")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    @TestTransaction
+    @Disabled
     public void testGetProceduresOfCategoryEndpoint() {
         User user = User.findById(1);
         SearchCriteria searchCriteria = new SearchCriteria();
@@ -114,8 +118,8 @@ public class CategoryControllerTest {
                 .body(searchCriteria)
                 .pathParam("cid", 1)
                 .post("/categories/procedures/{cid}")
-                .then();
-//                .statusCode(200);
+                .then()
+                .statusCode(200);
     }
 
 }
