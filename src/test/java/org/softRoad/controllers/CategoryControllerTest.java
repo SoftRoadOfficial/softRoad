@@ -19,7 +19,7 @@ public class CategoryControllerTest {
     public void testCreateEndpoint() {
         Category category = new Category();
         category.name = "official";
-        category.type = Category.Type.FINANCE;
+        category.type = Category.Type.VERIFIED;
 
         User user = User.findById(1);
 
