@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
@@ -72,15 +72,15 @@
     <changeSet id="insert-test-categories" author="softroad" context="test">
         <insert tableName="categories">
             <column name="name" value="Finance"/>
-            <column name="type" value="FINANCE"/>
+            <column name="type" value="VERIFIED"/>
         </insert>
         <insert tableName="categories">
             <column name="name" value="Medical"/>
-            <column name="type" value="MEDICAL"/>
+            <column name="type" value="VERIFIED"/>
         </insert>
         <insert tableName="categories">
             <column name="name" value="business"/>
-            <column name="type" value="BUSINESS"/>
+            <column name="type" value="VERIFIED"/>
         </insert>
     </changeSet>
 
@@ -193,6 +193,9 @@
         </insert>
         <insert tableName="roles">
             <column name="name" value="normalUser"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="idiotUser"/>
         </insert>
     </changeSet>
 

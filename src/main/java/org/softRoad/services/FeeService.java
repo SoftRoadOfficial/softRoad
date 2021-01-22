@@ -1,6 +1,5 @@
 package org.softRoad.services;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.softRoad.exception.DuplicateDataException;
 import org.softRoad.models.Fee;
 import org.softRoad.security.Permission;
@@ -34,6 +33,7 @@ public class FeeService extends CrudService<Fee> {
     }
 
     @Override
+    @Transactional
     public Response update(Fee obj) {
         Fee fee = Fee.findById(obj.id);
         checkState(fee.consultant.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_FEE));
@@ -41,6 +41,7 @@ public class FeeService extends CrudService<Fee> {
     }
 
     @Override
+    @Transactional
     public Response delete(Integer id) {
         Fee fee = Fee.findById(id);
         checkState(fee.consultant.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.DELETE_FEE));
