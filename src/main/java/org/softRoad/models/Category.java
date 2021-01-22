@@ -56,11 +56,11 @@ public class Category extends SoftRoadModel {
         presentFields.add("type");
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public static String fields(String fieldName, String... fieldNames) {
         return QueryUtils.fields(Category.class, fieldName, fieldNames);
     }
 
-    public static enum Type{
-        FINANCE
+    public enum Type {
+        VERIFIED
     }
 }

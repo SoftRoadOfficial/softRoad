@@ -12,11 +12,11 @@ import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.SecurityUtils;
 
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import java.util.HashMap;
-import java.util.Map;
 import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest

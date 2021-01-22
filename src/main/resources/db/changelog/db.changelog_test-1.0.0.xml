@@ -204,6 +204,11 @@
             <column name="user_id" value="1"/>
             <column name="role_id" value="1"/>
         </insert>
+
+        <insert tableName="user_role">
+            <column name="user_id" value="3"/>
+            <column name="role_id" value="1"/>
+        </insert>
     </changeSet>
 
     <changeSet id="insert-test-role_permission" author="softroad" context="test">

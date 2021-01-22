@@ -132,5 +132,4 @@ public class CityControllerTest {
                 .statusCode(200);
     }
 
-
 }

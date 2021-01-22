@@ -19,6 +19,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CommentController {
     private final CommentService commentService;
+
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }

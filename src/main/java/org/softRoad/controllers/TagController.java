@@ -66,6 +66,6 @@ public class TagController {
     @Path("consultants")
     public Set<ConsultantProfile> getConsultantsForTags(List<Integer> tagIds) {
         return tagService.getConsultantsForTags(tagIds);
-    } 
-    
+    }
+
 }
