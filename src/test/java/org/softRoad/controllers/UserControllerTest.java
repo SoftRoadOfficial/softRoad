@@ -104,7 +104,7 @@ public class UserControllerTest {
 
         Map<String, Object> data = new HashMap<>();
         data.put(User.ID, 1);
-        data.put("displayName", "Mahdi"); //FIXME there should be a static field for displayName somewhere !
+        data.put(User.EMAIL, "Mahdi@yahoo.com");
 
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)

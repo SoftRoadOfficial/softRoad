@@ -25,7 +25,7 @@ public class RoleControllerTest {
     @TestTransaction
     public void testCreateEndpoint() {
         Role role = new Role();
-        role.name = "MainAdmin";
+        role.name = "newRole";
 
         User user = User.findById(1);
 
@@ -80,7 +80,7 @@ public class RoleControllerTest {
         User user = User.findById(1);
 
         Map<String, Object> modifiedData = new HashMap<>();
-        modifiedData.put(Role.ID, 2);
+        modifiedData.put(Role.ID, 4);
         modifiedData.put(Role.NAME, "simpleUser");
 
         given()
@@ -102,7 +102,7 @@ public class RoleControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .when()
-                .pathParam("id", 2)
+                .pathParam("id", 3)
                 .delete("/roles/{id}")
                 .then()
                 .statusCode(200);

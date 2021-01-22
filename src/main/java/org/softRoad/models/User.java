@@ -88,7 +88,7 @@ public class User extends SoftRoadModel {
     @JsonIgnore
     public Set<Procedure> procedures = new HashSet<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JsonIgnore
     public ConsultantProfile consultantProfile;
 
