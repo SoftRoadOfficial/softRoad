@@ -197,6 +197,9 @@
         <insert tableName="roles">
             <column name="name" value="idiotUser"/>
         </insert>
+        <insert tableName="roles">
+            <column name="name" value="role4"/>
+        </insert>
     </changeSet>
 
     <changeSet id="insert-test-user_role" author="softroad" context="test">

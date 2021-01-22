@@ -94,8 +94,8 @@ public class CrudService<T extends SoftRoadModel> {
     @Transactional
     public T get(Integer id) {
         checkPermission(PermissionType.READ);
-        Optional first = entityManager.createNativeQuery(String.format("select * from %s where id=:id",
-                ModelUtils.getTableName(objClass), objClass), objClass)
+        Optional first = entityManager.createNativeQuery(
+                String.format("select * from %s where id=:id", ModelUtils.getTableName(objClass), objClass), objClass)
                 .setParameter("id", id).getResultStream().findFirst();
         if (first.isEmpty())
             throw new InvalidDataException("Invalid id");
@@ -111,9 +111,12 @@ public class CrudService<T extends SoftRoadModel> {
         String table = ModelUtils.getTableName(obj.getClass());
         queryBuilder.append("update ").append(table).append(" set ");
 
-        Field primaryKeyField = ModelUtils.getPrimaryKeyField(obj, obj.getClass());
-        Preconditions.checkState(primaryKeyField != null, "Invalid update input, did you use DiffValidator?");
-        String pkName = primaryKeyField.getName();
+        Integer pk = ModelUtils.getPrimaryKeyValue(obj, obj.getClass());
+        String pkName = ModelUtils.getPrimaryKeyField(obj, obj.getClass()).getName();
+
+        T oldObj = get(pk);
+        if (oldObj == null)
+            throw new InvalidDataException("Invalid id");
 
         int ind = 0;
         for (String fieldName : obj.presentFields) {
@@ -122,8 +125,8 @@ public class CrudService<T extends SoftRoadModel> {
                 field.setAccessible(true);
                 Column column = field.getAnnotation(Column.class);
                 JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-                String columnName = joinColumn != null ? joinColumn.name() : column == null || Strings.isNullOrEmpty(
-                        column.name()) ? fieldName : column.name();
+                String columnName = joinColumn != null ? joinColumn.name()
+                        : column == null || Strings.isNullOrEmpty(column.name()) ? fieldName : column.name();
 
                 Object value = field.get(obj);
                 if (joinColumn != null)
@@ -165,15 +168,11 @@ public class CrudService<T extends SoftRoadModel> {
         checkPermission(PermissionType.READ);
         return QueryUtils.nativeQuery(entityManager, objClass)
                 .baseQuery(new HqlQuery("select * from " + ModelUtils.getTableName(objClass)))
-                .searchCriteria(searchCriteria)
-                .build().getResultList();
+                .searchCriteria(searchCriteria).build().getResultList();
     }
 
     protected enum PermissionType {
-        CREATE,
-        DELETE,
-        UPDATE,
-        READ
+        CREATE, DELETE, UPDATE, READ
     }
 
 }
