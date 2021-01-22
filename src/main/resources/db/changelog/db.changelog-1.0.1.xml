@@ -68,7 +68,7 @@
             <column name="national_id" type="varchar(32)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="bio" type="varchar(2048)">
+            <column name="bio" type="text">
                 <constraints nullable="true"/>
             </column>
             <column name="description" type="varchar(256)">
@@ -141,10 +141,19 @@
             <column name="consultant_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
     <changeSet id="create-consultations-table-constraints" author="softroad" context="prod">
+        <addForeignKeyConstraint baseTableName="consultations"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_consultations(user_id, user(id))"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+
         <addForeignKeyConstraint baseColumnNames="fee_id"
                                  baseTableName="consultations"
                                  constraintName="fk_consultations(fee_id, fees(id))"
@@ -269,7 +278,7 @@
             <column name="created_date" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="payload" type="varchar(256)">
+            <column name="payload" type="text">
                 <constraints nullable="false"/>
             </column>
             <column name="procedure_id" type="bigint">
@@ -329,6 +338,8 @@
     </changeSet>
 
     <changeSet id="create-comments-table-constraints" author="softroad" context="prod">
+
+
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="comments"
                                  constraintName="fk_comments(user_id, users(id))"

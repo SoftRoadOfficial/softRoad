@@ -30,16 +30,20 @@ public class CommentService extends CrudService<Comment> {
 
     @Override
     @Transactional
-    public Response create(Comment obj) {
-        if (obj.user == null) {
+    public Response create(Comment comment) {
+        if (comment.user == null) {
             User user = acm.getCurrentUser();
             if (user != null)
-                obj.user = user;
+                comment.user = user;
             else
                 throw new ForbiddenException("Comment.user must not be null");
         }
-        if (obj.rate != null || !Strings.isNullOrEmpty(obj.text))
-            return super.create(obj);
+        if ((comment.consultation == null || comment.consultation.id == null)
+                == (comment.procedure == null || comment.procedure.id == null))
+            throw new BadRequestException("Invalid data");
+
+        if (comment.rate != null || !Strings.isNullOrEmpty(comment.text))
+            return super.create(comment);
         throw new InvalidDataException("rate or text should be provided");
     }
 

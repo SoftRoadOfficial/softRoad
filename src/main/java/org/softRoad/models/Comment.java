@@ -49,12 +49,12 @@ public class Comment extends SoftRoadModel {
 
     @ManyToOne
     @JoinColumn(name = "consultation_id")
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"fee", "consultant", "user", "comments"})
     public Consultation consultation;
 
     @ManyToOne
     @JoinColumn(name = "procedure_id")
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"title", "description", "createdDate", "confirmed", "categories", "user"})
     public Procedure procedure;
 
     @ManyToOne

@@ -67,7 +67,7 @@ public class User extends SoftRoadModel {
     @Roles
     public Set<Role> roles = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     @JsonIgnore
     public City city;

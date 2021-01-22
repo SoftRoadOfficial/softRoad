@@ -59,8 +59,9 @@ public class ConsultantProfile extends SoftRoadModel {
     @JsonIgnore
     public Set<Tag> tags = new HashSet<>();
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @NotNull
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
     @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
 

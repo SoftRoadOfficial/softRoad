@@ -4,6 +4,7 @@ import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Comment;
+import org.softRoad.models.Consultation;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.User;
 import org.softRoad.models.query.SearchCriteria;
@@ -39,6 +40,29 @@ public class CommentControllerTest {
                 .post("/comments/create")
                 .then()
                 .statusCode(201);
+
+        comment.consultation = Consultation.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .body(comment)
+                .when()
+                .post("/comments/create")
+                .then()
+                .statusCode(400);
+
+        comment.procedure = null;
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .body(comment)
+                .when()
+                .post("/comments/create")
+                .then()
+                .statusCode(201);
+
     }
 
     @Test

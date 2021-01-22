@@ -525,4 +525,22 @@
         </insert>
     </changeSet>
 
+    <changeSet id="insert-test-consultation" author="softRoad" context="test">
+        <insert tableName="consultations">
+            <column name="fee_id" value="3"/>
+            <column name="consultant_id" value="3"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert tableName="consultations">
+            <column name="fee_id" value="2"/>
+            <column name="consultant_id" value="3"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert tableName="consultations">
+            <column name="fee_id" value="3"/>
+            <column name="consultant_id" value="2"/>
+            <column name="user_id" value="1"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

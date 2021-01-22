@@ -30,9 +30,14 @@ public class Consultation extends SoftRoadModel {
     public Set<Comment> comments = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "consultant_id") // TODO: 1/4/2021 double_checking
-    @JsonIgnoreProperties(value = "consultations", allowSetters = true)
+    @JoinColumn(name = "consultant_id")
+    @JsonIgnoreProperties(value = "consultations")
     public ConsultantProfile consultant;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties(value = {"roles", "password", "enabled", "cities"})
+    public ConsultantProfile user;
 
     public void setId(Integer id) {
         this.id = id;
@@ -49,7 +54,12 @@ public class Consultation extends SoftRoadModel {
         presentFields.add("consultant");
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public void setUser(ConsultantProfile user) {
+        this.user = user;
+        presentFields.add("user");
+    }
+
+    public static String fields(String fieldName, String... fieldNames) {
         return QueryUtils.fields(Consultation.class, fieldName, fieldNames);
     }
 }
