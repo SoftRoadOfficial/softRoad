@@ -19,12 +19,11 @@ public class StepControllerTest {
     @TestTransaction
     public void testCreateEndpoint() {
         Step step = new Step();
-        step.title = "TheImpStep";
-        step.description = "ThisIsAVeryImportantStep!";
-
-        User user = User.findById(1);
+        step.title = "The Important Step";
+        step.description = "This Is A Very Important Step!";
 
         step.procedure = Procedure.findById(1);
+        User user = User.findById(1);
 
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
@@ -34,6 +33,22 @@ public class StepControllerTest {
                 .post("/steps/create")
                 .then()
                 .statusCode(201);
+    }
+
+    @Test
+    @TestTransaction
+    public void testGetStepsOfProcedureEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .pathParam("pid", 2)
+                .when()
+                .post("/steps/get/{pid}")
+                .then();
+//                .statusCode(200)
+//                .body("$.size", is(1));
     }
 
 }
