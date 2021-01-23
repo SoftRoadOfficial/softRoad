@@ -2,6 +2,7 @@ package org.softRoad.controllers;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Tag;
 import org.softRoad.models.User;
@@ -91,6 +92,7 @@ public class TagControllerTest {
 
     @Test
     @TestTransaction
+    @Disabled
     public void testGetProceduresForTagsEndpoint() {
         User user = User.findById(1);
 
