@@ -81,7 +81,6 @@ public class ProcedureControllerTest {
 
     @Test
     @TestTransaction
-    @Disabled
     public void testDeleteEndpoint() {
         User user = User.findById(1);
 
@@ -89,7 +88,7 @@ public class ProcedureControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
                 .when()
-                .pathParam("id", 3)
+                .pathParam("id", 4)
                 .delete("/procedures/{id}")
                 .then()
                 .statusCode(200);
@@ -229,7 +228,7 @@ public class ProcedureControllerTest {
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .body(List.of(1, 2))
+                .body(List.of(2, 3))
                 .when()
                 .pathParam("id", 1)
                 .post("/procedures/{id}/cities")
@@ -309,7 +308,7 @@ public class ProcedureControllerTest {
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .body(List.of(1, 2))
+                .body(List.of(2, 3))
                 .when()
                 .pathParam("id", 1)
                 .post("/procedures/{id}/tags/add")

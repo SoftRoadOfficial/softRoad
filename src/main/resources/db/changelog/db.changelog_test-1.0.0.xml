@@ -129,6 +129,14 @@
             <column name="confirmed" value="true"/>
             <column name="created_date" value="now()"/>
         </insert>
+
+        <insert tableName="procedures">
+            <column name="title" value="the main procedure4"/>
+            <column name="description" value="this is very important procedure4"/>
+            <column name="user_id" value="3"/>
+            <column name="confirmed" value="true"/>
+            <column name="created_date" value="now()"/>
+        </insert>
     </changeSet>
 
     <changeSet id="insert-test-comments" author="softroad" context="test">
