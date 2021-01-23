@@ -29,6 +29,7 @@ public class StepService extends CrudService<Step> {
     }
 
     @Override
+    @Transactional
     public Response update(Step obj) {
         Step step = Step.findById(obj.id);
         if (step == null)
@@ -38,6 +39,7 @@ public class StepService extends CrudService<Step> {
     }
 
     @Override
+    @Transactional
     public Response delete(Integer id) {
         Step step = Step.findById(id);
         if (step == null)

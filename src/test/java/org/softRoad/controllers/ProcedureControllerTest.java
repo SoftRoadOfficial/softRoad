@@ -216,7 +216,7 @@ public class ProcedureControllerTest {
                 .get("/procedures/{id}/cities")
                 .then()
                 .statusCode(200)
-                .body("$.size", is(1));
+                .body("$.size", is(0));
     }
 
     @Test
@@ -281,7 +281,7 @@ public class ProcedureControllerTest {
                 .get("/procedures/{id}/steps")
                 .then()
                 .statusCode(200)
-                .body("$.size", is(0));
+                .body("$.size", is(2));
     }
 
     @Test

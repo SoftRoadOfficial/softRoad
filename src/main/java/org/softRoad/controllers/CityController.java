@@ -61,13 +61,6 @@ public class CityController {
         return cityService.getProceduresForCity(searchCriteria, id);
     }
 
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("procedures/{pid}")
-    public Response removeCitiesForProcedure(@PathParam("pid") Integer pid, @NotNull List<Integer> citiesId) {
-        return cityService.removeCitiesForProcedure(pid, citiesId);
-    }
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getAll")

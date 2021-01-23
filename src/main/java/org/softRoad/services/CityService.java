@@ -1,7 +1,6 @@
 package org.softRoad.services;
 
 import org.softRoad.exception.InvalidDataException;
-import org.softRoad.models.Category;
 import org.softRoad.models.City;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.ProcedureCity;
@@ -55,7 +54,7 @@ public class CityService extends CrudService<City> {
 
     @Transactional
     public List<Procedure> getProceduresForCity(SearchCriteria searchCriteria, Integer id) {
-        Category city = City.findById(id);
+        City city = City.findById(id);
         if (city == null)
             throw new InvalidDataException("Category not found");
 

@@ -71,50 +71,19 @@ public class CityControllerTest {
 
     @Test
     @TestTransaction
-    public void testAddCityForProcedureEndpoint() {
+    public void testGetProceduresForCityEndpoint() {
         User user = User.findById(1);
+        SearchCriteria searchCriteria = new SearchCriteria();
 
         given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .body(searchCriteria)
                 .when()
-                .pathParam("pid", 1)
-                .pathParam("cid", 2)
-                .post("/cities/procedure/{pid}/add/{cid}")
+                .pathParam("id", 2)
+                .get("/cities/procedures/{id}")
                 .then()
                 .statusCode(200);
-    }
-
-    @Test
-    @TestTransaction
-    public void testRemoveCityFromProcedureEndpoint() {
-        User user = User.findById(1);
-
-        given()
-                .header("Content-Type", MediaType.APPLICATION_JSON)
-                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .when()
-                .pathParam("pid", 2)
-                .pathParam("cid", 1)
-                .delete("/cities/{cid}/{pid}")
-                .then()
-                .statusCode(200);
-    }
-
-    @Test
-    @TestTransaction
-    public void testGetCitiesOfProcedureEndpoint() {
-        User user = User.findById(1);
-
-        given()
-                .header("Content-Type", MediaType.APPLICATION_JSON)
-                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .when()
-                .pathParam("pid", 2)
-                .get("/cities/procedure/{pid}")
-                .then()
-                .statusCode(200)
-                .body("$.size", is(0));
     }
 
     @Test

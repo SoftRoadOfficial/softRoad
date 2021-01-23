@@ -139,6 +139,26 @@
         </insert>
     </changeSet>
 
+    <changeSet id="insert-test-steps" author="softroad" context="test">
+        <insert tableName="steps">
+            <column name="title" value="test title step 1"/>
+            <column name="description" value="test description step 1"/>
+            <column name="procedure_id" value="1"/>
+        </insert>
+
+        <insert tableName="steps">
+            <column name="title" value="test title step 2"/>
+            <column name="description" value="test description step 2"/>
+            <column name="procedure_id" value="1"/>
+        </insert>
+
+        <insert tableName="steps">
+            <column name="title" value="test title step 3"/>
+            <column name="description" value="test description step 3"/>
+            <column name="procedure_id" value="2"/>
+        </insert>
+    </changeSet>
+
     <changeSet id="insert-test-comments" author="softroad" context="test">
         <insert tableName="comments">
             <column name="text" value="very good"/>

@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 public class CategoryControllerTest {
@@ -54,21 +53,6 @@ public class CategoryControllerTest {
                 .body("name", equalTo("Medical"));
     }
 
-    @Test
-    @TestTransaction
-    public void testGetCategoriesOfProcedureEndpoint() {
-        User user = User.findById(1);
-
-        given()
-                .header("Content-Type", MediaType.APPLICATION_JSON)
-                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
-                .when()
-                .pathParam("pid", 2)
-                .get("/categories/list/{pid}")
-                .then()
-                .statusCode(200)
-                .body("$.size", is(0));
-    }
 
     @Test
     @TestTransaction

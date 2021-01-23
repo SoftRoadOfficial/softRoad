@@ -2,6 +2,7 @@ package org.softRoad.controllers;
 
 import org.softRoad.models.Step;
 import org.softRoad.services.StepService;
+import org.softRoad.utils.Diff;
 
 import javax.enterprise.context.RequestScoped;
 import javax.validation.Valid;
@@ -30,15 +31,14 @@ public class StepController {
 
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("update")
-    public Response update(@Valid Step step) {
+    public Response update(@Diff Step step) {
         return stepService.update(step);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("delete")
-    public Response delete(Integer id) {
+    @Path("{id}")
+    public Response delete(@PathParam("id") Integer id) {
         return stepService.delete(id);
     }
 
