@@ -574,4 +574,28 @@
         </insert>
     </changeSet>
 
+    <changeSet id="insert-update-request" author="softroad">
+        <insert tableName="update_requests">
+            <column name="created_date" value="now()"/>
+            <column name="payload" value="there is just a test"/>
+            <column name="procedure_id" value="1"/>
+            <column name="type" value="EDIT_PROCEDURE"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert tableName="update_requests">
+            <column name="created_date" value="now()"/>
+            <column name="payload" value="i wanna delete procedure"/>
+            <column name="procedure_id" value="1"/>
+            <column name="type" value="DELETE_PROCEDURE"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert tableName="update_requests">
+            <column name="created_date" value="now()"/>
+            <column name="payload" value="i wanna delete procedure"/>
+            <column name="procedure_id" value="2"/>
+            <column name="type" value="DELETE_PROCEDURE"/>
+            <column name="user_id" value="1"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

@@ -345,7 +345,7 @@ public class ProcedureControllerTest {
                 .get("/procedures/{id}/updateRequests")
                 .then()
                 .statusCode(200)
-                .body("$.size", is(0));
+                .body("$.size", is(2));
     }
 
 }

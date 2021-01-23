@@ -284,6 +284,9 @@
             <column name="procedure_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
+            <column name="type" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>

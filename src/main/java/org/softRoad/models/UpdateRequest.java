@@ -23,6 +23,8 @@ public class UpdateRequest extends SoftRoadModel {
     public final static String PROCEDURE = "procedure_id";
     @Transient
     public final static String USER = "user_id";
+    @Transient
+    public final static String TYPE = "type";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,10 @@ public class UpdateRequest extends SoftRoadModel {
 
     @Column(name = "created_date", nullable = false)
     public Instant createdDate;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    public Type type;
 
     @NotNull
     public String payload;
@@ -81,7 +87,21 @@ public class UpdateRequest extends SoftRoadModel {
         presentFields.add("user");
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public void setType(Type type) {
+        this.type = type;
+        presentFields.add("type");
+    }
+
+    public static String fields(String fieldName, String... fieldNames) {
         return QueryUtils.fields(UpdateRequest.class, fieldName, fieldNames);
+    }
+
+    public enum Type {
+        ADD_STEP,
+        DELETE_STEP,
+        EDIT_STEP,
+
+        DELETE_PROCEDURE,
+        EDIT_PROCEDURE
     }
 }
