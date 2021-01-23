@@ -1,8 +1,10 @@
 package org.softRoad.controllers;
 
 import org.softRoad.models.City;
+import org.softRoad.models.Procedure;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.services.CityService;
+import org.softRoad.utils.Diff;
 
 import javax.enterprise.context.RequestScoped;
 import javax.validation.Valid;
@@ -31,35 +33,6 @@ public class CityController {
         return cityService.get(cid);
     }
 
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("procedure/{pid}/add/{cid}")
-    public Response addCityForProcedure(@PathParam("pid") Integer pid, @PathParam("cid") Integer cid) {
-        return cityService.addCityForProcedure(cid, pid);
-    }
-
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{cid}/{pid}")
-    public Response removeCityFromProcedure(@PathParam("pid") Integer pid, @PathParam("cid") Integer cid) {
-        return cityService.removeCityFromProcedure(cid, pid);
-    }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("getAll")
-    public List<City> getAll(@NotNull SearchCriteria searchCriteria) {
-        return cityService.getAll(searchCriteria);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("procedure/{pid}")
-    public List<City> getCitiesOfProcedure(@PathParam("pid") Integer pid) {
-        return cityService.getCitiesOfProcedure(pid);
-    }
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
@@ -73,4 +46,33 @@ public class CityController {
     public Response delete(@PathParam("cid") Integer cid) {
         return cityService.delete(cid);
     }
+
+    @PATCH
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{cid}")
+    public Response update(@Diff City city) {
+        return cityService.update(city);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("procedures/{id}")
+    public List<Procedure> getProceduresForCity(@NotNull SearchCriteria searchCriteria, @PathParam("id") Integer id) {
+        return cityService.getProceduresForCity(searchCriteria, id);
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("procedures/{pid}")
+    public Response removeCitiesForProcedure(@PathParam("pid") Integer pid, @NotNull List<Integer> citiesId) {
+        return cityService.removeCitiesForProcedure(pid, citiesId);
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getAll")
+    public List<City> getAll(@NotNull SearchCriteria searchCriteria) {
+        return cityService.getAll(searchCriteria);
+    }
+
 }

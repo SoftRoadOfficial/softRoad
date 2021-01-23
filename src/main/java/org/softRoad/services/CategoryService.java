@@ -1,9 +1,7 @@
 package org.softRoad.services;
 
-import org.softRoad.exception.NotFoundException;
-import org.softRoad.models.Category;
-import org.softRoad.models.Procedure;
-import org.softRoad.models.ProcedureCategory;
+import org.softRoad.exception.InvalidDataException;
+import org.softRoad.models.*;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.SearchCriteria;
@@ -39,59 +37,59 @@ public class CategoryService extends CrudService<Category> {
         return super.hasPermission(type);
     }
 
-    @Transactional
-    public List<Category> getCategoriesOfProcedure(Integer pid) {
-        Procedure procedure = Procedure.findById(pid);
-        return new ArrayList<>(procedure.categories);
-    }
 
     @Transactional
-    public Response addCategoryForProcedure(Integer pid, Integer cid) {
+    public Response addCategoriesForProcedure(List<Integer> categoriesId, Integer pid) {
         Procedure procedure = Procedure.findById(pid);
-        Category category = Category.findById(cid);
         if (procedure == null)
-            throw new NotFoundException("Procedure not found");
-        if (category == null)
-            throw new NotFoundException("Category not found");
+            throw new InvalidDataException("Procedure not found");
 
         checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
 
-        entityManager.createNativeQuery(
-                String.format("insert into %s(%s, %s) values(:cid,:pid)",
-                        PROCEDURE_CATEGORY, ProcedureCategory.CATEGORIES_ID, ProcedureCategory.PROCEDURE_ID))
-                .setParameter("cid", cid)
-                .setParameter("pid", pid)
-                .executeUpdate();
+        for (Integer categoryId : categoriesId) {
+            Category category = Category.findById(categoryId);
+            if (category == null)
+                throw new InvalidDataException("Category not found");
+
+            entityManager.createNativeQuery(
+                    String.format("insert into %s(%s, %s) values(:cid,:pid)",
+                            PROCEDURE_CATEGORY, ProcedureCategory.CATEGORIES_ID, ProcedureCategory.PROCEDURE_ID))
+                    .setParameter("cid", categoryId)
+                    .setParameter("pid", pid)
+                    .executeUpdate();
+        }
 
         return Response.ok().build();
     }
 
     @Transactional
-    public Response removeCategoryFromProcedure(Integer pid, Integer cid) {
+    public Response removeCategoriesForProcedure(List<Integer> categoriesId, Integer pid) {
         Procedure procedure = Procedure.findById(pid);
-        Category category = Category.findById(cid);
         if (procedure == null)
-            throw new NotFoundException("Procedure not found");
-        if (category == null)
-            throw new NotFoundException("Category not found");
+            throw new InvalidDataException("Procedure not found");
 
         checkState(procedure.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
 
-        entityManager.createNativeQuery(
-                String.format("delete from %s where %s=:cid and %s=:pid",
-                        PROCEDURE_CATEGORY, ProcedureCategory.CATEGORIES_ID, ProcedureCategory.PROCEDURE_ID))
-                .setParameter("cid", cid)
-                .setParameter("pid", pid)
-                .executeUpdate();
+        for (Integer categoryId : categoriesId) {
+            Category category = Category.findById(categoryId);
+            if (category == null)
+                throw new InvalidDataException("Category not found");
+            entityManager.createNativeQuery(
+                    String.format("delete from %s where %s=:cid and %s=:pid",
+                            PROCEDURE_CATEGORY, ProcedureCategory.CATEGORIES_ID, ProcedureCategory.PROCEDURE_ID))
+                    .setParameter("cid", categoryId)
+                    .setParameter("pid", pid)
+                    .executeUpdate();
+        }
 
         return Response.ok().build();
     }
 
     @Transactional
-    public List<Procedure> getProceduresOfCategory(Integer cid, @NotNull SearchCriteria searchCriteria) {
+    public List<Procedure> getProceduresForCategory(Integer cid, @NotNull SearchCriteria searchCriteria) {
         Category category = Category.findById(cid);
         if (category == null)
-            throw new NotFoundException("Category not found");
+            throw new InvalidDataException("Category not found");
 
         Query q = QueryUtils.nativeQuery(entityManager, Procedure.class)
                 .baseQuery(new HqlQuery("select c.* from %s left join %s as c on c.%s=%s",
@@ -102,4 +100,25 @@ public class CategoryService extends CrudService<Category> {
         return q.getResultList();
     }
 
+    @Transactional
+    public List<Fee> getFeesForCategory(Integer id) {
+        checkState(acm.hasPermission(Permission.READ_FEE));
+
+        Category category = Category.findById(id);
+        if (category == null)
+            throw new InvalidDataException("Category not found");
+
+        return new ArrayList<>(category.fees);
+    }
+
+    @Transactional
+    public List<ConsultantProfile> getConsultantsForCategory(Integer id) {
+        checkState(acm.hasPermission(Permission.READ_CONSULTANT_PROFILE));
+
+        Category category = Category.findById(id);
+        if (category == null)
+            throw new InvalidDataException("Category not found");
+
+        return new ArrayList<>(category.consultants);
+    }
 }

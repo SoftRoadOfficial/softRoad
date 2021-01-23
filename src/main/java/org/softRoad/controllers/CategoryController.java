@@ -1,9 +1,12 @@
 package org.softRoad.controllers;
 
 import org.softRoad.models.Category;
+import org.softRoad.models.ConsultantProfile;
+import org.softRoad.models.Fee;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.services.CategoryService;
+import org.softRoad.utils.Diff;
 
 import javax.enterprise.context.RequestScoped;
 import javax.validation.Valid;
@@ -27,46 +30,65 @@ public class CategoryController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{cid}")
-    public Category getCategory(@PathParam("cid") Integer cid) {
-        return categoryService.get(cid);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("list/{pid}")
-    public List<Category> getCategoriesOfProcedure(@PathParam("pid") Integer pid) {
-        return categoryService.getCategoriesOfProcedure(pid);
-    }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("add")
-    public Response addCategoryForProcedure(@Valid Integer cid, @Valid Integer pid) {
-        return categoryService.addCategoryForProcedure(pid, cid);
-    }
-
-
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("delete")
-    public Response removeCategoryFromProcedure(@Valid Integer cid, @Valid Integer pid) {
-        return categoryService.removeCategoryFromProcedure(pid, cid);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("procedures/{cid}")
-    public List<Procedure> getProceduresOfCategory(@PathParam("cid") Integer cid, @NotNull SearchCriteria searchCriteria) {
-        return categoryService.getProceduresOfCategory(cid, searchCriteria);
+    @Path("{id}")
+    public Category get(@PathParam("id") Integer id) {
+        return categoryService.get(id);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
-    public Response createCategory(@Valid Category category) {
+    public Response create(@Valid Category category) {
         return categoryService.create(category);
     }
 
+    @PATCH
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("update")
+    public Response update(@Diff Category category) {
+        return categoryService.update(category);
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}")
+    public Response delete(@PathParam("id") Integer id) {
+        return categoryService.delete(id);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("fee/{id}")
+    public List<Fee> getFeesForCategory(@PathParam("id") Integer id) {
+        return categoryService.getFeesForCategory(id);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("consultant/{id}")
+    public List<ConsultantProfile> getConsultantsForCategory(@PathParam("id") Integer id) {
+        return categoryService.getConsultantsForCategory(id);
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("procedures/{id}")
+    public Response addCategoriesForProcedure(@NotNull List<Integer> categoriesId, @PathParam("id") Integer pid) {
+        return categoryService.addCategoriesForProcedure(categoriesId, pid);
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("procedure/{pid}")
+    public Response removeCategoriesForProcedure(@NotNull List<Integer> categoriesId, @PathParam("pid") Integer pid) {
+        return categoryService.removeCategoriesForProcedure(categoriesId, pid);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("procedures/{cid}")
+    public List<Procedure> getProceduresForCategory(@PathParam("cid") Integer cid, @NotNull SearchCriteria searchCriteria) {
+        return categoryService.getProceduresForCategory(cid, searchCriteria);
+    }
 
 }

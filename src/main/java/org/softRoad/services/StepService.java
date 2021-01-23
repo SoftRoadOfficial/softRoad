@@ -1,6 +1,5 @@
 package org.softRoad.services;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Procedure;
 import org.softRoad.models.Step;
@@ -14,7 +13,6 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.softRoad.models.Tables.STEPS;
 
 @ApplicationScoped
 public class StepService extends CrudService<Step> {
@@ -53,6 +51,8 @@ public class StepService extends CrudService<Step> {
         Procedure procedure = Procedure.findById(pid);
         if (procedure == null)
             throw new InvalidDataException("Procedure not found");
+
         return new ArrayList<>(procedure.steps);
     }
+
 }
