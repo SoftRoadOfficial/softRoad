@@ -2,6 +2,8 @@ package org.softRoad.controllers;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.softRoad.models.Category;
 import org.softRoad.models.ConsultantProfile;
@@ -61,6 +63,7 @@ public class FeeControllerTest {
                 .body("$.size()", is(2));
     }
 
+    @Disabled
     @Test
     @TestTransaction
     public void testUpdateEndpoint() {

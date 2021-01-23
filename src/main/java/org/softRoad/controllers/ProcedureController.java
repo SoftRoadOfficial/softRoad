@@ -24,20 +24,34 @@ public class ProcedureController {
     public ProcedureController(ProcedureService procedureService) {
         this.procedureService = procedureService;
     }
-
+    
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
     public Response create(@Valid Procedure procedure) {
         return procedureService.create(procedure);
     }
-
+    
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@Diff Procedure procedure) {
         return procedureService.update(procedure);
     }
+    
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}")
+    public Response delete(@PathParam("id") Integer id) {
+        return procedureService.delete(id);
+    }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getAll")
+    public List<Procedure> getAll(@NotNull SearchCriteria searchCriteria) {
+        return procedureService.getAll(searchCriteria);
+    }
+    
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/cities/add")
@@ -90,14 +104,16 @@ public class ProcedureController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("categories/{id}")
-    public List<Procedure> getProcedureForCategory(@PathParam("id") Integer id, @NotNull SearchCriteria searchCriteria) {
+    public List<Procedure> getProcedureForCategory(@PathParam("id") Integer id,
+            @NotNull SearchCriteria searchCriteria) {
         return procedureService.getProceduresForCategory(id, searchCriteria);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("cities/{cityId}/categories/{categoryId}")
-    public List<Procedure> getProcedureForCategoryInCity(@PathParam("cityId") Integer cityId, @PathParam("categoryId") Integer categoryId, @NotNull SearchCriteria searchCriteria) {
+    public List<Procedure> getProcedureForCategoryInCity(@PathParam("cityId") Integer cityId,
+            @PathParam("categoryId") Integer categoryId, @NotNull SearchCriteria searchCriteria) {
         return procedureService.getProceduresForCategoryInCity(cityId, categoryId, searchCriteria);
     }
 
@@ -143,11 +159,5 @@ public class ProcedureController {
         return procedureService.getTagsOfProcedure(id);
     }
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("getAll")
-    public List<Procedure> getAll(@NotNull SearchCriteria searchCriteria) {
-        return procedureService.getAll(searchCriteria);
-    }
 
 }

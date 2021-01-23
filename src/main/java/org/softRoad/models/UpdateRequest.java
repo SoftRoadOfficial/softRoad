@@ -46,6 +46,11 @@ public class UpdateRequest extends SoftRoadModel {
     @JsonIgnoreProperties(value = {"roles", "password", "enabled"})
     public User user;
 
+    @PrePersist
+    private void setAccepted() {
+        this.accepted = false;
+    }
+
     public void setId(Integer id) {
         this.id = id;
         presentFields.add("id");

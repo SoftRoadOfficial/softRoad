@@ -1,13 +1,14 @@
 package org.softRoad.services;
 
 import org.softRoad.exception.DuplicateDataException;
+import org.softRoad.exception.ForbiddenException;
+import org.softRoad.exception.InvalidDataException;
 import org.softRoad.models.Fee;
 import org.softRoad.security.Permission;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
-
 
 @ApplicationScoped
 public class FeeService extends CrudService<Fee> {
@@ -36,7 +37,11 @@ public class FeeService extends CrudService<Fee> {
     @Transactional
     public Response update(Fee obj) {
         Fee fee = Fee.findById(obj.id);
+        if (fee == null)
+            throw new InvalidDataException("Invalid fee");
         checkState(fee.consultant.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.UPDATE_FEE));
+        if (obj.presentFields.contains("category") || obj.presentFields.contains("minute"))
+            throw new ForbiddenException("Category or Minute of Fee can not modified.");
         return super.update(obj);
     }
 
@@ -44,6 +49,8 @@ public class FeeService extends CrudService<Fee> {
     @Transactional
     public Response delete(Integer id) {
         Fee fee = Fee.findById(id);
+        if (fee == null)
+            throw new InvalidDataException("Invalid fee");
         checkState(fee.consultant.user.id.equals(acm.getCurrentUserId()) || acm.hasPermission(Permission.DELETE_FEE));
         return super.delete(id);
     }
