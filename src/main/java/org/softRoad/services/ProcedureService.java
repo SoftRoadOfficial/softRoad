@@ -1,16 +1,5 @@
 package org.softRoad.services;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.Response;
-
 import org.softRoad.exception.BadRequestException;
 import org.softRoad.exception.ForbiddenException;
 import org.softRoad.exception.InvalidDataException;
@@ -19,8 +8,17 @@ import org.softRoad.models.*;
 import org.softRoad.models.query.HqlQuery;
 import org.softRoad.models.query.QueryUtils;
 import org.softRoad.models.query.SearchCriteria;
-import org.softRoad.security.AccessControlManager;
 import org.softRoad.security.Permission;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
 
 import static org.softRoad.models.Tables.*;
 
@@ -29,19 +27,26 @@ public class ProcedureService extends CrudService<Procedure> {
     @Inject
     EntityManager entityManager;
 
+    @Override
+    protected boolean hasPermission(PermissionType type) {
+        if (type == PermissionType.READ)
+            return true;
+        return super.hasPermission(type);
+    }
+
     public ProcedureService() {
         super(Procedure.class);
     }
-    
+
     @Override
     @Transactional
     public Response create(Procedure obj) {
         if (obj.user == null) {
             User user = acm.getCurrentUser();
             if (user != null)
-            obj.user = user;
+                obj.user = user;
             else
-            throw new ForbiddenException("Procedure.user must not be null");
+                throw new ForbiddenException("Procedure.user must not be null");
         }
         return super.create(obj);
     }
@@ -53,11 +58,11 @@ public class ProcedureService extends CrudService<Procedure> {
             throw new BadRequestException("Procedure.user can not get changed");
         Procedure oldProcedure = Procedure.findById(procedure.id);
         if (oldProcedure == null)
-        throw new NotFoundException("Procedure Not Found");
+            throw new NotFoundException("Procedure Not Found");
         checkState(acm.isCurrentUser(oldProcedure.user.id) || acm.hasPermission(Permission.UPDATE_PROCEDURE));
-        return super.update(procedure);        
+        return super.update(procedure);
     }
-    
+
     @Override
     @Transactional
     public Response delete(Integer id) {
@@ -65,7 +70,7 @@ public class ProcedureService extends CrudService<Procedure> {
         if (procedure == null)
             throw new NotFoundException("Procedure Not Found");
         checkState(acm.isCurrentUser(procedure.user.id) || acm.hasPermission(Permission.DELETE_PROCEDURE));
-        return super.delete(id);       
+        return super.delete(id);
     }
 
     @Transactional
@@ -253,7 +258,7 @@ public class ProcedureService extends CrudService<Procedure> {
 
     @Transactional
     public List<Procedure> getProceduresForCategoryInCity(Integer cityId, Integer categoryId,
-            @NotNull SearchCriteria searchCriteria) {
+                                                          @NotNull SearchCriteria searchCriteria) {
 
         City city = City.findById(cityId);
         if (city == null)
@@ -270,6 +275,15 @@ public class ProcedureService extends CrudService<Procedure> {
                 .addFilter(new HqlQuery("%s=:idd", ProcedureCategory.CATEGORIES_ID).setParameter("idd", category.id))
                 .searchCriteria(searchCriteria).build();
         return q.getResultList();
+    }
+
+    @Transactional
+    public Integer getRate(Integer id) {
+        return entityManager.createNativeQuery(String.format(
+                "select avg(%s) from %s where %s=:procedure_id and %s is not null",
+                Comment.RATE, COMMENTS, Comment.PROCEDURE, Comment.RATE), Integer.class)
+                .setParameter("procedure_id", id)
+                .getFirstResult();
     }
 
 }

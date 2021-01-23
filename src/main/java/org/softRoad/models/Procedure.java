@@ -14,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "procedures")
 public class Procedure extends SoftRoadModel {
+
     @Transient
     public final static String ID = "id";
     @Transient
@@ -84,7 +85,7 @@ public class Procedure extends SoftRoadModel {
     public User user;
 
     @PrePersist
-    private void setCreatedData(){
+    private void setCreatedData() {
         this.createdDate = Instant.now();
     }
 
@@ -108,19 +109,12 @@ public class Procedure extends SoftRoadModel {
         presentFields.add("user");
     }
 
-    public Double getRate() {
-        // TODO: 1/7/2021 calculate avg. rate from database
-        return rate;
-    }
-
-    // TODO: 1/7/2021 check if database can handle rate calculation
-
     public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
         presentFields.add("confirmed");
     }
 
-    public static String fields(String fieldName, String ... fieldNames) {
+    public static String fields(String fieldName, String... fieldNames) {
         return QueryUtils.fields(Procedure.class, fieldName, fieldNames);
     }
 }
