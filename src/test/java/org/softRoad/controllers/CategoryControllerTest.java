@@ -10,6 +10,8 @@ import org.softRoad.models.query.SearchCriteria;
 import org.softRoad.security.SecurityUtils;
 
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -53,6 +55,39 @@ public class CategoryControllerTest {
                 .body("name", equalTo("Medical"));
     }
 
+    @Test
+    @TestTransaction
+    public void testUpdateEndpoint() {
+        User user = User.findById(1);
+
+        Map<String, Object> modifiedData = new HashMap<>();
+        modifiedData.put(Category.ID, 2);
+        modifiedData.put(Category.NAME, "Simple Category");
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .body(modifiedData)
+                .when()
+                .patch("/categories/update")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    @TestTransaction
+    public void testDeleteEndpoint() {
+        User user = User.findById(1);
+
+        given()
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .header("Authorization", SecurityUtils.getAuthorizationHeader(user))
+                .when()
+                .pathParam("id", 3)
+                .delete("/categories/{id}")
+                .then()
+                .statusCode(200);
+    }
 
     @Test
     @TestTransaction
